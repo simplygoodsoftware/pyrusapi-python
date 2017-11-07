@@ -1,0 +1,106 @@
+# pylint: disable=C0103
+# pylint: disable=R0903
+# pylint: disable=too-many-instance-attributes
+
+from . import entities
+
+DATE_FORMAT = '%Y-%m-%dT%H:%M:%SZ'
+
+class BaseResponse(object):
+    error_code = None
+    error = None
+
+    def __init__(self, **kwargs):
+        if 'error_code' in kwargs:
+            self.error_code = kwargs['error_code']
+        if 'error' in kwargs:
+            self.error = kwargs['error']
+
+class AuthResponse(BaseResponse):
+    access_token = None
+
+    def __init__(self, **kwargs):
+        if 'access_token' in kwargs:
+            self.access_token = kwargs['access_token']
+            self.success = True
+        else:
+            self.success = False
+        super(AuthResponse, self).__init__(**kwargs)
+
+class FormResponse(BaseResponse):
+    id = None
+    name = None
+    steps = None
+    fields = None
+
+    def __init__(self, **kwargs):
+        if 'id' in kwargs:
+            self.id = kwargs['id']
+        if 'name' in kwargs:
+            self.name = kwargs['name']
+        if 'steps' in kwargs:
+            self.steps = kwargs['steps']
+        if 'fields' in kwargs:
+            self.fields = []
+            for field in kwargs['fields']:
+                self.fields.append(entities.FormField(**field))
+        super(FormResponse, self).__init__(**kwargs)
+
+class FormsResponse(BaseResponse):
+    forms = None
+
+    def __init__(self, **kwargs):
+        if 'forms' in kwargs:
+            self.forms = []
+            for form in kwargs['forms']:
+                self.forms.append(FormResponse(**form))
+        super(FormsResponse, self).__init__(**kwargs)
+
+class TaskResponse(BaseResponse):
+    task = None
+    def __init__(self, **kwargs):
+        if 'task' in kwargs:
+            self.task = entities.Task(**kwargs['task'])
+        super(TaskResponse, self).__init__(**kwargs)
+
+class ContactsResponse(BaseResponse):
+    organizations = None
+
+    def __init__(self, **kwargs):
+        if 'organizations' in kwargs:
+            self.organizations = []
+            for organization in kwargs['organizations']:
+                self.organizations.append(entities.Organization(**organization))
+        super(ContactsResponse, self).__init__(**kwargs)
+
+class CatalogResponse(BaseResponse):
+    items = None
+    catalog_id = None
+
+    def __init__(self, **kwargs):
+        if 'catalog_id' in kwargs:
+            self.catalog_id = kwargs['catalog_id']
+        if 'items' in kwargs:
+            self.items = []
+            for item in kwargs['items']:
+                self.items.append(entities.CatalogItem(**item))
+        super(CatalogResponse, self).__init__(**kwargs)
+
+class FormRegisterResponse(BaseResponse):
+    tasks = None
+    def __init__(self, **kwargs):
+        if 'tasks' in kwargs:
+            self.tasks = []
+            for task in kwargs['tasks']:
+                self.tasks.append(entities.Task(**task))
+        super(FormRegisterResponse, self).__init__(**kwargs)
+
+class UploadResponse(BaseResponse):
+    guid = None
+    md5_hash = None
+    def __init__(self, **kwargs):
+        if 'guid' in kwargs:
+            self.guid = kwargs['guid']
+        if 'md5_hash' in kwargs:
+            self.md5_hash = kwargs['md5_hash']
+        super(UploadResponse, self).__init__(**kwargs)
