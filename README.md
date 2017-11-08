@@ -1,8 +1,6 @@
 # Python Pyrus API client
 
-The Pyrus API provides a python 3 implementation of core API methods. 
-
-To get started, you must do the following:
+The Pyrus API provides a python 3 implementation of core API methods. To get started, you must do the following:
 
 ## Getting Started
 
