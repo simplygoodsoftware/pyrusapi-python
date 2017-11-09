@@ -7,7 +7,7 @@ The Pyrus API provides a python 3 implementation of core API methods. To get sta
 * instal pyrus-api library using pip:
 
 ````
-$ pip install pyrusAPI
+$ pip install pyrus-api
 ````
 
 * Import packages into your project:
