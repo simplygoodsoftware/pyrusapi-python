@@ -1,4 +1,4 @@
-Pyrus/build/
-Pyrus/dist/
+build/
+dist/
 *.pyc
-Pyrus/pyrus_api.egg-info/
+pyrus_api.egg-info/
