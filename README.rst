@@ -1,9 +1,7 @@
 ==============================
 Python Pyrus API client
 ==============================
-
-pyrusAPI is a client to connect pyrus using python.
-It's based on the Pyrus API.
+This package is used to connect to Pyrus via python.
 
 The full documentation for API can be found here_.
 
