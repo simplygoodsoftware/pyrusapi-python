@@ -1,7 +1,7 @@
 ==============================
-Python Pyrus API client
+pyrus-api
 ==============================
-This package is used to connect to Pyrus via python.
+A python 3 client for the Pyrus API.
 
 The full documentation for API can be found here_.
 
