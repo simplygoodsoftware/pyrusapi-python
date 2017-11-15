@@ -1,5 +1,7 @@
 # pyrus-api
 
+[![PyPI version](https://badge.fury.io/py/pyrus-api.svg)](https://badge.fury.io/py/pyrus-api)
+
 A Python 3 client for the Pyrus API.
 
 ## Getting Started
