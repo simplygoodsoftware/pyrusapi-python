@@ -25,35 +25,9 @@ class FormField(object):
             self.info = FormFieldInfo(**kwargs['info'])
         if 'value' in kwargs:
             if self.type:
-                self.value = self._create_field_value(self.type, kwargs['value'])
+                self.value = _create_field_value(self.type, kwargs['value'])
             else:
                 self.value = kwargs['value']
-
-    def _create_field_value(self, field_type, value):
-        if field_type in ['text', 'money', 'number', 'time', 'checkmark', 'email',
-                          'phone', 'flag', 'step', 'status', 'note']:
-            return value
-        if field_type in ['date', 'create_date', 'due_date']:
-            return datetime.strptime(value, DATE_FORMAT)
-        if field_type == 'catalog':
-            return CatalogItem(**value)
-        if field_type == 'file':
-            res = []
-            for file in value:
-                res.append(File(**file))
-            return res
-        if field_type in ['person', 'author']:
-            return Person(**value)
-        if field_type == 'table':
-            return Table(*value)
-        if field_type == 'title':
-            return Title(**value)
-        if field_type == 'checkmark':
-            return Checkmark(**value)
-        if field_type == 'project':
-            return Projects(**value)
-        if field_type == 'form_link':
-            return FormLink(**value)
 
 class FormFieldInfo(object):
     required_step = None
@@ -105,6 +79,8 @@ class Task(object):
     last_modified_date = None
     author = None
     due_date = None
+    due = None
+    duration = None
     close_date = None
     form_id = None
     attachments = None
@@ -128,6 +104,10 @@ class Task(object):
             self.author = Person(**kwargs['author'])
         if 'due_date' in kwargs:
             self.due_date = datetime.strptime(kwargs['due_date'], DATE_FORMAT)
+        if 'due' in kwargs:
+            self.due = datetime.strptime(kwargs['due'], DATE_TIME_FORMAT)
+        if 'duration' in kwargs:
+            self.duration = kwargs['duration']
         if 'close_date' in kwargs:
             self.text = kwargs['close_date']
         if 'form_id' in kwargs:
@@ -220,6 +200,8 @@ class TaskComment(object):
     participants_added = None
     participants_removed = None
     due_date = None
+    due = None
+    duration = None
     attachments = None
     action = None
 
@@ -264,6 +246,10 @@ class TaskComment(object):
                 self.participants_removed.append(Person(**participant))
         if 'due_date' in kwargs:
             self.due_date = datetime.strptime(kwargs['due_date'], DATE_FORMAT)
+        if 'due' in kwargs:
+            self.due = datetime.strptime(kwargs['due'], DATE_TIME_FORMAT)
+        if 'duration' in kwargs:
+            self.duration = kwargs['duration']
         if 'attachments' in kwargs:
             self.attachments = []
             for attachment in kwargs['attachments']:
@@ -271,7 +257,7 @@ class TaskComment(object):
         if 'action' in kwargs:
             self.action = kwargs['action']
 
-class Organization (object):
+class Organization(object):
     id = None
     name = None
     persons = None
@@ -453,3 +439,31 @@ def _get_value(value):
 def _validate_field_id(field_id):
     if not isinstance(field_id, int):
         raise TypeError('field_id must be valid int.')
+
+def _create_field_value(field_type, value):
+    if field_type in ['text', 'money', 'number', 'time', 'checkmark', 'email',
+                      'phone', 'flag', 'step', 'status', 'note']:
+        return value
+    if field_type in ['date', 'create_date', 'due_date']:
+        return datetime.strptime(value, DATE_FORMAT)
+    if field_type == 'due_date_time':
+        return datetime.strptime(value, DATE_TIME_FORMAT)
+    if field_type == 'catalog':
+        return CatalogItem(**value)
+    if field_type == 'file':
+        res = []
+        for file in value:
+            res.append(File(**file))
+        return res
+    if field_type in ['person', 'author']:
+        return Person(**value)
+    if field_type == 'table':
+        return Table(*value)
+    if field_type == 'title':
+        return Title(**value)
+    if field_type == 'checkmark':
+        return Checkmark(**value)
+    if field_type == 'project':
+        return Projects(**value)
+    if field_type == 'form_link':
+        return FormLink(**value)

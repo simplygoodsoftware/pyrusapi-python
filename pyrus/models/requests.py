@@ -38,7 +38,8 @@ class FormRegisterRequest(object):
 class TaskCommentRequest(object):
     def __init__(self, text=None, approval_choice=None, action=None,
                  attachments=None, field_updates=None, approvals_added=None,
-                 participants_added=None, reassign_to=None):
+                 participants_added=None, reassign_to=None, due=None,
+                 due_date=None, duration=None):
         self.text = text
         if approval_choice:
             if approval_choice not in ['approved', 'rejected', 'revoked']:
@@ -101,23 +102,44 @@ class TaskCommentRequest(object):
                         raise TypeError('each field_update in field_updates must '
                                         'contain field value')
                     self.field_updates.append(field_update)
+        if due_date:
+            if not isinstance(due_date, datetime):
+                raise TypeError('due_date must be a date')
+            self.due_date = datetime.strftime(due_date, DATE_FORMAT)
+        if due:
+            if not isinstance(due, datetime):
+                raise TypeError('due must be a date')
+            self.due = datetime.strftime(due, DATE_TIME_FORMAT)
+        if duration:
+            if not isinstance(due, int):
+                raise TypeError('duration must be an int')
+            self.duration = duration
 
 class CreateTaskRequest(object):
     def __init__(self, text=None, subject=None, parent_task_id=None,
                  due_date=None, form_id=None, attachments=None, responsible=None,
-                 fields=None, approvals=None, participants=None, lists=None):
+                 fields=None, approvals=None, participants=None, lists=None,
+                 due=None, duration=None):
         if text:
             self.text = text
         if subject:
             self.subject = subject
         if parent_task_id:
             if not isinstance(parent_task_id, int):
-                raise TypeError('parent_task_id must be int')
+                raise TypeError('parent_task_id must be an int')
             self.parent_task_id = parent_task_id
         if due_date:
             if not isinstance(due_date, datetime):
-                raise TypeError('due_date must be date')
+                raise TypeError('due_date must be a date')
             self.due_date = datetime.strftime(due_date, DATE_FORMAT)
+        if due:
+            if not isinstance(due, datetime):
+                raise TypeError('due must be a date')
+            self.due = datetime.strftime(due, DATE_TIME_FORMAT)
+        if duration:
+            if not isinstance(duration, int):
+                raise TypeError('duration must be an int')
+            self.duration = duration
         if form_id:
             if not isinstance(form_id, int):
                 raise TypeError('form_id must be int')
