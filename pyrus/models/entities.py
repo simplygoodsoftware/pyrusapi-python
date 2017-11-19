@@ -412,7 +412,7 @@ class RangeFilter(FormRegisterFilter):
         _validate_field_id(field_id)
         if not isinstance(values, list):
             raise TypeError('values must be a list.')
-        if not len(values) != 2:
+        if len(values) != 2:
             raise TypeError('values length must be equal 2.')
         formated_values = []
         for value in values:
