@@ -56,7 +56,7 @@ class PyrusAPI(object):
         return resp.FormsResponse(**response)
 
     def get_registry(self, form_id, form_register_request=None):
-        url = self._create_url(f'/forms/{form_id}/register')
+        url = self._create_url('/forms/{}/register'.format(form_id))
         if form_register_request:
             if not isinstance(form_register_request, req.FormRegisterRequest):
                 raise TypeError('form_register_request must be an instance '
@@ -78,7 +78,7 @@ class PyrusAPI(object):
         except ValueError:
             raise Exception("catalog_id should be valid int")
 
-        url = self._create_url(f'/catalogs/{catalog_id}')
+        url = self._create_url('/catalogs/{}'.format(catalog_id))
         response = self._perform_get_request(url)
         return resp.CatalogResponse(**response)
 
@@ -88,7 +88,7 @@ class PyrusAPI(object):
         except ValueError:
             raise Exception("form_id should be valid int")
 
-        url = self._create_url(f'/forms/{form_id}')
+        url = self._create_url('/forms/{}'.format(form_id))
         response = self._perform_get_request(url)
         return resp.FormResponse(**response)
 
@@ -98,7 +98,7 @@ class PyrusAPI(object):
         except ValueError:
             raise Exception("task_id should be valid int")
 
-        url = self._create_url(f'/tasks/{task_id}')
+        url = self._create_url('/tasks/{}'.format(task_id))
         response = self._perform_get_request(url)
         return resp.TaskResponse(**response)
 
@@ -107,7 +107,7 @@ class PyrusAPI(object):
             int(task_id)
         except ValueError:
             raise Exception("task_id should be valid int")
-        url = self._create_url(f'/tasks/{task_id}/comments')
+        url = self._create_url('/tasks/{}/comments'.format(task_id))
         if not isinstance(task_comment_request, req.TaskCommentRequest):
             raise TypeError('form_register_request must be an instance '
                             'of models.requests.TaskCommentRequest')
@@ -130,8 +130,8 @@ class PyrusAPI(object):
     def _auth(self):
         url = self._create_url('/auth')
         headers = {
-            'User-Agent': f'{self._user_agent}',
-            'Content-Type': f'application/json'
+            'User-Agent': '{}'.format(self._user_agent),
+            'Content-Type': 'application/json'
         }
         params = {
             'login': self.login,
@@ -149,7 +149,7 @@ class PyrusAPI(object):
         return response
 
     def _create_url(self, url):
-        return f"{self._protocol}://{self._host}{self._base_path}{url}"
+        return '{}://{}{}{}'.format(self._protocol, self._host, self._base_path, url)
 
     def _perform_get_request(self, url):
         return self._perform_request_with_retry(url, self.HTTPMethod.GET)
@@ -208,8 +208,8 @@ class PyrusAPI(object):
 
     def _create_default_headers(self):
         headers = {
-            'User-Agent': f'{self._user_agent}',
-            'Authorization': f'Bearer {self.access_token}',
+            'User-Agent': '{}'.format(self._user_agent),
+            'Authorization': 'Bearer {}'.format(self.access_token),
             'Content-Type': 'application/json'
         }
         return headers
