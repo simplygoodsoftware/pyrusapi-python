@@ -25,15 +25,15 @@ class FormRegisterRequest(object):
                 if not isinstance(fltr, entities.FormRegisterFilter):
                     raise TypeError('filters must be a list of entities.FormRegisterFilter')
                 if fltr.operator == 'equals':
-                    setattr(self, f'fld{fltr.field_id}', fltr.values)
+                    setattr(self, 'fld{}'.format(fltr.field_id), fltr.values)
                 if fltr.operator == 'greater_than':
-                    setattr(self, f'fld{fltr.field_id}', f'gt{fltr.values}')
+                    setattr(self, 'fld{}'.format(fltr.field_id), 'gt{}'.format(fltr.values))
                 if fltr.operator == 'less_than':
-                    setattr(self, f'fld{fltr.field_id}', f'lt{fltr.values}')
+                    setattr(self, 'fld{}'.format(fltr.field_id), 'lt{}'.format(fltr.values))
                 if fltr.operator == 'range':
-                    setattr(self, f'fld{fltr.field_id}', f'gt{fltr.values[0]},lt{fltr.values[1]}')
+                    setattr(self, 'fld{}'.format(fltr.field_id), 'gt{},lt{}'.format(*fltr.values))
                 if fltr.operator == 'is_in':
-                    setattr(self, f'fld{fltr.field_id}', ",".join(fltr.values))
+                    setattr(self, 'fld{}'.format(fltr.field_id), ",".join(fltr.values))
 
 class TaskCommentRequest(object):
     def __init__(self, text=None, approval_choice=None, action=None,
