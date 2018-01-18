@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 setup(name="pyrus-api",
       version="1.4.0",
-      python_requires='>=3',
+      python_requires='>=3.4',
       description="Python Pyrus API client",
       author="Pyrus",
       long_description=open('README.rst', 'r').read(),
