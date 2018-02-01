@@ -42,10 +42,10 @@ class TaskCommentRequest(object):
                  due_date=None, duration=None):
         self.text = text
         if approval_choice:
-            if approval_choice not in ['approved', 'rejected', 'revoked']:
-                raise TypeError('approval_choice can only be \'approved\', \'rejected\', '
-                                'or \'revoked\'')
-            self.approval_choice = approval_choice
+            if approval_choice not in ['approved', 'rejected', 'revoked', 'acknowledged']:
+                raise TypeError('approval_choice can only be \'approved\', \'rejected\', \'acknowledged\', or \'revoked\'')
+
+				self.approval_choice = approval_choice
         if action:
             if action not in ['finished', 'reopened']:
                 raise TypeError('action can only be \'finished\' or \'reopened\'')
