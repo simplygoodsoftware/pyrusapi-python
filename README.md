@@ -101,6 +101,23 @@ items = catalog_response.items
 contacts = pyrus_client.get_contacts()
 ```
 
+## Lists
+
+* Get all lists
+
+```python
+response = pyrus_client.get_lists()
+lists = response.lists
+```
+
+* Get all tasks in list
+
+```python
+list_id = 1522
+response = pyrus_client.get_task_list(list_id, max_tasks_count=25, include_archived=True)
+tasks = response.tasks
+```
+
 ## Support
 
 If you have any questions or comments please send an email to support@pyrus.com

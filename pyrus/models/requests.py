@@ -39,7 +39,8 @@ class TaskCommentRequest(object):
     def __init__(self, text=None, approval_choice=None, action=None,
                  attachments=None, field_updates=None, approvals_added=None,
                  participants_added=None, reassign_to=None, due=None,
-                 due_date=None, duration=None):
+                 due_date=None, duration=None, scheduled_date=None,
+                 cancel_schedule=None, added_list_ids=None, removed_list_ids=None):
         self.text = text
         if approval_choice:
             if approval_choice not in ['approved', 'rejected', 'revoked', 'acknowledged']:
@@ -113,12 +114,34 @@ class TaskCommentRequest(object):
             if not isinstance(due, int):
                 raise TypeError('duration must be an int')
             self.duration = duration
+        if scheduled_date:
+            if not isinstance(scheduled_date, datetime):
+                raise TypeError('scheduled_date must be a date')
+            self.scheduled_date = datetime.strftime(scheduled_date, DATE_FORMAT)
+        if cancel_schedule:
+            if not isinstance(cancel_schedule, bool):
+                raise TypeError('cancel_schedule must be a bool')
+            self.cancel_schedule = datetime.strftime(cancel_schedule, DATE_FORMAT)
+        if added_list_ids:
+            if not isinstance(added_list_ids, list):
+                raise TypeError('added_list_ids must be a list of int')
+            for item in added_list_ids:
+                if not isinstance(item, int):
+                    raise TypeError('added_list_ids must be a list of int')
+            self.added_list_ids = added_list_ids
+        if removed_list_ids:
+            if not isinstance(removed_list_ids, list):
+                raise TypeError('removed_list_ids must be a list of int')
+            for item in removed_list_ids:
+                if not isinstance(item, int):
+                    raise TypeError('removed_list_ids must be a list of int')
+            self.removed_list_ids = removed_list_ids
 
 class CreateTaskRequest(object):
     def __init__(self, text=None, subject=None, parent_task_id=None,
                  due_date=None, form_id=None, attachments=None, responsible=None,
-                 fields=None, approvals=None, participants=None, lists=None,
-                 due=None, duration=None):
+                 fields=None, approvals=None, participants=None, list_ids=None,
+                 due=None, duration=None, scheduled_date=None):
         if text:
             self.text = text
         if subject:
@@ -139,6 +162,10 @@ class CreateTaskRequest(object):
             if not isinstance(duration, int):
                 raise TypeError('duration must be an int')
             self.duration = duration
+        if scheduled_date:
+            if not isinstance(scheduled_date, datetime):
+                raise TypeError('scheduled_date must be a date')
+            self.scheduled_date = datetime.strftime(scheduled_date, DATE_FORMAT)
         if form_id:
             if not isinstance(form_id, int):
                 raise TypeError('form_id must be int')
@@ -195,10 +222,10 @@ class CreateTaskRequest(object):
                     self.participants.append(entities.Person(id=person))
                 except ValueError:
                     self.participants.append(entities.Person(email=person))
-        if lists:
-            if not isinstance(lists, list):
-                raise TypeError('lists must be a list of int')
-            for item in lists:
+        if list_ids:
+            if not isinstance(list_ids, list):
+                raise TypeError('list_ids must be a list of int')
+            for item in list_ids:
                 if not isinstance(item, int):
-                    raise TypeError('lists must be a list of int')
-            self.lists = lists
+                    raise TypeError('list_ids must be a list of int')
+            self.list_ids = list_ids

@@ -127,6 +127,27 @@ class PyrusAPI(object):
         response = self._perform_request_with_retry(url, self.HTTPMethod.POST, file_path=file_path)
         return resp.UploadResponse(**response)
 
+    def get_lists(self):
+        url = self._create_url('/lists')
+        response = self._perform_get_request(url)
+        return resp.ListsResponse(**response)
+
+    def get_task_list(self, list_id, item_count=200, include_archived=False):
+        if not isinstance(list_id, int):
+            raise TypeError('list_id must be an instance of int')
+        if not isinstance(item_count, int):
+            raise TypeError('item_count must be an instance of int')
+        if not isinstance(include_archived, bool):
+            raise TypeError('include_archived must be an instance of bool')
+
+        url_suffix = '/lists/{}/tasks?item_count={}'.format(list_id, item_count)
+        if include_archived:
+            url_suffix += '&include_archived=y'
+
+        url = self._create_url(url_suffix)
+        response = self._perform_get_request(url)
+        return resp.TaskListResponse(**response)
+
     def _auth(self):
         url = self._create_url('/auth')
         headers = {

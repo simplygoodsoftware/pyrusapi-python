@@ -72,23 +72,14 @@ class ChoiceOption(object):
             for field in kwargs['fields']:
                 self.fields.append(FormField(**field))
 
-class Task(object):
+class TaskHeader(object):
     id = None
     text = None
     create_date = None
     last_modified_date = None
     author = None
-    due_date = None
-    due = None
-    duration = None
     close_date = None
-    form_id = None
-    attachments = None
-    comments = None
     responsible = None
-    fields = None
-    approvals = None
-    participants = None
 
     def __init__(self, **kwargs):
         if 'id' in kwargs:
@@ -98,30 +89,41 @@ class Task(object):
         if 'create_date' in kwargs:
             self.create_date = datetime.strptime(kwargs['create_date'], DATE_TIME_FORMAT)
         if 'last_modified_date' in kwargs:
-            self.last_modified_date = datetime.strptime(kwargs['last_modified_date']
-                                                        , DATE_TIME_FORMAT)
+            self.last_modified_date = datetime.strptime(kwargs['last_modified_date'], DATE_TIME_FORMAT)
         if 'author' in kwargs:
             self.author = Person(**kwargs['author'])
+        if 'close_date' in kwargs:
+            self.close_date = datetime.strptime(kwargs['close_date'], DATE_TIME_FORMAT)
+        if 'responsible' in kwargs:
+            self.responsible = Person(**kwargs['responsible'])
+
+class Task(TaskHeader):
+    due_date = None
+    due = None
+    duration = None
+    form_id = None
+    attachments = None
+    fields = None
+    approvals = None
+    participants = None
+    scheduled_date = None
+    list_ids = None
+
+    def __init__(self, **kwargs):
         if 'due_date' in kwargs:
             self.due_date = datetime.strptime(kwargs['due_date'], DATE_FORMAT)
         if 'due' in kwargs:
             self.due = datetime.strptime(kwargs['due'], DATE_TIME_FORMAT)
         if 'duration' in kwargs:
             self.duration = kwargs['duration']
-        if 'close_date' in kwargs:
-            self.text = kwargs['close_date']
+        if 'scheduled_date' in kwargs:
+            self.scheduled_date = datetime.strptime(kwargs['scheduled_date'], DATE_FORMAT)
         if 'form_id' in kwargs:
             self.form_id = kwargs['form_id']
         if 'attachments' in kwargs:
             self.attachments = []
             for attachment in kwargs['attachments']:
                 self.attachments.append(File(**attachment))
-        if 'comments' in kwargs:
-            self.comments = []
-            for comment in kwargs['comments']:
-                self.comments.append(TaskComment(**comment))
-        if 'responsible' in kwargs:
-            self.responsible = Person(**kwargs['responsible'])
         if 'fields' in kwargs:
             self.fields = []
             for field in kwargs['fields']:
@@ -136,6 +138,21 @@ class Task(object):
             self.participants = []
             for participant in kwargs['participants']:
                 self.participants.append(Person(**participant))
+        if 'list_ids' in kwargs:
+            self.list_ids = []
+            for lst in kwargs['list_ids']:
+                self.list_ids.append(lst)
+        super(Task, self).__init__(**kwargs)
+
+class TaskWithComments(Task):
+    comments = None
+
+    def __init__(self, **kwargs):
+        if 'comments' in kwargs:
+            self.comments = []
+            for comment in kwargs['comments']:
+                self.comments.append(TaskComment(**comment))
+        super(TaskWithComments, self).__init__(**kwargs)
 
 class Person(object):
     id = None
@@ -204,6 +221,10 @@ class TaskComment(object):
     duration = None
     attachments = None
     action = None
+    scheduled_date = None
+    cancel_schedule = None
+    added_list_ids = None
+    removed_list_ids = None
 
     def __init__(self, **kwargs):
         if 'id' in kwargs:
@@ -256,6 +277,18 @@ class TaskComment(object):
                 self.attachments.append(File(**attachment))
         if 'action' in kwargs:
             self.action = kwargs['action']
+        if 'scheduled_date' in kwargs:
+            self.scheduled_date = datetime.strptime(kwargs['scheduled_date'], DATE_FORMAT)
+        if 'cancel_schedule' in kwargs:
+            self.cancel_schedule = kwargs['cancel_schedule']
+        if 'added_list_ids' in kwargs:
+            self.added_list_ids = []
+            for lst in kwargs['added_list_ids']:
+                self.added_list_ids.append(lst)
+        if 'removed_list_ids' in kwargs:
+            self.removed_list_ids = []
+            for lst in kwargs['removed_list_ids']:
+                self.removed_list_ids.append(lst)
 
 class Organization(object):
     id = None
@@ -430,6 +463,21 @@ class IsInFilter(FormRegisterFilter):
             formated_values.append(_get_value(value))
         super(IsInFilter, self).\
             __init__(field_id=field_id, operator='is_in', values=formated_values)
+
+class TaskList(object):
+    id = None
+    name = None
+    children = None
+
+    def __init__(self, **kwargs):
+        if 'id' in kwargs:
+            self.id = kwargs['id']
+        if 'name' in kwargs:
+            self.name = kwargs['name']
+        if 'children' in kwargs:
+            self.children = []
+            for child in kwargs['children']:
+                self.children.append(TaskList(**child))
 
 def _get_value(value):
     if isinstance(value, datetime):

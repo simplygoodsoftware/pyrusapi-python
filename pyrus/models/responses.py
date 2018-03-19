@@ -60,7 +60,7 @@ class TaskResponse(BaseResponse):
     task = None
     def __init__(self, **kwargs):
         if 'task' in kwargs:
-            self.task = entities.Task(**kwargs['task'])
+            self.task = entities.TaskWithComments(**kwargs['task'])
         super(TaskResponse, self).__init__(**kwargs)
 
 class ContactsResponse(BaseResponse):
@@ -104,3 +104,24 @@ class UploadResponse(BaseResponse):
         if 'md5_hash' in kwargs:
             self.md5_hash = kwargs['md5_hash']
         super(UploadResponse, self).__init__(**kwargs)
+
+class ListsResponse(BaseResponse):
+    lists = None
+    def __init__(self, **kwargs):
+        if 'lists' in kwargs:
+            self.lists = []
+            for lst in kwargs['lists']:
+                self.lists.append(entities.TaskList(**lst))
+        super(ListsResponse, self).__init__(**kwargs)
+
+class TaskListResponse(BaseResponse):
+    tasks = None
+    has_more = None
+    def __init__(self, **kwargs):
+        if 'has_more' in kwargs:
+            self.has_more = kwargs['has_more']
+        if 'tasks' in kwargs:
+            self.tasks = []
+            for task in kwargs['tasks']:
+                self.tasks.append(entities.TaskHeader(**task))
+        super(TaskListResponse, self).__init__(**kwargs)
