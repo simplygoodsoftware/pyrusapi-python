@@ -114,7 +114,7 @@ lists = response.lists
 
 ```python
 list_id = 1522
-response = pyrus_client.get_task_list(list_id, max_tasks_count=25, include_archived=True)
+response = pyrus_client.get_task_list(list_id, item_count=25, include_archived=True)
 tasks = response.tasks
 ```
 
