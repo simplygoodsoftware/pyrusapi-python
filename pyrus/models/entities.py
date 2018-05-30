@@ -108,6 +108,8 @@ class Task(TaskHeader):
     participants = None
     scheduled_date = None
     list_ids = None
+    parent_task_id = None
+    linked_task_ids = None
 
     def __init__(self, **kwargs):
         if 'due_date' in kwargs:
@@ -124,6 +126,12 @@ class Task(TaskHeader):
             self.attachments = []
             for attachment in kwargs['attachments']:
                 self.attachments.append(File(**attachment))
+        if 'parent_task_id' in kwargs:
+            self.parent_task_id = kwargs['parent_task_id']
+        if 'linked_task_ids' in kwargs:
+            self.linked_task_ids = []
+            for linked_task_id in kwargs['linked_task_ids']:
+                self.linked_task_ids.append(linked_task_id)
         if 'fields' in kwargs:
             self.fields = []
             for field in kwargs['fields']:
