@@ -15,7 +15,7 @@ class BaseResponse(object):
             self.error_code = kwargs['error_code']
         if 'error' in kwargs:
             self.error = kwargs['error']
-
+        
 class AuthResponse(BaseResponse):
     access_token = None
 
@@ -125,3 +125,11 @@ class TaskListResponse(BaseResponse):
             for task in kwargs['tasks']:
                 self.tasks.append(entities.TaskHeader(**task))
         super(TaskListResponse, self).__init__(**kwargs)
+
+class DownloadResponse(BaseResponse):
+    filename = None
+    raw_file = None
+    def __init__(self, filename, raw_file):
+        self.filename = filename
+        self.raw_file = raw_file
+        super(DownloadResponse, self).__init__(**{})

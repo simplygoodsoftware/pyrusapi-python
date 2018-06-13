@@ -5,7 +5,7 @@ DATE_TIME_FORMAT = '%Y-%m-%dT%H:%M:%SZ'
 DATE_FORMAT = '%Y-%m-%d'
 
 class FormRegisterRequest(object):
-    def __init__(self, steps=None, include_archived=False, filters=None):
+    def __init__(self, steps=None, include_archived=False, filters=None, modified_before=None, modified_after=None):
         if steps:
             if not isinstance(steps, list):
                 raise TypeError('steps must be a list of int')
@@ -17,6 +17,16 @@ class FormRegisterRequest(object):
         if not isinstance(include_archived, bool):
             raise TypeError('include_archived must be bool')
         self.include_archived = include_archived
+
+        if modified_before:
+            if not isinstance(modified_before, datetime):
+                raise TypeError('modified_before must be a date')
+            self.modified_before = datetime.strftime(modified_before, DATE_TIME_FORMAT)
+
+        if modified_after:
+            if not isinstance(modified_after, datetime):
+                raise TypeError('modified_after must be a date')
+            self.modified_after = datetime.strftime(modified_after, DATE_TIME_FORMAT)
 
         if filters:
             if not isinstance(filters, list):
@@ -36,11 +46,12 @@ class FormRegisterRequest(object):
                     setattr(self, 'fld{}'.format(fltr.field_id), ",".join(fltr.values))
 
 class TaskCommentRequest(object):
-    def __init__(self, text=None, approval_choice=None, action=None,
+    def __init__(self, text=None, approval_choice=None, approval_steps=None, action=None,
                  attachments=None, field_updates=None, approvals_added=None,
                  participants_added=None, reassign_to=None, due=None,
                  due_date=None, duration=None, scheduled_date=None,
-                 cancel_schedule=None, added_list_ids=None, removed_list_ids=None):
+                 cancel_schedule=None, added_list_ids=None, removed_list_ids=None,
+                 approvals_removed=None, approvals_rerequested=None):
         self.text = text
         if approval_choice:
             if approval_choice not in ['approved', 'rejected', 'revoked', 'acknowledged']:
@@ -79,6 +90,38 @@ class TaskCommentRequest(object):
                         self.approvals_added[idx].append(entities.Person(id=person))
                     else:
                         self.approvals_added[idx].append(entities.Person(email=person))
+        if approvals_removed:
+            if not isinstance(approvals_removed, list):
+                raise TypeError('approvals_removed must be a list')
+            self.approvals_removed = []
+            for idx, approval_step in enumerate(approvals_removed):
+                if not isinstance(approval_step, list):
+                    raise TypeError('approval_step must be a list of persons, person ids'
+                                    ', or person emails')
+                self.approvals_removed.append([])
+                for person in approval_step:
+                    if isinstance(person, entities.Person):
+                        self.approvals_removed[idx].append(person)
+                    elif isinstance(person, int):
+                        self.approvals_removed[idx].append(entities.Person(id=person))
+                    else:
+                        self.approvals_removed[idx].append(entities.Person(email=person))
+        if approvals_rerequested:
+            if not isinstance(approvals_rerequested, list):
+                raise TypeError('approvals_rerequested must be a list')
+            self.approvals_rerequested = []
+            for idx, approval_step in enumerate(approvals_rerequested):
+                if not isinstance(approval_step, list):
+                    raise TypeError('approval_step must be a list of persons, person ids'
+                                    ', or person emails')
+                self.approvals_rerequested.append([])
+                for person in approval_step:
+                    if isinstance(person, entities.Person):
+                        self.approvals_rerequested[idx].append(person)
+                    elif isinstance(person, int):
+                        self.approvals_rerequested[idx].append(entities.Person(id=person))
+                    else:
+                        self.approvals_rerequested[idx].append(entities.Person(email=person))
         if participants_added:
             if not isinstance(participants_added, list):
                 raise TypeError('participants_added must be a list')
@@ -136,6 +179,13 @@ class TaskCommentRequest(object):
                 if not isinstance(item, int):
                     raise TypeError('removed_list_ids must be a list of int')
             self.removed_list_ids = removed_list_ids
+        if approval_steps:
+            if not isinstance(approval_steps, list):
+                raise TypeError('approval_steps must be a list of int')
+            for item in approval_steps:
+                if not isinstance(item, int):
+                    raise TypeError('approval_steps must be a list of int')
+            self.approval_steps = approval_steps
 
 class CreateTaskRequest(object):
     def __init__(self, text=None, subject=None, parent_task_id=None,

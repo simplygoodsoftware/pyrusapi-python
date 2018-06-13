@@ -17,10 +17,13 @@ Full documentation for PyrusAPI is at https://pyrus.com/en/help/api
 
 from enum import Enum
 import jsonpickle
+import os
+import re
 import requests
 from .models import responses as resp, requests as req
 
 class PyrusAPI(object):
+    MAX_FILE_SIZE_MB = 250 * 1024 * 1024
 
     class HTTPMethod(Enum):
         GET = "GET"
@@ -32,7 +35,7 @@ class PyrusAPI(object):
     _protocol = 'https'
     _api_name = 'Pyrus'
     format = 'json'
-    _user_agent = 'Pyrus API python client v 1.0.0'
+    _user_agent = 'Pyrus API python client v 1.9.0'
     proxy = None
 
     def __init__(self, login=None, security_key=None, access_token=None, proxy=None):
@@ -148,6 +151,17 @@ class PyrusAPI(object):
         response = self._perform_get_request(url)
         return resp.TaskListResponse(**response)
 
+    def download_file(self, file_id):
+        if not isinstance(file_id, int):
+            raise TypeError('file_id must be an instance of int')
+        url_suffix = '/files/download/{}'.format(file_id)
+        url = self._create_url(url_suffix)
+        response = self._perform_get_file_request(url)
+        if hasattr(response, 'status_code'):
+            filename = re.findall('filename=(.+)', response.headers['Content-Disposition'])
+            return resp.DownloadResponse(filename, response.raw)
+        return resp.BaseResponse(**response)
+        
     def _auth(self):
         url = self._create_url('/auth')
         headers = {
@@ -175,10 +189,13 @@ class PyrusAPI(object):
     def _perform_get_request(self, url):
         return self._perform_request_with_retry(url, self.HTTPMethod.GET)
 
+    def _perform_get_file_request(self, url):
+        return self._perform_request_with_retry(url, self.HTTPMethod.GET, get_file=True)
+
     def _perform_post_request(self, url, body=None):
         return self._perform_request_with_retry(url, self.HTTPMethod.POST, body)
 
-    def _perform_request_with_retry(self, url, method, body=None, file_path=None):
+    def _perform_request_with_retry(self, url, method, body=None, file_path=None, get_file=False):
         if not isinstance(method, self.HTTPMethod):
             raise TypeError('method must be an instanse of HTTPMethod Enum.')
 
@@ -189,7 +206,7 @@ class PyrusAPI(object):
                 return response
 
         #try to call api method
-        response = self._perform_request(url, method, body, file_path)
+        response = self._perform_request(url, method, body, file_path, get_file)
         #if 401 try auth and call method again
         if response.status_code == 401:
             response = self._auth()
@@ -197,22 +214,33 @@ class PyrusAPI(object):
             if not self.access_token:
                 return response
 
-            response = self._perform_request(url, method, body, file_path)
-        return response.json()
+            response = self._perform_request(url, method, body, file_path, get_file)
 
-    def _perform_request(self, url, method, body, file_path):
+        if get_file and response.status_code == 200:
+            return response
+        else:
+            return response.json()
+
+    def _perform_request(self, url, method, body, file_path, get_file):
         if method == self.HTTPMethod.POST:
             if file_path:
                 response = self._post_file_request(url, file_path)
             else:
                 response = self._post_request(url, body)
         else:
-            response = self._get_request(url)
+            if get_file:
+                response = self._get_file_request(url)
+            else:
+                response = self._get_request(url)
         return response
 
     def _get_request(self, url):
         headers = self._create_default_headers()
         return requests.get(url, headers=headers, proxies=self.proxy)
+
+    def _get_file_request(self, url):
+        headers = self._create_default_headers()
+        return requests.get(url, headers=headers, proxies=self.proxy, stream=True)
 
     def _post_request(self, url, body):
         headers = self._create_default_headers()
@@ -221,9 +249,13 @@ class PyrusAPI(object):
         return requests.post(url, headers=headers, data=data, proxies=self.proxy)
 
     def _post_file_request(self, url, file_path):
+        
         headers = self._create_default_headers()
         del headers['Content-Type']
         if file_path:
+            size = os.path.getsize(file_path)
+            if size > self.MAX_FILE_SIZE_MB:
+                raise Exception("File size should not exceed {} MB".format(self.MAX_FILE_SIZE_MB))
             files = {'file': open(file_path, 'rb')}
         return requests.post(url, headers=headers, files=files, proxies=self.proxy)
 

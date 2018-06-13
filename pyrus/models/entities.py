@@ -110,6 +110,7 @@ class Task(TaskHeader):
     list_ids = None
     parent_task_id = None
     linked_task_ids = None
+    last_note_id = None
 
     def __init__(self, **kwargs):
         if 'due_date' in kwargs:
@@ -150,6 +151,8 @@ class Task(TaskHeader):
             self.list_ids = []
             for lst in kwargs['list_ids']:
                 self.list_ids.append(lst)
+        if 'last_note_id' in kwargs:
+            self.last_note_id = kwargs['last_note_id']
         super(Task, self).__init__(**kwargs)
 
 class TaskWithComments(Task):
@@ -218,9 +221,11 @@ class TaskComment(object):
     reassigned_to = None
     field_updates = None
     approval_choice = None
+    approval_step = None
     reset_to_step = None
     approvals_added = None
     approvals_removed = None
+    approvals_rerequested = None
     participants_added = None
     participants_added = None
     participants_removed = None
@@ -265,6 +270,12 @@ class TaskComment(object):
                 self.approvals_removed.append([])
                 for curr_step in approval:
                     self.approvals_removed[idx].append(Approval(**curr_step))
+        if 'approvals_rerequested' in kwargs:
+            self.approvals_rerequested = []
+            for idx, approval in enumerate(kwargs['approvals_rerequested']):
+                self.approvals_rerequested.append([])
+                for curr_step in approval:
+                    self.approvals_rerequested[idx].append(Approval(**curr_step))
         if 'participants_added' in kwargs:
             self.participants_added = []
             for participant in kwargs['participants_added']:
@@ -297,6 +308,8 @@ class TaskComment(object):
             self.removed_list_ids = []
             for lst in kwargs['removed_list_ids']:
                 self.removed_list_ids.append(lst)
+        if 'approval_step' in kwargs:
+            self.approval_step = kwargs['approval_step']
 
 class Organization(object):
     id = None
