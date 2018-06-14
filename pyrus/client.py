@@ -37,6 +37,7 @@ class PyrusAPI(object):
     format = 'json'
     _user_agent = 'Pyrus API python client v 1.9.0'
     proxy = None
+    _download_file_base_url = 'https://files.pyrus.com/services/attachment?Id='
 
     def __init__(self, login=None, security_key=None, access_token=None, proxy=None):
         self.security_key = security_key
@@ -154,13 +155,18 @@ class PyrusAPI(object):
     def download_file(self, file_id):
         if not isinstance(file_id, int):
             raise TypeError('file_id must be an instance of int')
-        url_suffix = '/files/download/{}'.format(file_id)
-        url = self._create_url(url_suffix)
+        url = self._download_file_base_url + str(file_id)
         response = self._perform_get_file_request(url)
-        if hasattr(response, 'status_code'):
+        if response.status_code == 200:
             filename = re.findall('filename=(.+)', response.headers['Content-Disposition'])
-            return resp.DownloadResponse(filename, response.raw)
-        return resp.BaseResponse(**response)
+            return resp.DownloadResponse(filename, response.content)
+        else: 
+            if response.status_code == 401:
+                return resp.BaseResponse(**{'error_code' : 'authorization_error'})
+            if response.status_code == 403 or response.status_code == 404:
+                return resp.BaseResponse(**{'error_code' : 'access_denied_file'})
+            else:
+                return resp.BaseResponse(**{'error_code' : 'ServerError'})
         
     def _auth(self):
         url = self._create_url('/auth')
@@ -216,7 +222,7 @@ class PyrusAPI(object):
 
             response = self._perform_request(url, method, body, file_path, get_file)
 
-        if get_file and response.status_code == 200:
+        if get_file:
             return response
         else:
             return response.json()
