@@ -187,6 +187,7 @@ class File(object):
     size = None
     md5 = None
     url = None
+    version = None
 
     def __init__(self, **kwargs):
         if 'id' in kwargs:
@@ -199,6 +200,8 @@ class File(object):
             self.md5 = kwargs['md5']
         if 'url' in kwargs:
             self.url = kwargs['url']
+        if 'version' in kwargs:
+            self.url = kwargs['version']
 
 class Approval(object):
     person = None
