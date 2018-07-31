@@ -241,6 +241,8 @@ class TaskComment(object):
     cancel_schedule = None
     added_list_ids = None
     removed_list_ids = None
+    changed_step = None
+    comment_as_roles = None
 
     def __init__(self, **kwargs):
         if 'id' in kwargs:
@@ -313,6 +315,12 @@ class TaskComment(object):
                 self.removed_list_ids.append(lst)
         if 'approval_step' in kwargs:
             self.approval_step = kwargs['approval_step']
+        if 'changed_step' in kwargs:
+            self.changed_step = kwargs['changed_step']
+        if 'comment_as_roles' in kwargs:
+            self.comment_as_roles = []
+            for role in kwargs['comment_as_roles']:
+                self.comment_as_roles.append(Role(**role))
 
 class Organization(object):
     id = None
