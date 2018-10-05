@@ -76,6 +76,7 @@ class ContactsResponse(BaseResponse):
 class CatalogResponse(BaseResponse):
     items = None
     catalog_id = None
+    catalog_headers = None
 
     def __init__(self, **kwargs):
         if 'catalog_id' in kwargs:
@@ -84,6 +85,10 @@ class CatalogResponse(BaseResponse):
             self.items = []
             for item in kwargs['items']:
                 self.items.append(entities.CatalogItem(**item))
+        if 'catalog_headers' in kwargs:
+            self.catalog_headers = []
+            for item in kwargs['catalog_headers']:
+                self.catalog_headers.append(entities.CatalogHeader(**item))
         super(CatalogResponse, self).__init__(**kwargs)
 
 class FormRegisterResponse(BaseResponse):
@@ -133,3 +138,30 @@ class DownloadResponse(BaseResponse):
         self.filename = filename
         self.raw_file = raw_file
         super(DownloadResponse, self).__init__(**{})
+
+class SyncCatalogResponse(BaseResponse):
+    apply = None
+    added = None
+    deleted = None
+    updated = None
+    catalog_headers = None
+    def __init__(self, **kwargs):
+        if 'apply' in kwargs:
+            self.apply = kwargs['apply']
+        if 'added' in kwargs:
+            self.added = []
+            for added_item in kwargs['added']:
+                self.added.append(entities.CatalogItem(**added_item))
+        if 'updated' in kwargs:
+            self.updated = []
+            for updated_item in kwargs['updated']:
+                self.updated.append(entities.CatalogItem(**updated_item))
+        if 'deleted' in kwargs:
+            self.deleted = []
+            for deleted_item in kwargs['deleted']:
+                self.deleted.append(entities.CatalogItem(**deleted_item))
+        if 'catalog_headers' in kwargs:
+            self.catalog_headers = []
+            for header in kwargs['catalog_headers']:
+                self.catalog_headers.append(entities.CatalogHeader(**header))
+        super(SyncCatalogResponse, self).__init__(**kwargs)

@@ -80,7 +80,7 @@ task = pyrus_client.create_task(request).task
 * Upload a file:
 
 ```python
-response = myclient.upload_file('C:\\path\\to\\file.txt').guid
+response = pyrus_client.upload_file('C:\\path\\to\\file.txt').guid
 ```
 
 ## Catalogs
@@ -91,6 +91,41 @@ response = myclient.upload_file('C:\\path\\to\\file.txt').guid
 catalog_id = 1525
 catalog_response = pyrus_client.get_catalog(catalog_id)
 items = catalog_response.items
+```
+
+* Create catalog
+
+```python
+request = pyrus.models.requests.CreateCatalogRequest(
+        name = "NewCatalog",
+        catalog_headers = ["Column1", "Column2", "Column3"],
+        items = [
+            ["A1", "A2", "A3"],
+            ["B1", "B2", "B3"],
+            ["C1", "C2", "C3"]
+        ]
+    )
+catalog_id = pyrus_client.create_catalog(request).catalog_id
+```
+
+* Sync catalog (All unspecified catalog items and text columns will be deleted)
+
+```python
+catalog_id = 7825
+request = pyrus.models.requests.SyncCatalogRequest(
+        apply = True,
+        catalog_headers = ["Column1", "Column4", "Column3"],
+        items = [
+            ["A1", "A2", "A3"],
+            ["B1", "B4", "B5"],
+            ["D1", "D2", "D3"]
+        ]
+    )
+response = pyrus_client.sync_catalog(catalog_id, request)
+delted = response.deleted
+updated = response.updated
+added = response.added
+new_headers = response.catalog_headers
 ```
 
 ## Contacts

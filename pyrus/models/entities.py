@@ -372,6 +372,16 @@ class CatalogItem(object):
             for value in kwargs['values']:
                 self.values.append(value)
 
+    @classmethod
+    def fromliststr(cls, values):
+        if not isinstance(values, list):
+            raise TypeError('lst must be a list of str')
+        for item in values:
+            if not isinstance(item, str):
+                raise TypeError('lst must be a list of str')
+        values = {'values': values}
+        return cls(**values)
+
 class Table(list):
     def __init__(self, *args):
         list.__init__(self)
@@ -547,3 +557,13 @@ def _create_field_value(field_type, value):
         return Projects(**value)
     if field_type == 'form_link':
         return FormLink(**value)
+
+class CatalogHeader(object):
+    name = None
+    type = None
+
+    def __init__(self, **kwargs):
+        if 'name' in kwargs:
+            self.name = kwargs['name']
+        if 'type' in kwargs:
+            self.type = kwargs['type']

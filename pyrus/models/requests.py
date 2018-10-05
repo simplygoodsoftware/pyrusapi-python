@@ -279,3 +279,48 @@ class CreateTaskRequest(object):
                 if not isinstance(item, int):
                     raise TypeError('list_ids must be a list of int')
             self.list_ids = list_ids
+
+class SyncCatalogRequest(object):
+    def __init__(self, apply=None, catalog_headers=None, items=None):
+        if apply:
+            if not isinstance(apply, bool):
+                raise TypeError('apply must be a bool')
+            self.apply = apply
+        if catalog_headers:
+            _validata_catalog_headers(catalog_headers)
+            self.catalog_headers = catalog_headers
+        if items:
+            self.items = _get_catalog_items(items)
+
+class CreateCatalogRequest(object):
+    def __init__(self, name=None, catalog_headers=None, items=None):
+        if name:
+            if not isinstance(name, str):
+                raise TypeError('name must be a str')
+            self.name = name
+        if catalog_headers:
+            _validata_catalog_headers(catalog_headers)
+            self.catalog_headers = catalog_headers
+        if items:
+            self.items = _get_catalog_items(items)
+
+def _validata_catalog_headers(catalog_headers):
+    if not isinstance(catalog_headers, list):
+        raise TypeError('catalog_headers must be a list of str')
+    for item in catalog_headers:
+        if not isinstance(item, str):
+            raise TypeError('list_ids must be a list of str')
+
+def _get_catalog_items(catalog_items):
+    if not isinstance(catalog_items, list):
+        raise TypeError('catalog_items must be a list')
+    
+    items = []
+    for item in catalog_items:
+        try:
+            items.append(entities.CatalogItem.fromliststr(item))
+        except TypeError:
+            if not isinstance(item, entities.CatalogItem):
+                raise TypeError('catalog_items must be a list of CatalogItems')
+            items.append(item)
+    return items

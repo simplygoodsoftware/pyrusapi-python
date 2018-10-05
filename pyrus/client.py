@@ -28,6 +28,7 @@ class PyrusAPI(object):
     class HTTPMethod(Enum):
         GET = "GET"
         POST = "POST"
+        PUT = "PUT"
 
     _host = 'api.pyrus.com'
     _base_path = '/v4'
@@ -77,9 +78,7 @@ class PyrusAPI(object):
         return resp.ContactsResponse(**response)
 
     def get_catalog(self, catalog_id):
-        try:
-            int(catalog_id)
-        except ValueError:
+        if not isinstance(catalog_id, int):
             raise Exception("catalog_id should be valid int")
 
         url = self._create_url('/catalogs/{}'.format(catalog_id))
@@ -87,9 +86,7 @@ class PyrusAPI(object):
         return resp.CatalogResponse(**response)
 
     def get_form(self, form_id):
-        try:
-            int(form_id)
-        except ValueError:
+        if not isinstance(form_id, int):
             raise Exception("form_id should be valid int")
 
         url = self._create_url('/forms/{}'.format(form_id))
@@ -97,19 +94,14 @@ class PyrusAPI(object):
         return resp.FormResponse(**response)
 
     def get_task(self, task_id):
-        try:
-            int(task_id)
-        except ValueError:
+        if not isinstance(task_id, int):
             raise Exception("task_id should be valid int")
-
         url = self._create_url('/tasks/{}'.format(task_id))
         response = self._perform_get_request(url)
         return resp.TaskResponse(**response)
 
     def comment_task(self, task_id, task_comment_request):
-        try:
-            int(task_id)
-        except ValueError:
+        if not isinstance(task_id, int):
             raise Exception("task_id should be valid int")
         url = self._create_url('/tasks/{}/comments'.format(task_id))
         if not isinstance(task_comment_request, req.TaskCommentRequest):
@@ -167,6 +159,24 @@ class PyrusAPI(object):
                 return resp.BaseResponse(**{'error_code' : 'access_denied_file'})
             else:
                 return resp.BaseResponse(**{'error_code' : 'ServerError'})
+
+    def create_catalog(self, create_catalog_request):
+        url = self._create_url('/catalogs')
+        if not isinstance(create_catalog_request, req.CreateCatalogRequest):
+            raise TypeError('create_catalog_request must be an instance '
+                            'of models.requests.CreateCatalogRequest')
+        response = self._perform_put_request(url, create_catalog_request)
+        return resp.CatalogResponse(**response)
+
+    def sync_catalog(self, catalog_id, sync_catalog_request):
+        if not isinstance(catalog_id, int):
+            raise TypeError("catalog_id must be an instance of int")
+        url = self._create_url('/catalogs/{}'.format(catalog_id))
+        if not isinstance(sync_catalog_request, req.SyncCatalogRequest):
+            raise TypeError('sync_catalog_request must be an instance '
+                            'of models.requests.SyncCatalogRequest')
+        response = self._perform_post_request(url, sync_catalog_request)
+        return resp.SyncCatalogResponse(**response)
         
     def _auth(self):
         url = self._create_url('/auth')
@@ -201,6 +211,9 @@ class PyrusAPI(object):
     def _perform_post_request(self, url, body=None):
         return self._perform_request_with_retry(url, self.HTTPMethod.POST, body)
 
+    def _perform_put_request(self, url, body=None):
+        return self._perform_request_with_retry(url, self.HTTPMethod.PUT, body)
+
     def _perform_request_with_retry(self, url, method, body=None, file_path=None, get_file=False):
         if not isinstance(method, self.HTTPMethod):
             raise TypeError('method must be an instanse of HTTPMethod Enum.')
@@ -224,21 +237,18 @@ class PyrusAPI(object):
 
         if get_file:
             return response
-        else:
-            return response.json()
+        return response.json()
 
     def _perform_request(self, url, method, body, file_path, get_file):
         if method == self.HTTPMethod.POST:
             if file_path:
-                response = self._post_file_request(url, file_path)
-            else:
-                response = self._post_request(url, body)
-        else:
-            if get_file:
-                response = self._get_file_request(url)
-            else:
-                response = self._get_request(url)
-        return response
+                return self._post_file_request(url, file_path)
+            return self._post_request(url, body)
+        if method == self.HTTPMethod.PUT:
+            return self._put_request(url, body)
+        if get_file:
+            return self._get_file_request(url)
+        return self._get_request(url)
 
     def _get_request(self, url):
         headers = self._create_default_headers()
@@ -254,8 +264,13 @@ class PyrusAPI(object):
             data = jsonpickle.dumps(body, unpicklable=False).encode('utf-8')
         return requests.post(url, headers=headers, data=data, proxies=self.proxy)
 
+    def _put_request(self, url, body):
+        headers = self._create_default_headers()
+        if body:
+            data = jsonpickle.dumps(body, unpicklable=False).encode('utf-8')
+        return requests.put(url, headers=headers, data=data, proxies=self.proxy)
+
     def _post_file_request(self, url, file_path):
-        
         headers = self._create_default_headers()
         del headers['Content-Type']
         if file_path:
