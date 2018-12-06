@@ -51,8 +51,9 @@ class TaskCommentRequest(object):
                  participants_added=None, reassign_to=None, due=None,
                  due_date=None, duration=None, scheduled_date=None,
                  cancel_schedule=None, added_list_ids=None, removed_list_ids=None,
-                 approvals_removed=None, approvals_rerequested=None):
+                 approvals_removed=None, approvals_rerequested=None, subject = None):
         self.text = text
+        self.subject = subject
         if approval_choice:
             if approval_choice not in ['approved', 'rejected', 'revoked', 'acknowledged']:
                 raise TypeError('approval_choice can only be \'approved\', \'rejected\', \'acknowledged\', or \'revoked\'')
@@ -191,7 +192,7 @@ class CreateTaskRequest(object):
     def __init__(self, text=None, subject=None, parent_task_id=None,
                  due_date=None, form_id=None, attachments=None, responsible=None,
                  fields=None, approvals=None, participants=None, list_ids=None,
-                 due=None, duration=None, scheduled_date=None):
+                 due=None, duration=None, scheduled_date=None, fill_defaults = None):
         if text:
             self.text = text
         if subject:
@@ -279,6 +280,10 @@ class CreateTaskRequest(object):
                 if not isinstance(item, int):
                     raise TypeError('list_ids must be a list of int')
             self.list_ids = list_ids
+        if fill_defaults:
+            if not isinstance(fill_defaults, bool):
+                raise TypeError("fill_defaults must be a boolean")
+            self.fill_defaults = fill_defaults
 
 class SyncCatalogRequest(object):
     def __init__(self, apply=None, catalog_headers=None, items=None):

@@ -111,8 +111,11 @@ class Task(TaskHeader):
     parent_task_id = None
     linked_task_ids = None
     last_note_id = None
+    subject = None
 
     def __init__(self, **kwargs):
+        if 'subject' in kwargs:
+            self.subject = kwargs['subject']
         if 'due_date' in kwargs:
             self.due_date = datetime.strptime(kwargs['due_date'], DATE_FORMAT)
         if 'due' in kwargs:
@@ -243,12 +246,15 @@ class TaskComment(object):
     removed_list_ids = None
     changed_step = None
     comment_as_roles = None
+    subject = None
 
     def __init__(self, **kwargs):
         if 'id' in kwargs:
             self.id = kwargs['id']
         if 'text' in kwargs:
             self.text = kwargs['text']
+        if 'subject' in kwargs:
+            self.subject = kwargs['subject']
         if 'create_date' in kwargs:
             self.create_date = datetime.strptime(kwargs['create_date'], DATE_TIME_FORMAT)
         if 'author' in kwargs:
@@ -391,6 +397,8 @@ class Table(list):
 class TableRow(object):
     row_id = None
     cells = None
+    delete = None
+
     def __init__(self, **kwargs):
         if 'row_id' in kwargs:
             self.row_id = kwargs['row_id']
@@ -401,6 +409,10 @@ class TableRow(object):
                     self.cells.append(cell)
                 else:
                     self.cells.append(FormField(**cell))
+        if 'delete' in kwargs:
+            self.delete = kwargs['delete']
+            if not isinstance(self.delete, bool):
+                raise TypeError('delete must be a boolean')
 
 class Title(object):
     checkmark = None
@@ -414,13 +426,18 @@ class Title(object):
             for field in kwargs['fields']:
                 self.fields.append(FormField(**field))
 
-class Checkmark(object):
+class MultipleChoice(object):
     choice_id = None
     fields = None
+    choice_ids = None
 
     def __init__(self, **kwargs):
         if 'choice_id' in kwargs:
             self.choice_id = kwargs['choice_id']
+        if 'choice_ids' in kwargs:
+            self.choice_ids = []
+            for choice in kwargs['choice_ids']:
+                self.choice_ids.append(choice)
         if 'fields' in kwargs:
             self.fields = []
             for field in kwargs['fields']:
@@ -438,12 +455,17 @@ class Projects(object):
 class FormLink(object):
     task_id = None
     subject = None
+    task_ids = None
 
     def __init__(self, **kwargs):
         if 'task_id' in kwargs:
             self.task_id = kwargs['task_id']
         if 'subject' in kwargs:
             self.subject = kwargs['subject']
+        if 'task_ids' in kwargs:
+            self.task_ids = []
+            for task in kwargs['task_ids']:
+                self.task_ids.append(task)
 
 class Project(object):
     id = None
@@ -551,8 +573,8 @@ def _create_field_value(field_type, value):
         return Table(*value)
     if field_type == 'title':
         return Title(**value)
-    if field_type == 'checkmark':
-        return Checkmark(**value)
+    if field_type == 'multiple_choice':
+        return MultipleChoice(**value)
     if field_type == 'project':
         return Projects(**value)
     if field_type == 'form_link':
