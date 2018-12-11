@@ -35,7 +35,7 @@ auth_response = pyrus_client.auth()
 * Get all form templates:
 
 ```python
-forms_response = pyrus_client.forms()
+forms_response = pyrus_client.get_forms()
 forms = forms_response.forms
 ```
 

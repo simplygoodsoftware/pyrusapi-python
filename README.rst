@@ -13,7 +13,7 @@ Installation
 
 To get the latest version:
 
-  $ pip install pyrusAPI
+  $ pip install pyrus-api
 
 -----------------
 Usage
@@ -33,7 +33,7 @@ Authenticate:
 
 Get all form templates:
 
-    >>> forms_response = pyrus_client.forms()
+    >>> forms_response = pyrus_client.get_forms()
     >>> forms = forms_response.forms
 
 Get list of tasks created using specified form:
