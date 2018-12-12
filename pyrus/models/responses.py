@@ -14,8 +14,10 @@ class BaseResponse(object):
 
     error_code = None
     error = None
+    original_response = None
 
     def __init__(self, **kwargs):
+        self.original_response = kwargs
         if 'error_code' in kwargs:
             self.error_code = kwargs['error_code']
         if 'error' in kwargs:
