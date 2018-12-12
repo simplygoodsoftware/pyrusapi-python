@@ -5,6 +5,17 @@ DATE_TIME_FORMAT = '%Y-%m-%dT%H:%M:%SZ'
 DATE_FORMAT = '%Y-%m-%d'
 
 class FormRegisterRequest(object):
+    """
+        FormRegisterRequest
+        
+        Args:
+            steps (:obj:`list` of :obj:`int`, optional): List of step numbers. Only tasks on the specified steps will be returned
+            include_archived (:obj:`bool`, optional): Flag indicating if we need to include archived tasks to the response. False by default
+            filters (:obj:`list` of :obj:`models.entities.FormRegisterFilter`, optional): List of form field filters
+            modified_before (:obj:`datetime`, optional): Include only tasks that were modified before specified date
+            modified_after (:obj:`datetime`, optional): Include only tasks that were modified after specified date
+    """
+    
     def __init__(self, steps=None, include_archived=False, filters=None, modified_before=None, modified_after=None):
         if steps:
             if not isinstance(steps, list):
@@ -46,12 +57,41 @@ class FormRegisterRequest(object):
                     setattr(self, 'fld{}'.format(fltr.field_id), ",".join(fltr.values))
 
 class TaskCommentRequest(object):
+    """
+        TaskCommentRequest
+        
+        Args:
+            text (:obj:`str`, optional): Comment text
+            action (:obj:`str`, optional): Activity action (finished/reopened)
+            attachments (:obj:`list` of :obj:`str`, optional): List of file guids to attach to the task
+            added_list_ids (:obj:`list` of :obj:`int`, optional): List of list identifiers to which you want to add the task
+            removed_list_ids (:obj:`list` of :obj:`int`, optional): List of list identifiers from which you want to remove the task
+        Args(Simple task comment):
+            participants_added (:obj:`list` of :obj:`models.entities.Person`, optional): List of participants to add to the task
+            participants_removed (:obj:`list` of :obj:`models.entities.Person`, optional): List of participants to remove from the task
+            reassign_to (:obj:`models.entities.Person`, optional): new responsible for the task
+            due (:obj:`datetime`, optional): task due date with time (either due_date or due can be used)
+            due_date (:obj:`datetime`, optional): task due date (either due_date or due can be used)
+            duration (:obj:`int`, optional): duration of the event in minutes (it can only be used with due)
+            scheduled_date (:obj:`datetime`, optional): task scheduled date
+            cancel_schedule (:obj:`bool`, optional): Flag indicating that schedule should be cancelled. The task will be moved to the inbox
+            subject (:obj:`str`, optional): New task subject
+        Args(Form task comment):
+            approval_choice (:obj:`str`, optional): Approval choice (approved/rejected/acknowledged)
+            approval_steps (:obj:`list` of :obj:`int`, optional): Indicates for which steps approval_choice must be applied. By default: current step
+            field_updates (:obj:`list` of :obj:`models.entities.FormField`, optional): List of field values to update
+            approvals_added (:obj:`list` of :obj:`list` of :obj:`models.entities.Person`, optional) List of approval steps to add to the task
+            approvals_removed (:obj:`list` of :obj:`list` of :obj:`models.entities.Person`, optional) List of approval steps to remove from the task
+            approvals_rerequested (:obj:`list` of :obj:`list` of :obj:`models.entities.Person`, optional) List of approval steps to rerequest for the task
+    """
+
     def __init__(self, text=None, approval_choice=None, approval_steps=None, action=None,
                  attachments=None, field_updates=None, approvals_added=None,
                  participants_added=None, reassign_to=None, due=None,
                  due_date=None, duration=None, scheduled_date=None,
                  cancel_schedule=None, added_list_ids=None, removed_list_ids=None,
-                 approvals_removed=None, approvals_rerequested=None, subject = None):
+                 approvals_removed=None, approvals_rerequested=None, subject = None,
+                 participants_removed = None):
         self.text = text
         self.subject = subject
         if approval_choice:
@@ -133,6 +173,16 @@ class TaskCommentRequest(object):
                     self.participants_added.append(entities.Person(id=person))
                 except ValueError:
                     self.participants_added.append(entities.Person(email=person))
+        if participants_removed:
+            if not isinstance(participants_removed, list):
+                raise TypeError('participants_removed must be a list')
+            self.participants_removed = []
+            for person in participants_removed:
+                try:
+                    int(person)
+                    self.participants_removed.append(entities.Person(id=person))
+                except ValueError:
+                    self.participants_removed.append(entities.Person(email=person))
         if field_updates:
             self.field_updates = []
             for field_update in field_updates:
@@ -157,6 +207,8 @@ class TaskCommentRequest(object):
         if duration:
             if not isinstance(due, int):
                 raise TypeError('duration must be an int')
+            if not due:
+                raise ValueError("duration can only be used with due")
             self.duration = duration
         if scheduled_date:
             if not isinstance(scheduled_date, datetime):
@@ -187,8 +239,33 @@ class TaskCommentRequest(object):
                 if not isinstance(item, int):
                     raise TypeError('approval_steps must be a list of int')
             self.approval_steps = approval_steps
+        if due and due_date:
+            raise ValueError("either due_date or due can be set")
 
 class CreateTaskRequest(object):
+    """
+        CreateTaskRequest
+        
+        Args:
+            parent_task_id (:obj:`int`, optional): Parent task id
+            attachments (:obj:`list` of :obj:`str`, optional): List of file guids to attach to the task
+            list_ids (:obj:`list` of :obj:`int`, optional): List of list identifiers to which you want to add the task
+        Args(Simple task):
+            text (:obj:`str`): Task text. Required for a simple task
+            subject (:obj:`str`, optional): Task subject
+            due (:obj:`datetime`, optional): task due date with time (either due_date or due can be used)
+            due_date (:obj:`datetime`, optional): task due date (either due_date or due can be used)
+            duration (:obj:`int`, optional): duration of the event in minutes (it can only be used with due)
+            responsible (:obj:`models.entities.Person`, optional): Responsible for the task
+            participants (:obj:`list` of :obj:`models.entities.Person`, optional): List of task participants
+            scheduled_date (:obj:`datetime`, optional): task scheduled date
+        Args(Form task):
+            form_id (:obj:`int`) Form template id. Required for a form task
+            fields (:obj:`list` of :obj:`models.entities.FormField`, optional): List of field values
+            approvals (:obj:`list` of :obj:`list` of :obj:`models.entities.Person`, optional) List of approval steps to add to the task
+            fill_defaults (:obj:`bool`, optional): Flag indicating that task should be created with default values from the form template
+    """
+
     def __init__(self, text=None, subject=None, parent_task_id=None,
                  due_date=None, form_id=None, attachments=None, responsible=None,
                  fields=None, approvals=None, participants=None, list_ids=None,
@@ -286,6 +363,15 @@ class CreateTaskRequest(object):
             self.fill_defaults = fill_defaults
 
 class SyncCatalogRequest(object):
+    """
+        SyncCatalogRequest
+        
+        Args:
+            catalog_headers (:obj:`list` of :obj:`str`): List of new catalog headers
+            items (:obj:`list` of :obj:`models.entities.CatalogItem`, optional): List of new catalog items
+            apply (:obj:`bool`, optional): Flag indicates if changes must be applied. By default false
+    """
+
     def __init__(self, apply=None, catalog_headers=None, items=None):
         if apply:
             if not isinstance(apply, bool):
@@ -298,6 +384,15 @@ class SyncCatalogRequest(object):
             self.items = _get_catalog_items(items)
 
 class CreateCatalogRequest(object):
+    """
+        CreateCatalogRequest
+        
+        Args:
+            name (:obj:`str`): Catalog name
+            catalog_headers (:obj:`list` of :obj:`str`): List of catalog headers
+            items (:obj:`list` of :obj:`models.entities.CatalogItem`, optional): List of catalog items
+    """
+
     def __init__(self, name=None, catalog_headers=None, items=None):
         if name:
             if not isinstance(name, str):

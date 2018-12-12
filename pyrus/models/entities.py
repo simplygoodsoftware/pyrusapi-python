@@ -8,6 +8,17 @@ DATE_TIME_FORMAT = '%Y-%m-%dT%H:%M:%SZ'
 DATE_FORMAT = '%Y-%m-%d'
 
 class FormField(object):
+    """
+        Form field
+        
+        Attributes:
+            id (:obj:`int`): Field id
+            type (:obj:`str`): Field type
+            name (:obj:`str`): Field name
+            info (:obj:`models.entitites.FormFieldInfo`): Additional field information
+            value (:obj:`object`, optional): Field value
+    """
+
     id = None
     type = None
     name = None
@@ -30,6 +41,18 @@ class FormField(object):
                 self.value = kwargs['value']
 
 class FormFieldInfo(object):
+    """
+        Additional form field information
+        
+        Attributes:
+            required_step (:obj:`int`): Indicates the step number where the field becomes required for filling
+            immutable_step (:obj:`int`): indicates the step number from which the user can't change the field value
+            options (:obj:`list` of :obj:`models.entitites.ChoiceOption`): Choice options for multiple_choice field
+            catalog_id (:obj:`int`): Catalog id for catalog field
+            columns (:obj:`list` of :obj:`models.entitites.FormField`): Columns description for table field
+            fields (:obj:`list` of :obj:`models.entitites.FormField`): Child fields description for title field
+    """
+
     required_step = None
     immutable_step = None
     options = None
@@ -58,6 +81,14 @@ class FormFieldInfo(object):
                 self.fields.append(FormField(**field))
 
 class ChoiceOption(object):
+    """
+        multiple_choice options description
+        
+        Attributes:
+            choice_id (:obj:`int`): Choice id
+            choice_value (:obj:`str`): Choice name
+            fields (:obj:`list` of :obj:`models.entitites.FormField`): Child fields for the specified choice_id
+    """
     choice_id = None
     choice_value = None
     fields = None
@@ -73,6 +104,20 @@ class ChoiceOption(object):
                 self.fields.append(FormField(**field))
 
 class TaskHeader(object):
+    """
+        Task header
+        
+        Attributes:
+            id (:obj:`int`): Task id
+            create_date (:obj:`datetime`): Task creation date
+            last_modified_date (:obj:`datetime`): Task last modified date
+            close_date (:obj:`datetime`): Task closing date
+            author (:obj:`models.entities.Person`): Task author
+        Attributes(Simple Task):
+            text (:obj:`str`): Task text
+            responsible (:obj:`models.entities.Person`): Task responsible
+    """
+
     id = None
     text = None
     create_date = None
@@ -98,6 +143,35 @@ class TaskHeader(object):
             self.responsible = Person(**kwargs['responsible'])
 
 class Task(TaskHeader):
+    """
+        Task header
+        
+        Attributes:
+            id (:obj:`int`): Task id
+            create_date (:obj:`datetime`): Task creation date
+            last_modified_date (:obj:`datetime`): Task last modified date
+            close_date (:obj:`datetime`): Task closing date
+            author (:obj:`models.entities.Person`): Task author
+            attachments (:obj:`list` of :obj:`models.entities.File`): List of task attachments
+            list_ids (:obj:`list` of :obj:`int`): List of list identifiers
+            parent_task_id (:obj:`int`): Parent task id
+            linked_task_ids (:obj:`list` of :obj:`int`): List of linked task identifiers
+            last_note_id (:obj:`int`): Id of the last comment
+            subject (:obj:`str`): Task subject
+        Attributes(Simple Task):
+            text (:obj:`str`): Task text
+            responsible (:obj:`models.entities.Person`): Task responsible
+            due_date (:obj:`datetime`): Task due date
+            due (:obj:`datetime`): Task due date with time
+            duration (:obj:`int`): Task duration in minutes
+            participants (:obj:`list` of :obj:`models.entities.Person`): List of task participants
+            scheduled_date (:obj:`datetime`): task scheduled date
+        Attributes(Form Task):
+            form_id (:obj:`int`): Form template id
+            fields (:obj:`list` of obj`models.entities.FormField`): List of field values
+            approvals (:obj:`list` of :obj:`list` of :obj:`models.entities.Person`) List of approval steps.
+    """
+
     due_date = None
     due = None
     duration = None
@@ -159,6 +233,36 @@ class Task(TaskHeader):
         super(Task, self).__init__(**kwargs)
 
 class TaskWithComments(Task):
+    """
+        Task with comments
+        
+        Attributes:
+            id (:obj:`int`): Task id
+            create_date (:obj:`datetime`): Task creation date
+            last_modified_date (:obj:`datetime`): Task last modified date
+            close_date (:obj:`datetime`): Task closing date
+            author (:obj:`models.entities.Person`): Task author
+            attachments (:obj:`list` of :obj:`models.entities.File`): List of task attachments
+            list_ids (:obj:`list` of :obj:`int`): List of list identifiers
+            parent_task_id (:obj:`int`): Parent task id
+            linked_task_ids (:obj:`list` of :obj:`int`): List of linked task identifiers
+            last_note_id (:obj:`int`): Id of the last comment
+            subject (:obj:`str`): Task subject
+            comments (:obj:`list` of :obj:`models.entities.TaskComment`): List of task comments
+        Attributes(Simple Task):
+            text (:obj:`str`): Task text
+            responsible (:obj:`models.entities.Person`): Task responsible
+            due_date (:obj:`datetime`): Task due date
+            due (:obj:`datetime`): Task due date with time
+            duration (:obj:`int`): Task duration in minutes
+            participants (:obj:`list` of :obj:`models.entities.Person`): List of task participants
+            scheduled_date (:obj:`datetime`): task scheduled date
+        Attributes(Form Task):
+            form_id (:obj:`int`): Form template id
+            fields (:obj:`list` of obj`models.entities.FormField`): List of field values
+            approvals (:obj:`list` of :obj:`list` of :obj:`models.entities.Person`) List of approval steps.
+    """
+
     comments = None
 
     def __init__(self, **kwargs):
@@ -169,6 +273,16 @@ class TaskWithComments(Task):
         super(TaskWithComments, self).__init__(**kwargs)
 
 class Person(object):
+    """
+        Person
+        
+        Attributes:
+            id (:obj:`int`): Person id
+            first_name (:obj:`str`): Person first name
+            last_name (:obj:`str`): Person last name
+            email (:obj:`str`): Person email
+    """
+
     id = None
     first_name = None
     last_name = None
@@ -185,6 +299,19 @@ class Person(object):
             self.email = kwargs['email']
 
 class File(object):
+    """
+        File
+        
+        Attributes:
+            id (:obj:`int`): File id
+            name (:obj:`str`): File name
+            size (:obj:`int`): File size in bytes
+            md5 (:obj:`str`): File md5 hash
+            md5 (:obj:`str`): File md5 hash
+            url (:obj:`str`): Url to download the file
+            size (:obj:`int`): File version
+    """
+
     id = None
     name = None
     size = None
@@ -207,6 +334,15 @@ class File(object):
             self.url = kwargs['version']
 
 class Approval(object):
+    """
+        Approval
+        
+        Attributes:
+            person (:obj:`entities.models.Person`): Approval person
+            approval_choice (:obj:`str`): Approval choice (approved/rejected/revoked/acknowledged)
+            step (:obj:`int`): Approval step number
+    """
+
     person = None
     approval_choice = None
     step = None
@@ -220,6 +356,40 @@ class Approval(object):
             self.step = kwargs['step']
 
 class TaskComment(object):
+    """
+        Task comment
+        
+        Attributes:
+            id (:obj:`int`): Comment id
+            text (:obj:`str`): Comment text
+            create_date (:obj:`datetime`): Comment creation date
+            author (:obj:`models.entities.Person`): Comment author
+            attachments (:obj:`list` of :obj:`models.entities.File`): List of comment attachments
+            action (:obj:`str`): Activity action (finished/reopened)
+            added_list_ids (:obj:`list` of :obj:`int`): List of list identifiers to which the task was added
+            removed_list_ids (:obj:`list` of :obj:`int`): List of list identifiers from the task was removed
+            comment_as_roles (:obj:`list` of :obj:`models.entites.Role`) List of roles on behalf of which the task was commented
+            subject (:obj:`str`): Updated task subject
+        Attributes(Simple Task comment):
+            reassign_to (:obj:`models.entities.Person`): Person to whom the task was reassigned
+            participants_added (:obj:`list` of :obj:`models.entities.Person`): List of participants added to the task
+            participants_removed (:obj:`list` of :obj:`models.entities.Person`): List of participants removed from the task
+            due_date (:obj:`datetime`): Task due date
+            due (:obj:`datetime`): Task due date with time
+            duration (:obj:`int`): Task duration in minutes
+            scheduled_date (:obj:`datetime`): task scheduled date
+            cancel_schedule (:obj:`bool`): Flag indicating that schedule was cancelled for the task.
+        Attributes(Form Task comment):
+            field_updates (:obj:`list` of obj`models.entities.FormField`): List of updated field values
+            approval_choice (:obj:`str`): Approval choice (approved/rejected/acknowledged)
+            approval_step (:obj:`int`): Step number on which the task was approved
+            reset_to_step (:obj:`int`) Step number on which the task was reseted
+            changed_step (:obj:`int`) Step number on which the task was moved after comment
+            approvals_added (:obj:`list` of :obj:`list` of :obj:`models.entities.Person`) List of approval steps added to the task
+            approvals_removed (:obj:`list` of :obj:`list` of :obj:`models.entities.Person`) List of approval steps removed from the task
+            approvals_rerequested (:obj:`list` of :obj:`list` of :obj:`models.entities.Person`) List of approval steps rerequested for the task
+    """
+
     id = None
     text = None
     create_date = None
@@ -232,7 +402,6 @@ class TaskComment(object):
     approvals_added = None
     approvals_removed = None
     approvals_rerequested = None
-    participants_added = None
     participants_added = None
     participants_removed = None
     due_date = None
@@ -329,6 +498,16 @@ class TaskComment(object):
                 self.comment_as_roles.append(Role(**role))
 
 class Organization(object):
+    """
+        Organization
+        
+        Attributes:
+            id (:obj:`int`): Organization id
+            name (:obj:`str`): Organization name
+            persons (:obj:`list` of :obj:`models.entities.Person`): List of persons in the organization
+            roles (:obj:`list` of :obj:`models.entities.Role`): List of roles in the organization
+    """
+
     id = None
     name = None
     persons = None
@@ -349,6 +528,15 @@ class Organization(object):
                 self.roles.append(Role(**role))
 
 class Role(object):
+    """
+        Role
+        
+        Attributes:
+            id (:obj:`int`): Role id
+            name (:obj:`str`): Role name
+            member_ids (:obj:`list` of :obj:`int`): List of persons ids in the role
+    """
+
     id = None
     name = None
     member_ids = None
@@ -364,13 +552,24 @@ class Role(object):
                 self.member_ids.append(member_id)
 
 class CatalogItem(object):
+    """
+        Value of FormField catalog
+        
+        Attributes:
+            item_id (:obj:`int`): Catalog item id
+            values (:obj:`list` of :obj:`str`): List of catalog values
+            headers (:obj:`list` of :obj:`str`): List of catalog headers
+    """
+
     item_id = None
     values = None
     headers = None
 
     def __init__(self, **kwargs):
         if 'headers' in kwargs:
-            self.headers = kwargs['headers']
+            self.headers = []
+            for header in kwargs['headers']:
+                self.headers.append(header)
         if 'item_id' in kwargs:
             self.item_id = kwargs['item_id']
         if 'values' in kwargs:
@@ -389,12 +588,26 @@ class CatalogItem(object):
         return cls(**values)
 
 class Table(list):
+    """
+        Value of FormField table
+        List of `models.entities.TableRow`
+    """
+
     def __init__(self, *args):
         list.__init__(self)
         for value in args:
             self.append(TableRow(**value))
 
 class TableRow(object):
+    """
+        Table Row
+        
+        Attributes:
+            row_id (:obj:`int`): Table row id
+            cells (:obj:`list` of :obj:`models.entities.FormField`): List of row cells
+            delete (:obj:`bool`): Flag indicating if table row should be deleted
+    """
+
     row_id = None
     cells = None
     delete = None
@@ -415,6 +628,14 @@ class TableRow(object):
                 raise TypeError('delete must be a boolean')
 
 class Title(object):
+    """
+        Value of FormField title
+        
+        Attributes:
+            checkmark (:obj:`str`): checkmark value (checked/unchecked)
+            fields (:obj:`list` of :obj:`models.entities.FormField`): List of title child fields
+    """
+
     checkmark = None
     fields = None
 
@@ -427,6 +648,15 @@ class Title(object):
                 self.fields.append(FormField(**field))
 
 class MultipleChoice(object):
+    """
+        Value of FormField multiple_choice
+        
+        Attributes:
+            choice_ids (:obj:`list` of :obj:`int`): choice ids
+            fields (:obj:`list` of :obj:`models.entities.FormField`): List of multiple choice child fields
+            choice_id (:obj:`int`, deprecated): choice id
+    """
+
     choice_id = None
     fields = None
     choice_ids = None
@@ -444,6 +674,13 @@ class MultipleChoice(object):
                 self.fields.append(FormField(**field))
 
 class Projects(object):
+    """
+        Value of FormField project
+        
+        Attributes:
+            projects (:obj:`list` of :obj:`models.entities.Project`): List of projects
+    """
+
     projects = None
 
     def __init__(self, **kwargs):
@@ -453,6 +690,15 @@ class Projects(object):
                 self.projects.append(Project(**project))
 
 class FormLink(object):
+    """
+        Value of FormField form_link
+        
+        Attributes:
+            task_ids (:obj:`list` of :obj:`int`): List of task identifiers
+            subject (:obj:`str`): task subjects
+            task_id (:obj:`int`, deprecated): task identifier
+    """
+
     task_id = None
     subject = None
     task_ids = None
@@ -468,6 +714,15 @@ class FormLink(object):
                 self.task_ids.append(task)
 
 class Project(object):
+    """
+        Project
+        
+        Attributes:
+            id (:obj:`int`): Project id
+            name (:obj:`str`): Project name
+            parent (:obj:`models.entities.Project`): Parent project
+    """
+
     id = None
     name = None
     parent = None
@@ -481,30 +736,66 @@ class Project(object):
             self.parent = Project(**kwargs['parent'])
 
 class FormRegisterFilter(object):
+    """
+        Base form register filter. Should never be created explictly
+    """
+
     def __init__(self, **kwargs):
         self.field_id = kwargs['field_id']
         self.operator = kwargs['operator']
         self.values = kwargs['values']
 
 class EqualsFilter(FormRegisterFilter):
+    """
+        Form register equals filter
+        
+        Attributes:
+            field_id (:obj:`int`): Form field id
+            value (:obj:`str`): Form field value
+    """
+
     def __init__(self, field_id, value):
         _validate_field_id(field_id)
         super(EqualsFilter, self).\
             __init__(field_id=field_id, operator='equals', values=_get_value(value))
 
 class GreaterThanFilter(FormRegisterFilter):
+    """
+        Form register greater than filter
+        
+        Attributes:
+            field_id (:obj:`int`): Form field id
+            value (:obj:`str`): Form field value
+    """
+
     def __init__(self, field_id, value):
         _validate_field_id(field_id)
         super(GreaterThanFilter, self).\
             __init__(field_id=field_id, operator='greater_than', values=_get_value(value))
 
 class LessThanFilter(FormRegisterFilter):
+    """
+        Form register less than filter
+        
+        Attributes:
+            field_id (:obj:`int`): Form field id
+            value (:obj:`str`): Form field value
+    """
+
     def __init__(self, field_id, value):
         _validate_field_id(field_id)
         super(LessThanFilter, self).\
             __init__(field_id=field_id, operator='less_than', values=_get_value(value))
 
 class RangeFilter(FormRegisterFilter):
+    """
+        Form register range filter
+        
+        Attributes:
+            field_id (:obj:`int`): Form field id
+            value (:obj:`str`): Form field value
+    """
+
     def __init__(self, field_id, values):
         _validate_field_id(field_id)
         if not isinstance(values, list):
@@ -518,6 +809,14 @@ class RangeFilter(FormRegisterFilter):
             __init__(field_id=field_id, operator='range', values=formated_values)
 
 class IsInFilter(FormRegisterFilter):
+    """
+        Form register is in filter
+        
+        Attributes:
+            field_id (:obj:`int`): Form field id
+            value (:obj:`str`): Form field value
+    """
+
     def __init__(self, field_id, values):
         _validate_field_id(field_id)
         if not isinstance(values, list):
@@ -529,6 +828,15 @@ class IsInFilter(FormRegisterFilter):
             __init__(field_id=field_id, operator='is_in', values=formated_values)
 
 class TaskList(object):
+    """
+        task list
+        
+        Attributes:
+            id (:obj:`int`): Task list id
+            name (:obj:`str`): Task list name
+            children (:obj:`models.entities.TaskList`): Task list children
+    """
+
     id = None
     name = None
     children = None
@@ -542,6 +850,24 @@ class TaskList(object):
             self.children = []
             for child in kwargs['children']:
                 self.children.append(TaskList(**child))
+
+class CatalogHeader(object):
+    """
+        catalog header
+        
+        Attributes:
+            name (:obj:`str`): Catalog header name
+            type (:obj:`str`): Catalog header type (text/workflow)
+    """
+
+    name = None
+    type = None
+
+    def __init__(self, **kwargs):
+        if 'name' in kwargs:
+            self.name = kwargs['name']
+        if 'type' in kwargs:
+            self.type = kwargs['type']
 
 def _get_value(value):
     if isinstance(value, datetime):
@@ -579,13 +905,3 @@ def _create_field_value(field_type, value):
         return Projects(**value)
     if field_type == 'form_link':
         return FormLink(**value)
-
-class CatalogHeader(object):
-    name = None
-    type = None
-
-    def __init__(self, **kwargs):
-        if 'name' in kwargs:
-            self.name = kwargs['name']
-        if 'type' in kwargs:
-            self.type = kwargs['type']

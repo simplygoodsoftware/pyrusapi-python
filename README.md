@@ -3,14 +3,26 @@
 [![PyPI version](https://badge.fury.io/py/pyrus-api.svg)](https://badge.fury.io/py/pyrus-api)
 
 A Python 3 client for the Pyrus API.
+The full documentation for API can be found [here](https://pyrus.com/en/help/api/)
 
 ## Getting Started
 
-* instal pyrus-api library using pip:
+* instal pyrus-api library:
+    * [pip](https://pypi.python.org/pypi/pip) (preffered)
 
-````
-$ pip install pyrus-api
-````
+        ````
+        $ pip install --upgrade pyrus-api
+        ````
+    * [Setuptools](https://pypi.python.org/pypi/setuptools): Use the easy_install tool included in the setuptools package:
+
+        ````
+        $ easy_install --upgrade pyrus-api
+        ````
+    * Manual installation: [Download the latest version of pyrus-api client](https://pypi.python.org/pypi/pyrus-api/), unpack the code, and run:
+
+        ````
+        $ python setup.py install
+        ````
 
 * Import packages into your project:
 
@@ -28,6 +40,8 @@ pyrus_client = client.PyrusAPI(login='login@pyrus.com', security_key='sadf2R5Wrd
 
 ```python
 auth_response = pyrus_client.auth()
+if response.success:
+    pass
 ```
 
 ## Forms
@@ -35,7 +49,7 @@ auth_response = pyrus_client.auth()
 * Get all form templates:
 
 ```python
-forms_response = pyrus_client.forms()
+forms_response = pyrus_client.get_forms()
 forms = forms_response.forms
 ```
 

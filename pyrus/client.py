@@ -23,7 +23,16 @@ import requests
 from .models import responses as resp, requests as req
 
 class PyrusAPI(object):
-    MAX_FILE_SIZE_MB = 250 * 1024 * 1024
+    """
+    PyrusApi client
+
+    Args:
+        login (:obj:`str`): User's login (email)
+        security_key (:obj:`str`): User's Secret key
+        access_token (:obj:`str`, optional): Users's access token. You can specify it if you already have one. (optional)
+        proxy (:obj:`str`, optional): Proxy server url
+    """
+    MAX_FILE_SIZE_IN_BYTES = 250 * 1024 * 1024
 
     class HTTPMethod(Enum):
         GET = "GET"
@@ -35,7 +44,6 @@ class PyrusAPI(object):
     access_token = None
     _protocol = 'https'
     _api_name = 'Pyrus'
-    format = 'json'
     _user_agent = 'Pyrus API python client v 1.9.0'
     proxy = None
     _download_file_base_url = 'https://files.pyrus.com/services/attachment?Id='
@@ -48,6 +56,16 @@ class PyrusAPI(object):
             self.proxy = {'http': proxy}
 
     def auth(self, login=None, security_key=None):
+        """
+        Get access_token for user
+
+        Args:
+            login (:obj:`str`): User's login (email)
+            security_key (:obj:`str`): User's Secret key
+
+        Returns: 
+            class:`models.responses.AuthResponse` object
+        """
         if login:
             self.login = login
         if security_key:
@@ -56,11 +74,27 @@ class PyrusAPI(object):
         return resp.AuthResponse(**response)
 
     def get_forms(self):
+        """
+        Get all available form templates
+
+        Returns: 
+            class:`models.responses.FormsResponse` object
+        """
         url = self._create_url('/forms')
         response = self._perform_get_request(url)
         return resp.FormsResponse(**response)
 
     def get_registry(self, form_id, form_register_request=None):
+        """
+        Get a list of tasks based on the form template
+
+        Args:
+            form_id (:obj:`int`): Form id
+            form_register_request (:obj:`models.requests.FormRegisterRequest`, optional): Request filters.
+
+        Returns: 
+            class:`models.responses.FormRegisterResponse` object
+        """
         url = self._create_url('/forms/{}/register'.format(form_id))
         if form_register_request:
             if not isinstance(form_register_request, req.FormRegisterRequest):
@@ -73,11 +107,26 @@ class PyrusAPI(object):
         return resp.FormRegisterResponse(**response)
 
     def get_contacts(self):
+        """
+        Get a list of contacts available to the current user and grouped by organization
+
+        Returns: 
+            class:`models.responses.ContactsResponse` object
+        """
         url = self._create_url('/contacts')
         response = self._perform_get_request(url)
         return resp.ContactsResponse(**response)
 
     def get_catalog(self, catalog_id):
+        """
+        Get a catalog
+
+        Args:
+            catalog_id (:obj:`int`): Catalog id
+
+        Returns: 
+            class:`models.responses.CatalogResponse` object
+        """
         if not isinstance(catalog_id, int):
             raise Exception("catalog_id should be valid int")
 
@@ -86,6 +135,15 @@ class PyrusAPI(object):
         return resp.CatalogResponse(**response)
 
     def get_form(self, form_id):
+        """
+        Get the form template
+
+        Args:
+            form_id (:obj:`int`): form id
+
+        Returns:
+            class:`models.responses.FormResponse` object
+        """
         if not isinstance(form_id, int):
             raise Exception("form_id should be valid int")
 
@@ -94,6 +152,15 @@ class PyrusAPI(object):
         return resp.FormResponse(**response)
 
     def get_task(self, task_id):
+        """
+        Get the task
+
+        Args:
+            task_id (:obj:`int`): Task id
+
+        Returns: 
+            class:`models.responses.TaskResponse` object
+        """
         if not isinstance(task_id, int):
             raise Exception("task_id should be valid int")
         url = self._create_url('/tasks/{}'.format(task_id))
@@ -101,6 +168,15 @@ class PyrusAPI(object):
         return resp.TaskResponse(**response)
 
     def comment_task(self, task_id, task_comment_request):
+        """
+        Add task comment. This method returns a task with all comments, including the added one.
+        Args:
+            task_id (:obj:`int`): Task id
+            task_comment_request (:obj:`models.requests.TaskCommentRequest`): Comment data.
+
+        Returns:
+            class:`models.responses.TaskResponse` object
+        """
         if not isinstance(task_id, int):
             raise Exception("task_id should be valid int")
         url = self._create_url('/tasks/{}/comments'.format(task_id))
@@ -111,6 +187,15 @@ class PyrusAPI(object):
         return resp.TaskResponse(**response)
 
     def create_task(self, create_task_request):
+        """
+        Create task. This method returns a created task with a comment.
+
+        Args:
+            task_comment_request (:obj:`models.requests.CreateTaskRequest`)
+
+        Returns: 
+            class:`models.responses.TaskResponse` object
+        """
         url = self._create_url('/tasks')
         if not isinstance(create_task_request, req.CreateTaskRequest):
             raise TypeError('create_task_request must be an instance '
@@ -119,16 +204,42 @@ class PyrusAPI(object):
         return resp.TaskResponse(**response)
 
     def upload_file(self, file_path):
+        """
+        Upload files for subsequent attachment to tasks.
+
+        Args:
+            file_path (:obj:`str`): Path to the file
+
+        Returns: 
+            class:`models.responses.UploadResponse` object
+        """
         url = self._create_url('/files/upload')
         response = self._perform_request_with_retry(url, self.HTTPMethod.POST, file_path=file_path)
         return resp.UploadResponse(**response)
 
     def get_lists(self):
+        """
+        Get all the lists that are available to the user.
+
+        Returns: 
+            class:`models.responses.ListsResponse` object
+        """
         url = self._create_url('/lists')
         response = self._perform_get_request(url)
         return resp.ListsResponse(**response)
 
     def get_task_list(self, list_id, item_count=200, include_archived=False):
+        """
+        Get all tasks in the list.
+
+        Args:
+            list_id (:obj:`int`): List id
+            item_count (:obj:`int`, optional): The maximum number of tasks in the response, the default is 200
+            include_archived (:obj:`bool`, optional): Should archived tasks be included to the response, the default is False
+
+        Returns: 
+            class:`models.responses.TaskListResponse` object
+        """
         if not isinstance(list_id, int):
             raise TypeError('list_id must be an instance of int')
         if not isinstance(item_count, int):
@@ -145,6 +256,15 @@ class PyrusAPI(object):
         return resp.TaskListResponse(**response)
 
     def download_file(self, file_id):
+        """
+        Download the file.
+
+        Args:
+            file_id (:obj:`int`): File id
+
+        Returns: 
+            class:`models.responses.DownloadResponse` object
+        """
         if not isinstance(file_id, int):
             raise TypeError('file_id must be an instance of int')
         url = self._download_file_base_url + str(file_id)
@@ -161,6 +281,15 @@ class PyrusAPI(object):
                 return resp.BaseResponse(**{'error_code' : 'ServerError'})
 
     def create_catalog(self, create_catalog_request):
+        """
+        Create a catalog. This request returns created catalog with all elements
+
+        Args:
+            create_catalog_request (:obj:`models.requests.CreateCatalogRequest`): Catalog data.
+
+        Returns: 
+            class:`models.responses.CatalogResponse` object
+        """
         url = self._create_url('/catalogs')
         if not isinstance(create_catalog_request, req.CreateCatalogRequest):
             raise TypeError('create_catalog_request must be an instance '
@@ -169,6 +298,18 @@ class PyrusAPI(object):
         return resp.CatalogResponse(**response)
 
     def sync_catalog(self, catalog_id, sync_catalog_request):
+        """
+        Sync a catalog. This method updates catalog headers and items. 
+        You must define all the values and text columns that need to remain in the catalog.
+        All unspecified items and text columns will be deleted.
+        This method returns a list of items that have been added, modified, or deleted
+
+        Args:
+            sync_catalog_request (:obj:`models.requests.SyncCatalogRequest`): Catalog data.
+
+        Returns: 
+            class:`models.responses.SyncCatalogResponse` object
+        """
         if not isinstance(catalog_id, int):
             raise TypeError("catalog_id must be an instance of int")
         url = self._create_url('/catalogs/{}'.format(catalog_id))
@@ -275,8 +416,8 @@ class PyrusAPI(object):
         del headers['Content-Type']
         if file_path:
             size = os.path.getsize(file_path)
-            if size > self.MAX_FILE_SIZE_MB:
-                raise Exception("File size should not exceed {} MB".format(self.MAX_FILE_SIZE_MB))
+            if size > self.MAX_FILE_SIZE_IN_BYTES:
+                raise Exception("File size should not exceed {} MB".format(self.MAX_FILE_SIZE_IN_BYTES / 1024 / 1024))
             files = {'file': open(file_path, 'rb')}
         return requests.post(url, headers=headers, files=files, proxies=self.proxy)
 

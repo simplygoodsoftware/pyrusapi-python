@@ -12,8 +12,16 @@ Installation
 -----------------
 
 To get the latest version:
+  - pip_ (preffrered)
+      $ pip install --upgrade pyrus-api
+  - Setuptools_: Use the easy_install tool included in the setuptools package:
+      $ easy_install --upgrade pyrus-api
+  - Manual installation: `Download the latest version of pyrus-api client`_, unpack the code, and run 
+      $ python setup.py install
 
-  $ pip install pyrusAPI
+.. _pip: https://pypi.python.org/pypi/pip
+.. _Setuptools: https://pypi.python.org/pypi/setuptools
+.. _`Download the latest version of pyrus-api client`: https://pypi.python.org/pypi/pyrus-api/
 
 -----------------
 Usage
@@ -33,7 +41,7 @@ Authenticate:
 
 Get all form templates:
 
-    >>> forms_response = pyrus_client.forms()
+    >>> forms_response = pyrus_client.get_forms()
     >>> forms = forms_response.forms
 
 Get list of tasks created using specified form:
