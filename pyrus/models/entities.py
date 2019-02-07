@@ -6,6 +6,7 @@ from datetime import datetime
 
 DATE_TIME_FORMAT = '%Y-%m-%dT%H:%M:%SZ'
 DATE_FORMAT = '%Y-%m-%d'
+TIME_FORMAT = "%H:%M"
 
 class FormField(object):
     """
@@ -907,9 +908,11 @@ def _validate_field_id(field_id):
         raise TypeError('field_id must be valid int.')
 
 def _create_field_value(field_type, value):
-    if field_type in ['text', 'money', 'number', 'time', 'checkmark', 'email',
+    if field_type in ['text', 'money', 'number', 'checkmark', 'email',
                       'phone', 'flag', 'step', 'status', 'note']:
         return value
+    if field_type == 'time':
+        return datetime.strptime(value, TIME_FORMAT).time()
     if field_type in ['date', 'create_date', 'due_date']:
         return datetime.strptime(value, DATE_FORMAT)
     if field_type == 'due_date_time':
