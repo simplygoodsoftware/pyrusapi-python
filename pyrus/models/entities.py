@@ -350,7 +350,7 @@ class File(object):
         if 'url' in kwargs:
             self.url = kwargs['url']
         if 'version' in kwargs:
-            self.url = kwargs['version']
+            self.version = kwargs['version']
 
 class Approval(object):
     """
