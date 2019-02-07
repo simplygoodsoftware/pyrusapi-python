@@ -322,6 +322,9 @@ class PyrusAPI(object):
         response = self._perform_post_request(url, sync_catalog_request)
         return resp.SyncCatalogResponse(**response)
         
+    def serialize_request(self, body):
+        return jsonpickle.dumps(body, unpicklable=False).encode('utf-8')
+        
     def _auth(self):
         url = self._create_url('/auth')
         headers = {
@@ -403,13 +406,13 @@ class PyrusAPI(object):
     def _post_request(self, url, body):
         headers = self._create_default_headers()
         if body:
-            data = jsonpickle.dumps(body, unpicklable=False).encode('utf-8')
+            data = self.serialize_request(body)
         return requests.post(url, headers=headers, data=data, proxies=self.proxy)
 
     def _put_request(self, url, body):
         headers = self._create_default_headers()
         if body:
-            data = jsonpickle.dumps(body, unpicklable=False).encode('utf-8')
+            data = self.serialize_request(body)
         return requests.put(url, headers=headers, data=data, proxies=self.proxy)
 
     def _post_file_request(self, url, file_path):
