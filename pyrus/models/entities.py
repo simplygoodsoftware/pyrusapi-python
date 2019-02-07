@@ -17,6 +17,8 @@ class FormField(object):
             name (:obj:`str`): Field name
             info (:obj:`models.entitites.FormFieldInfo`): Additional field information
             value (:obj:`object`, optional): Field value
+            parent_id (:obj:`int`, optional) Parent field id (returned if field has parent)
+            row_id (:obj:`int`, optional) Table row id (returned if field is in table)
     """
 
     id = None
@@ -24,6 +26,8 @@ class FormField(object):
     name = None
     info = None
     value = None
+    parent_id = None
+    row_id = None
 
     def __init__(self, **kwargs):
         if 'id' in kwargs:
@@ -39,6 +43,10 @@ class FormField(object):
                 self.value = _create_field_value(self.type, kwargs['value'])
             else:
                 self.value = kwargs['value']
+        if 'parent_id' in kwargs:
+            self.parent_id = kwargs['parent_id']
+        if 'row_id' in kwargs:
+            self.row_id = kwargs['row_id']
 
 class FormFieldInfo(object):
     """
@@ -88,10 +96,12 @@ class ChoiceOption(object):
             choice_id (:obj:`int`): Choice id
             choice_value (:obj:`str`): Choice name
             fields (:obj:`list` of :obj:`models.entitites.FormField`): Child fields for the specified choice_id
+            deleted (:obj:`bool`): Is choice deleted
     """
     choice_id = None
     choice_value = None
     fields = None
+    deleted = None
 
     def __init__(self, **kwargs):
         if 'choice_id' in kwargs:
@@ -102,6 +112,8 @@ class ChoiceOption(object):
             self.fields = []
             for field in kwargs['fields']:
                 self.fields.append(FormField(**field))
+        if 'deleted' in kwargs:
+            self.deleted = kwargs['deleted']
 
 class TaskHeader(object):
     """
@@ -186,7 +198,10 @@ class Task(TaskHeader):
     linked_task_ids = None
     last_note_id = None
     subject = None
-
+    @property
+    def flat_fields(self):
+        return _get_flat_fields(self.fields)
+    
     def __init__(self, **kwargs):
         if 'subject' in kwargs:
             self.subject = kwargs['subject']
@@ -281,12 +296,14 @@ class Person(object):
             first_name (:obj:`str`): Person first name
             last_name (:obj:`str`): Person last name
             email (:obj:`str`): Person email
+            type (:obj:`str`): Person type (user/bot/role)
     """
 
     id = None
     first_name = None
     last_name = None
     email = None
+    type = None
 
     def __init__(self, **kwargs):
         if 'id' in kwargs:
@@ -297,6 +314,8 @@ class Person(object):
             self.last_name = kwargs['last_name']
         if 'email' in kwargs:
             self.email = kwargs['email']
+        if 'type' in kwargs:
+            self.type = kwargs['type']
 
 class File(object):
     """
@@ -416,6 +435,9 @@ class TaskComment(object):
     changed_step = None
     comment_as_roles = None
     subject = None
+    @property
+    def flat_field_updates(self):
+        return _get_flat_fields(self.field_updates)
 
     def __init__(self, **kwargs):
         if 'id' in kwargs:
@@ -653,6 +675,7 @@ class MultipleChoice(object):
         
         Attributes:
             choice_ids (:obj:`list` of :obj:`int`): choice ids
+            choice_names (:obj:`list` of :obj:`str`): choice names
             fields (:obj:`list` of :obj:`models.entities.FormField`): List of multiple choice child fields
             choice_id (:obj:`int`, deprecated): choice id
     """
@@ -660,6 +683,7 @@ class MultipleChoice(object):
     choice_id = None
     fields = None
     choice_ids = None
+    choice_names = None
 
     def __init__(self, **kwargs):
         if 'choice_id' in kwargs:
@@ -668,6 +692,10 @@ class MultipleChoice(object):
             self.choice_ids = []
             for choice in kwargs['choice_ids']:
                 self.choice_ids.append(choice)
+        if 'choice_names' in kwargs:
+            self.choice_names = []
+            for choice in kwargs['choice_names']:
+                self.choice_names.append(choice)
         if 'fields' in kwargs:
             self.fields = []
             for field in kwargs['fields']:
@@ -905,3 +933,17 @@ def _create_field_value(field_type, value):
         return Projects(**value)
     if field_type == 'form_link':
         return FormLink(**value)
+
+
+def _get_flat_fields(fields):
+    res = []
+    if not fields:
+        return res
+    for field in fields:
+        res.append(field)
+        if (isinstance(field.value, Title) or isinstance(field.value, MultipleChoice)):
+            res.extend(_get_flat_fields(field.value.fields))
+        if (isinstance(field.value, Table)):
+            for table_row in field.value:
+                res.extend(table_row.cells)
+    return res
