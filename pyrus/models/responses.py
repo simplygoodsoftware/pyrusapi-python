@@ -161,10 +161,12 @@ class FormRegisterResponse(BaseResponse):
         
         Attributes:
             tasks (:obj:`list` of :obj:`models.entities.Task`): List of tasks based on the form template
+            csv (:obj:`str`): csv response (if csv format was requested)
     """
     __doc__ += BaseResponse.__doc__
 
     tasks = None
+    csv = None
 
     def __init__(self, **kwargs):
         if 'tasks' in kwargs:

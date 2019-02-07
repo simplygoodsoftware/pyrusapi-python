@@ -13,10 +13,16 @@ class FormRegisterRequest(object):
             include_archived (:obj:`bool`, optional): Flag indicating if we need to include archived tasks to the response. False by default
             filters (:obj:`list` of :obj:`models.entities.FormRegisterFilter`, optional): List of form field filters
             modified_before (:obj:`datetime`, optional): Include only tasks that were modified before specified date
-            modified_after (:obj:`datetime`, optional): Include only tasks that were modified after specified date
+            modified_after (:obj:`datetime`, optional): Include only tasks that were modified after specified date,
+            field_ids (:obj:`list` of :obj:`int`, optional): List of field ids. Only specified fields will be returned in the response. Order is preserved
+            format (:obj:`str`, optional): Response format (json/csv). json by default
+            delimiter (:obj:`str`, optional): Csv delimiter. Applicable only for csv format
+            simple_format (:obj:`bool`, optional): Returns csv in simple for parsing format. Applicable only for csv format
+            encoding (:obj:`str`, optional): Response encoding. Applicable only for csv format
     """
     
-    def __init__(self, steps=None, include_archived=False, filters=None, modified_before=None, modified_after=None):
+    def __init__(self, steps=None, include_archived=False, filters=None, modified_before=None, modified_after=None, 
+                field_ids=None, format=None, delimiter=None, simple_format=None, encoding=None):
         if steps:
             if not isinstance(steps, list):
                 raise TypeError('steps must be a list of int')
@@ -55,6 +61,36 @@ class FormRegisterRequest(object):
                     setattr(self, 'fld{}'.format(fltr.field_id), 'gt{},lt{}'.format(*fltr.values))
                 if fltr.operator == 'is_in':
                     setattr(self, 'fld{}'.format(fltr.field_id), ",".join(fltr.values))
+
+        if field_ids:
+            if not isinstance(field_ids, list):
+                raise TypeError('field_ids must be a list of int')
+            for field_id in field_ids:
+                if not isinstance(field_id, int):
+                    raise TypeError('field_ids must be a list of int')
+            self.field_ids = field_ids
+        
+        if format:
+            if not isinstance(format, str):
+                raise TypeError('format must be an instance of str')
+            if format != "json" and format != "csv":
+                raise TypeError('format must "json" or "csv"')
+            self.format = format
+
+        if delimiter:
+            if not isinstance(delimiter, str):
+                raise TypeError('delimiter must be a string')
+            self.delimiter = delimiter
+
+        if simple_format:
+            if not isinstance(simple_format, bool):
+                raise TypeError('simple_format must be a bool')
+            self.simple_format = simple_format
+
+        if encoding:
+            if not isinstance(encoding, str):
+                raise TypeError('encoding must be a string')
+            self.encoding = encoding
 
 class TaskCommentRequest(object):
     """
