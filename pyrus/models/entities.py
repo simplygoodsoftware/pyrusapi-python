@@ -3,6 +3,7 @@
 # pylint: disable=too-many-instance-attributes
 
 from datetime import datetime
+from datetime import timezone
 
 DATE_TIME_FORMAT = '%Y-%m-%dT%H:%M:%SZ'
 DATE_FORMAT = '%Y-%m-%d'
@@ -145,13 +146,13 @@ class TaskHeader(object):
         if 'text' in kwargs:
             self.text = kwargs['text']
         if 'create_date' in kwargs:
-            self.create_date = datetime.strptime(kwargs['create_date'], DATE_TIME_FORMAT)
+            self.create_date = _set_utc_timezone(datetime.strptime(kwargs['create_date'], DATE_TIME_FORMAT))
         if 'last_modified_date' in kwargs:
-            self.last_modified_date = datetime.strptime(kwargs['last_modified_date'], DATE_TIME_FORMAT)
+            self.last_modified_date = _set_utc_timezone(datetime.strptime(kwargs['last_modified_date'], DATE_TIME_FORMAT))
         if 'author' in kwargs:
             self.author = Person(**kwargs['author'])
         if 'close_date' in kwargs:
-            self.close_date = datetime.strptime(kwargs['close_date'], DATE_TIME_FORMAT)
+            self.close_date = _set_utc_timezone(datetime.strptime(kwargs['close_date'], DATE_TIME_FORMAT))
         if 'responsible' in kwargs:
             self.responsible = Person(**kwargs['responsible'])
 
@@ -209,7 +210,7 @@ class Task(TaskHeader):
         if 'due_date' in kwargs:
             self.due_date = datetime.strptime(kwargs['due_date'], DATE_FORMAT)
         if 'due' in kwargs:
-            self.due = datetime.strptime(kwargs['due'], DATE_TIME_FORMAT)
+            self.due = _set_utc_timezone(datetime.strptime(kwargs['due'], DATE_TIME_FORMAT))
         if 'duration' in kwargs:
             self.duration = kwargs['duration']
         if 'scheduled_date' in kwargs:
@@ -448,7 +449,7 @@ class TaskComment(object):
         if 'subject' in kwargs:
             self.subject = kwargs['subject']
         if 'create_date' in kwargs:
-            self.create_date = datetime.strptime(kwargs['create_date'], DATE_TIME_FORMAT)
+            self.create_date = _set_utc_timezone(datetime.strptime(kwargs['create_date'], DATE_TIME_FORMAT))
         if 'author' in kwargs:
             self.author = Person(**kwargs['author'])
         if 'reassigned_to' in kwargs:
@@ -490,7 +491,7 @@ class TaskComment(object):
         if 'due_date' in kwargs:
             self.due_date = datetime.strptime(kwargs['due_date'], DATE_FORMAT)
         if 'due' in kwargs:
-            self.due = datetime.strptime(kwargs['due'], DATE_TIME_FORMAT)
+            self.due = _set_utc_timezone(datetime.strptime(kwargs['due'], DATE_TIME_FORMAT))
         if 'duration' in kwargs:
             self.duration = kwargs['duration']
         if 'attachments' in kwargs:
@@ -912,11 +913,11 @@ def _create_field_value(field_type, value):
                       'phone', 'flag', 'step', 'status', 'note']:
         return value
     if field_type == 'time':
-        return datetime.strptime(value, TIME_FORMAT).time()
+        return _set_utc_timezone(datetime.strptime(value, TIME_FORMAT).time())
     if field_type in ['date', 'create_date', 'due_date']:
-        return datetime.strptime(value, DATE_FORMAT)
+        return _set_utc_timezone(datetime.strptime(value, DATE_FORMAT))
     if field_type == 'due_date_time':
-        return datetime.strptime(value, DATE_TIME_FORMAT)
+        return _set_utc_timezone(datetime.strptime(value, DATE_TIME_FORMAT))
     if field_type == 'catalog':
         return CatalogItem(**value)
     if field_type == 'file':
@@ -950,3 +951,9 @@ def _get_flat_fields(fields):
             for table_row in field.value:
                 res.extend(table_row.cells)
     return res
+
+def _set_utc_timezone(time):
+    if time.tzinfo is None:
+        time = time.replace(tzinfo=timezone.utc)
+    return time
+    
