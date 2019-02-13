@@ -61,6 +61,9 @@ class FormResponse(BaseResponse):
     name = None
     steps = None
     fields = None
+    @property
+    def flat_fields(self):
+        return self._get_flat_fields(self.fields)
 
     def __init__(self, **kwargs):
         if 'id' in kwargs:
@@ -74,6 +77,25 @@ class FormResponse(BaseResponse):
             for field in kwargs['fields']:
                 self.fields.append(entities.FormField(**field))
         super(FormResponse, self).__init__(**kwargs)
+
+    def _get_flat_fields(self, fields):
+        res = []
+        if not fields:
+            return res
+        for field in fields:
+            res.append(field)
+            if not field.info:
+                continue
+            if field.info.fields:
+                res.extend(self._get_flat_fields(field.info.fields))
+            elif field.info.options:
+                for option in field.info.options:
+                    res.extend(self._get_flat_fields(option.fields))
+            elif field.info.columns:
+                res.extend(field.info.columns)
+            
+        return res
+        
 
 class FormsResponse(BaseResponse):
     """
@@ -161,10 +183,12 @@ class FormRegisterResponse(BaseResponse):
         
         Attributes:
             tasks (:obj:`list` of :obj:`models.entities.Task`): List of tasks based on the form template
+            csv (:obj:`str`): csv response (if csv format was requested)
     """
     __doc__ += BaseResponse.__doc__
 
     tasks = None
+    csv = None
 
     def __init__(self, **kwargs):
         if 'tasks' in kwargs:
