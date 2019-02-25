@@ -104,7 +104,7 @@ class PyrusAPI(object):
         else:
             response = self._perform_get_request(url)
 
-        if form_register_request and form_register_request.format == "csv":
+        if form_register_request and getattr(form_register_request, 'format', 'json') == "csv":
             return response
         
         return resp.FormRegisterResponse(**response)
@@ -434,7 +434,7 @@ class PyrusAPI(object):
         return headers
 
     def _get_response(self, response, get_file, request):
-        if isinstance(request, req.FormRegisterRequest) and request.format == "csv":
+        if isinstance(request, req.FormRegisterRequest) and getattr(request, 'format', 'json') == "csv":
             res = resp.FormRegisterResponse()
             res.csv = response.text
             return res
