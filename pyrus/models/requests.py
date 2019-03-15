@@ -13,7 +13,11 @@ class FormRegisterRequest(object):
             include_archived (:obj:`bool`, optional): Flag indicating if we need to include archived tasks to the response. False by default
             filters (:obj:`list` of :obj:`models.entities.FormRegisterFilter`, optional): List of form field filters
             modified_before (:obj:`datetime`, optional): Include only tasks that were modified before specified date
-            modified_after (:obj:`datetime`, optional): Include only tasks that were modified after specified date,
+            modified_after (:obj:`datetime`, optional): Include only tasks that were modified after specified date
+            closed_before (:obj:`datetime`, optional): Include only tasks that were closed before specified date
+            closed_after (:obj:`datetime`, optional): Include only tasks that were closed after specified date
+            created_before (:obj:`datetime`, optional): Include only tasks that were created before specified date
+            created_after (:obj:`datetime`, optional): Include only tasks that were created after specified date
             field_ids (:obj:`list` of :obj:`int`, optional): List of field ids. Only specified fields will be returned in the response. Order is preserved
             format (:obj:`str`, optional): Response format (json/csv). json by default
             delimiter (:obj:`str`, optional): Csv delimiter. Applicable only for csv format
@@ -21,8 +25,9 @@ class FormRegisterRequest(object):
             encoding (:obj:`str`, optional): Response encoding. Applicable only for csv format
     """
     
-    def __init__(self, steps=None, include_archived=False, filters=None, modified_before=None, modified_after=None, 
-                field_ids=None, format=None, delimiter=None, simple_format=None, encoding=None):
+    def __init__(self, steps=None, include_archived=None, filters=None, modified_before=None, modified_after=None, 
+                field_ids=None, format=None, delimiter=None, simple_format=None, encoding=None,
+                closed_before=None, closed_after=None, created_before=None, created_after=None):
         if steps:
             if not isinstance(steps, list):
                 raise TypeError('steps must be a list of int')
@@ -31,19 +36,23 @@ class FormRegisterRequest(object):
                     raise TypeError('steps must be a list of int')
             self.steps = steps
 
-        if not isinstance(include_archived, bool):
-            raise TypeError('include_archived must be bool')
-        self.include_archived = include_archived
+        if include_archived:
+            if not isinstance(include_archived, bool):
+                raise TypeError('include_archived must be bool')
+            self.include_archived = include_archived
 
         if modified_before:
-            if not isinstance(modified_before, datetime):
-                raise TypeError('modified_before must be a date')
-            self.modified_before = datetime.strftime(modified_before, DATE_TIME_FORMAT)
-
+            self.modified_before = _date_to_str(modified_before, 'modified_before')
         if modified_after:
-            if not isinstance(modified_after, datetime):
-                raise TypeError('modified_after must be a date')
-            self.modified_after = datetime.strftime(modified_after, DATE_TIME_FORMAT)
+            self.modified_after = _date_to_str(modified_after, 'modified_after')
+        if closed_before:
+            self.closed_before = _date_to_str(closed_before, 'closed_before')
+        if closed_after:
+            self.closed_after = _date_to_str(closed_after, 'closed_after')
+        if created_before:
+            self.created_before = _date_to_str(created_before, 'created_before')
+        if created_after:
+            self.created_after = _date_to_str(created_after, 'created_after')
 
         if filters:
             if not isinstance(filters, list):
@@ -460,3 +469,8 @@ def _get_catalog_items(catalog_items):
                 raise TypeError('catalog_items must be a list of CatalogItems')
             items.append(item)
     return items
+
+def _date_to_str(str_date, property_name):
+    if not isinstance(str_date, datetime):
+        raise TypeError('{} must be a date'.format(property_name))
+    return datetime.strftime(str_date, DATE_TIME_FORMAT)
