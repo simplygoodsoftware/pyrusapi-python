@@ -412,7 +412,7 @@ class SyncCatalogRequest(object):
         SyncCatalogRequest
         
         Args:
-            catalog_headers (:obj:`list` of :obj:`str`): List of new catalog headers
+            catalog_headers (:obj:`list` of :obj:`str` or :obj:`models.entities.CatalogHeader`): List of new catalog headers
             items (:obj:`list` of :obj:`models.entities.CatalogItem`, optional): List of new catalog items
             apply (:obj:`bool`, optional): Flag indicates if changes must be applied. By default false
     """
@@ -423,8 +423,7 @@ class SyncCatalogRequest(object):
                 raise TypeError('apply must be a bool')
             self.apply = apply
         if catalog_headers:
-            _validata_catalog_headers(catalog_headers)
-            self.catalog_headers = catalog_headers
+            self.catalog_headers = _get_catalog_headers(catalog_headers)
         if items:
             self.items = _get_catalog_items(items)
 
@@ -435,7 +434,7 @@ class CreateCatalogRequest(object):
         Args:
             name (:obj:`str`): Catalog name
             catalog_headers (:obj:`list` of :obj:`str`): List of catalog headers
-            items (:obj:`list` of :obj:`models.entities.CatalogItem`, optional): List of catalog items
+            items (:obj:`list` of :obj:`models.entities.str` or :obj:`models.entities.CatalogHeader`, optional): List of catalog items
     """
 
     def __init__(self, name=None, catalog_headers=None, items=None):
@@ -444,17 +443,23 @@ class CreateCatalogRequest(object):
                 raise TypeError('name must be a str')
             self.name = name
         if catalog_headers:
-            _validata_catalog_headers(catalog_headers)
-            self.catalog_headers = catalog_headers
+            self.catalog_headers = _get_catalog_headers(catalog_headers)
         if items:
             self.items = _get_catalog_items(items)
 
-def _validata_catalog_headers(catalog_headers):
+def _get_catalog_headers(catalog_headers):
     if not isinstance(catalog_headers, list):
         raise TypeError('catalog_headers must be a list of str')
+
+    headers = []
     for item in catalog_headers:
-        if not isinstance(item, str):
-            raise TypeError('list_ids must be a list of str')
+        if isinstance(item, entities.CatalogHeader):
+            headers.append(item.name)
+        elif isinstance(item, str):
+            headers.append(item)
+        else:
+            raise TypeError('list_ids must be a list of str or models.entities.CatalogHeader')
+    return headers
 
 def _get_catalog_items(catalog_items):
     if not isinstance(catalog_items, list):
@@ -466,7 +471,7 @@ def _get_catalog_items(catalog_items):
             items.append(entities.CatalogItem.fromliststr(item))
         except TypeError:
             if not isinstance(item, entities.CatalogItem):
-                raise TypeError('catalog_items must be a list of CatalogItems')
+                raise TypeError('catalog_items must be a list of str or models.entities.CatalogItems')
             items.append(item)
     return items
 
