@@ -949,7 +949,8 @@ def _get_flat_fields(fields):
             res.extend(_get_flat_fields(field.value.fields))
         if (isinstance(field.value, Table)):
             for table_row in field.value:
-                res.extend(table_row.cells)
+                if table_row.cells:
+                    res.extend(table_row.cells)
     return res
 
 def _set_utc_timezone(time):
