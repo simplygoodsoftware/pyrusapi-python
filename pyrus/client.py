@@ -323,7 +323,7 @@ class PyrusAPI(object):
         return resp.SyncCatalogResponse(**response)
         
     def serialize_request(self, body):
-        return jsonpickle.dumps(body, unpicklable=False).encode('utf-8')
+        return jsonpickle.encode(body, unpicklable=False).encode('utf-8')
         
     def _auth(self):
         url = self._create_url('/auth')

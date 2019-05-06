@@ -1,8 +1,6 @@
 from datetime import datetime
 from . import entities
-
-DATE_TIME_FORMAT = '%Y-%m-%dT%H:%M:%SZ'
-DATE_FORMAT = '%Y-%m-%d'
+from . import constants
 
 class FormRegisterRequest(object):
     """
@@ -244,11 +242,11 @@ class TaskCommentRequest(object):
         if due_date:
             if not isinstance(due_date, datetime):
                 raise TypeError('due_date must be a date')
-            self.due_date = datetime.strftime(due_date, DATE_FORMAT)
+            self.due_date = datetime.strftime(due_date, constants.DATE_FORMAT)
         if due:
             if not isinstance(due, datetime):
                 raise TypeError('due must be a date')
-            self.due = datetime.strftime(due, DATE_TIME_FORMAT)
+            self.due = datetime.strftime(due, constants.DATE_TIME_FORMAT)
         if duration:
             if not isinstance(due, int):
                 raise TypeError('duration must be an int')
@@ -258,11 +256,11 @@ class TaskCommentRequest(object):
         if scheduled_date:
             if not isinstance(scheduled_date, datetime):
                 raise TypeError('scheduled_date must be a date')
-            self.scheduled_date = datetime.strftime(scheduled_date, DATE_FORMAT)
+            self.scheduled_date = datetime.strftime(scheduled_date, constants.DATE_FORMAT)
         if cancel_schedule:
             if not isinstance(cancel_schedule, bool):
                 raise TypeError('cancel_schedule must be a bool')
-            self.cancel_schedule = datetime.strftime(cancel_schedule, DATE_FORMAT)
+            self.cancel_schedule = datetime.strftime(cancel_schedule, constants.DATE_FORMAT)
         if added_list_ids:
             if not isinstance(added_list_ids, list):
                 raise TypeError('added_list_ids must be a list of int')
@@ -326,11 +324,11 @@ class CreateTaskRequest(object):
         if due_date:
             if not isinstance(due_date, datetime):
                 raise TypeError('due_date must be a date')
-            self.due_date = datetime.strftime(due_date, DATE_FORMAT)
+            self.due_date = datetime.strftime(due_date, constants.DATE_FORMAT)
         if due:
             if not isinstance(due, datetime):
                 raise TypeError('due must be a date')
-            self.due = datetime.strftime(due, DATE_TIME_FORMAT)
+            self.due = datetime.strftime(due, constants.DATE_TIME_FORMAT)
         if duration:
             if not isinstance(duration, int):
                 raise TypeError('duration must be an int')
@@ -338,7 +336,7 @@ class CreateTaskRequest(object):
         if scheduled_date:
             if not isinstance(scheduled_date, datetime):
                 raise TypeError('scheduled_date must be a date')
-            self.scheduled_date = datetime.strftime(scheduled_date, DATE_FORMAT)
+            self.scheduled_date = datetime.strftime(scheduled_date, constants.DATE_FORMAT)
         if form_id:
             if not isinstance(form_id, int):
                 raise TypeError('form_id must be int')
@@ -478,4 +476,4 @@ def _get_catalog_items(catalog_items):
 def _date_to_str(str_date, property_name):
     if not isinstance(str_date, datetime):
         raise TypeError('{} must be a date'.format(property_name))
-    return datetime.strftime(str_date, DATE_TIME_FORMAT)
+    return datetime.strftime(str_date, constants.DATE_TIME_FORMAT)
