@@ -926,6 +926,8 @@ def _create_field_value(field_type, value):
     if field_type == 'catalog':
         return CatalogItem(**value)
     if field_type == 'file':
+        if isinstance(value, NewFile):
+            return value
         res = []
         for file in value:
             res.append(File(**file))
@@ -963,3 +965,13 @@ def _set_utc_timezone(time):
         time = time.replace(tzinfo=timezone.utc)
     return time
     
+class NewFile(list):
+    """
+        Value of new FormFieldFile
+        List of `str`
+    """
+
+    def __init__(self, *args):
+        list.__init__(self)
+        for value in args:
+            self.append(value)

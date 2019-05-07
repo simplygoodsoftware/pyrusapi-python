@@ -11,8 +11,11 @@ class FormFieldHandler(jsonpickle.handlers.BaseHandler):
             data['id'] = obj.id
         if obj.name:
             data['name'] = obj.name
-        if obj.type:
-            data['type'] = obj.type
+
+        #ignore readonly fields
+        if obj.type in ['step', 'status', 'note', 'author', 'project']:
+            return data
+
         if obj.value:
             data['value'] = self._get_flatten_value(obj.type, obj.value)
         return data
@@ -29,6 +32,13 @@ class FormFieldHandler(jsonpickle.handlers.BaseHandler):
             if isinstance(value, time):
                 return time.strftime(value, constants.TIME_FORMAT)
             return datetime.strftime(value, constants.TIME_FORMAT)
+        if type == 'file':
+            if not isinstance(value, entities.NewFile) or not isinstance(value, list):
+                return
                 
         p = jsonpickle.Pickler(unpicklable=False)
         return p.flatten(value)
+
+
+
+  
