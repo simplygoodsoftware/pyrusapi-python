@@ -13,6 +13,7 @@ setup(name="pyrus-api",
       keywords="pyrus api",
       install_requires=[
           'requests',
-          'jsonpickle'
+          'jsonpickle',
+          'rfc6266'
       ],
       zip_safe=True)
