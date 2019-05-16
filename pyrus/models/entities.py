@@ -29,6 +29,7 @@ class FormField(object):
     value = None
     parent_id = None
     row_id = None
+    decimal_places = None
 
     def __init__(self, **kwargs):
         if 'id' in kwargs:
@@ -48,6 +49,8 @@ class FormField(object):
             self.parent_id = kwargs['parent_id']
         if 'row_id' in kwargs:
             self.row_id = kwargs['row_id']
+        if 'decimal_places' in kwargs:
+            self.decimal_places = kwargs['decimal_places']
 
 class FormFieldInfo(object):
     """
