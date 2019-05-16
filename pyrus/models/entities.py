@@ -4,11 +4,10 @@
 
 from datetime import datetime
 from datetime import timezone
+from . import customhandlers
+from . import constants
 
-DATE_TIME_FORMAT = '%Y-%m-%dT%H:%M:%SZ'
-DATE_FORMAT = '%Y-%m-%d'
-TIME_FORMAT = "%H:%M"
-
+@customhandlers.FormFieldHandler.handles
 class FormField(object):
     """
         Form field
@@ -30,7 +29,7 @@ class FormField(object):
     value = None
     parent_id = None
     row_id = None
-
+    
     def __init__(self, **kwargs):
         if 'id' in kwargs:
             self.id = kwargs['id']
@@ -61,6 +60,7 @@ class FormFieldInfo(object):
             catalog_id (:obj:`int`): Catalog id for catalog field
             columns (:obj:`list` of :obj:`models.entitites.FormField`): Columns description for table field
             fields (:obj:`list` of :obj:`models.entitites.FormField`): Child fields description for title field
+            decimal_places(:obj:`int`): Number of decimal places for number field
     """
 
     required_step = None
@@ -69,7 +69,8 @@ class FormFieldInfo(object):
     catalog_id = None
     columns = None
     fields = None
-
+    decimal_places = None
+    
     def __init__(self, **kwargs):
         if 'required_step' in kwargs:
             self.required_step = kwargs['required_step']
@@ -89,6 +90,8 @@ class FormFieldInfo(object):
             self.fields = []
             for field in kwargs['fields']:
                 self.fields.append(FormField(**field))
+        if 'decimal_places' in kwargs:
+            self.decimal_places = kwargs['decimal_places']
 
 class ChoiceOption(object):
     """
@@ -146,13 +149,13 @@ class TaskHeader(object):
         if 'text' in kwargs:
             self.text = kwargs['text']
         if 'create_date' in kwargs:
-            self.create_date = _set_utc_timezone(datetime.strptime(kwargs['create_date'], DATE_TIME_FORMAT))
+            self.create_date = _set_utc_timezone(datetime.strptime(kwargs['create_date'], constants.DATE_TIME_FORMAT))
         if 'last_modified_date' in kwargs:
-            self.last_modified_date = _set_utc_timezone(datetime.strptime(kwargs['last_modified_date'], DATE_TIME_FORMAT))
+            self.last_modified_date = _set_utc_timezone(datetime.strptime(kwargs['last_modified_date'], constants.DATE_TIME_FORMAT))
         if 'author' in kwargs:
             self.author = Person(**kwargs['author'])
         if 'close_date' in kwargs:
-            self.close_date = _set_utc_timezone(datetime.strptime(kwargs['close_date'], DATE_TIME_FORMAT))
+            self.close_date = _set_utc_timezone(datetime.strptime(kwargs['close_date'], constants.DATE_TIME_FORMAT))
         if 'responsible' in kwargs:
             self.responsible = Person(**kwargs['responsible'])
 
@@ -172,6 +175,8 @@ class Task(TaskHeader):
             linked_task_ids (:obj:`list` of :obj:`int`): List of linked task identifiers
             last_note_id (:obj:`int`): Id of the last comment
             subject (:obj:`str`): Task subject
+            scheduled_date (:obj:`datetime`): task scheduled date
+            scheduled_datetime_utc (:obj:`datetime`): task scheduled date with utc time
         Attributes(Simple Task):
             text (:obj:`str`): Task text
             responsible (:obj:`models.entities.Person`): Task responsible
@@ -179,7 +184,6 @@ class Task(TaskHeader):
             due (:obj:`datetime`): Task due date with time
             duration (:obj:`int`): Task duration in minutes
             participants (:obj:`list` of :obj:`models.entities.Person`): List of task participants
-            scheduled_date (:obj:`datetime`): task scheduled date
         Attributes(Form Task):
             form_id (:obj:`int`): Form template id
             fields (:obj:`list` of obj`models.entities.FormField`): List of field values
@@ -195,6 +199,7 @@ class Task(TaskHeader):
     approvals = None
     participants = None
     scheduled_date = None
+    scheduled_datetime_utc = None
     list_ids = None
     parent_task_id = None
     linked_task_ids = None
@@ -208,13 +213,15 @@ class Task(TaskHeader):
         if 'subject' in kwargs:
             self.subject = kwargs['subject']
         if 'due_date' in kwargs:
-            self.due_date = datetime.strptime(kwargs['due_date'], DATE_FORMAT)
+            self.due_date = datetime.strptime(kwargs['due_date'], constants.DATE_FORMAT)
         if 'due' in kwargs:
-            self.due = _set_utc_timezone(datetime.strptime(kwargs['due'], DATE_TIME_FORMAT))
+            self.due = _set_utc_timezone(datetime.strptime(kwargs['due'], constants.DATE_TIME_FORMAT))
         if 'duration' in kwargs:
             self.duration = kwargs['duration']
         if 'scheduled_date' in kwargs:
-            self.scheduled_date = datetime.strptime(kwargs['scheduled_date'], DATE_FORMAT)
+            self.scheduled_date = datetime.strptime(kwargs['scheduled_date'], constants.DATE_FORMAT)
+        if 'scheduled_datetime_utc' in kwargs:
+            self.scheduled_datetime_utc = datetime.strptime(kwargs['scheduled_datetime_utc'], constants.DATE_TIME_FORMAT)
         if 'form_id' in kwargs:
             self.form_id = kwargs['form_id']
         if 'attachments' in kwargs:
@@ -236,7 +243,9 @@ class Task(TaskHeader):
             for idx, approval in enumerate(kwargs['approvals']):
                 self.approvals.append([])
                 for curr_step in approval:
-                    self.approvals[idx].append(Approval(**curr_step))
+                    approval = Approval(**curr_step)
+                    approval.step = idx
+                    self.approvals[idx].append(approval)
         if 'participants' in kwargs:
             self.participants = []
             for participant in kwargs['participants']:
@@ -266,6 +275,8 @@ class TaskWithComments(Task):
             last_note_id (:obj:`int`): Id of the last comment
             subject (:obj:`str`): Task subject
             comments (:obj:`list` of :obj:`models.entities.TaskComment`): List of task comments
+            scheduled_date (:obj:`datetime`): task scheduled date
+            scheduled_datetime_utc (:obj:`datetime`): task scheduled date with utc time
         Attributes(Simple Task):
             text (:obj:`str`): Task text
             responsible (:obj:`models.entities.Person`): Task responsible
@@ -273,7 +284,6 @@ class TaskWithComments(Task):
             due (:obj:`datetime`): Task due date with time
             duration (:obj:`int`): Task duration in minutes
             participants (:obj:`list` of :obj:`models.entities.Person`): List of task participants
-            scheduled_date (:obj:`datetime`): task scheduled date
         Attributes(Form Task):
             form_id (:obj:`int`): Form template id
             fields (:obj:`list` of obj`models.entities.FormField`): List of field values
@@ -391,6 +401,9 @@ class TaskComment(object):
             removed_list_ids (:obj:`list` of :obj:`int`): List of list identifiers from the task was removed
             comment_as_roles (:obj:`list` of :obj:`models.entites.Role`) List of roles on behalf of which the task was commented
             subject (:obj:`str`): Updated task subject
+            scheduled_date (:obj:`datetime`): task scheduled date
+            scheduled_datetime_utc (:obj:`datetime`): task scheduled date with utc time
+            cancel_schedule (:obj:`bool`): Flag indicating that schedule was cancelled for the task.
         Attributes(Simple Task comment):
             reassign_to (:obj:`models.entities.Person`): Person to whom the task was reassigned
             participants_added (:obj:`list` of :obj:`models.entities.Person`): List of participants added to the task
@@ -398,8 +411,6 @@ class TaskComment(object):
             due_date (:obj:`datetime`): Task due date
             due (:obj:`datetime`): Task due date with time
             duration (:obj:`int`): Task duration in minutes
-            scheduled_date (:obj:`datetime`): task scheduled date
-            cancel_schedule (:obj:`bool`): Flag indicating that schedule was cancelled for the task.
         Attributes(Form Task comment):
             field_updates (:obj:`list` of obj`models.entities.FormField`): List of updated field values
             approval_choice (:obj:`str`): Approval choice (approved/rejected/acknowledged)
@@ -431,6 +442,7 @@ class TaskComment(object):
     attachments = None
     action = None
     scheduled_date = None
+    scheduled_datetime_utc = None
     cancel_schedule = None
     added_list_ids = None
     removed_list_ids = None
@@ -449,7 +461,7 @@ class TaskComment(object):
         if 'subject' in kwargs:
             self.subject = kwargs['subject']
         if 'create_date' in kwargs:
-            self.create_date = _set_utc_timezone(datetime.strptime(kwargs['create_date'], DATE_TIME_FORMAT))
+            self.create_date = _set_utc_timezone(datetime.strptime(kwargs['create_date'], constants.DATE_TIME_FORMAT))
         if 'author' in kwargs:
             self.author = Person(**kwargs['author'])
         if 'reassigned_to' in kwargs:
@@ -489,9 +501,9 @@ class TaskComment(object):
             for participant in kwargs['participants_removed']:
                 self.participants_removed.append(Person(**participant))
         if 'due_date' in kwargs:
-            self.due_date = datetime.strptime(kwargs['due_date'], DATE_FORMAT)
+            self.due_date = datetime.strptime(kwargs['due_date'], constants.DATE_FORMAT)
         if 'due' in kwargs:
-            self.due = _set_utc_timezone(datetime.strptime(kwargs['due'], DATE_TIME_FORMAT))
+            self.due = _set_utc_timezone(datetime.strptime(kwargs['due'], constants.DATE_TIME_FORMAT))
         if 'duration' in kwargs:
             self.duration = kwargs['duration']
         if 'attachments' in kwargs:
@@ -501,7 +513,9 @@ class TaskComment(object):
         if 'action' in kwargs:
             self.action = kwargs['action']
         if 'scheduled_date' in kwargs:
-            self.scheduled_date = datetime.strptime(kwargs['scheduled_date'], DATE_FORMAT)
+            self.scheduled_date = datetime.strptime(kwargs['scheduled_date'], constants.DATE_FORMAT)
+        if 'scheduled_datetime_utc' in kwargs:
+            self.scheduled_datetime_utc = datetime.strptime(kwargs['scheduled_datetime_utc'], constants.DATE_TIME_FORMAT)
         if 'cancel_schedule' in kwargs:
             self.cancel_schedule = kwargs['cancel_schedule']
         if 'added_list_ids' in kwargs:
@@ -901,7 +915,7 @@ class CatalogHeader(object):
 
 def _get_value(value):
     if isinstance(value, datetime):
-        return value.strftime(DATE_FORMAT)
+        return value.strftime(constants.DATE_FORMAT)
     return value
 
 def _validate_field_id(field_id):
@@ -913,14 +927,22 @@ def _create_field_value(field_type, value):
                       'phone', 'flag', 'step', 'status', 'note']:
         return value
     if field_type == 'time':
-        return _set_utc_timezone(datetime.strptime(value, TIME_FORMAT).time())
-    if field_type in ['date', 'create_date', 'due_date']:
-        return _set_utc_timezone(datetime.strptime(value, DATE_FORMAT))
+        if isinstance(value, datetime):
+            return value
+        return _set_utc_timezone(datetime.strptime(value, constants.TIME_FORMAT).time())
+    if field_type in ['date', 'creation_date', 'due_date']:
+        if isinstance(value, datetime):
+            return value
+        return _set_utc_timezone(datetime.strptime(value, constants.DATE_FORMAT))
     if field_type == 'due_date_time':
-        return _set_utc_timezone(datetime.strptime(value, DATE_TIME_FORMAT))
+        if isinstance(value, datetime):
+            return value
+        return _set_utc_timezone(datetime.strptime(value, constants.DATE_TIME_FORMAT))
     if field_type == 'catalog':
         return CatalogItem(**value)
     if field_type == 'file':
+        if isinstance(value, NewFile):
+            return value
         res = []
         for file in value:
             res.append(File(**file))
@@ -958,3 +980,13 @@ def _set_utc_timezone(time):
         time = time.replace(tzinfo=timezone.utc)
     return time
     
+class NewFile(list):
+    """
+        Value of new FormFieldFile
+        List of `str`
+    """
+
+    def __init__(self, *args):
+        list.__init__(self)
+        for value in args:
+            self.append(value)

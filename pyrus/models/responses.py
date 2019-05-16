@@ -3,8 +3,7 @@
 # pylint: disable=too-many-instance-attributes
 
 from . import entities
-
-DATE_FORMAT = '%Y-%m-%dT%H:%M:%SZ'
+from . import constants
 
 class BaseResponse(object):
     """

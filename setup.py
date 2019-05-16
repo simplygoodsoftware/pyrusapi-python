@@ -2,7 +2,7 @@ import os
 from setuptools import setup, find_packages
 
 setup(name="pyrus-api",
-      version="1.18.0",
+      version="1.19.0",
       python_requires='>=3.4',
       description="Python Pyrus API client",
       author="Pyrus",
@@ -13,6 +13,7 @@ setup(name="pyrus-api",
       keywords="pyrus api",
       install_requires=[
           'requests',
-          'jsonpickle'
+          'jsonpickle',
+          'rfc6266'
       ],
       zip_safe=True)

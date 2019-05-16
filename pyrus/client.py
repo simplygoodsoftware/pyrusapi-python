@@ -21,6 +21,7 @@ import os
 import re
 import requests
 from .models import responses as resp, requests as req, entities as ent
+import rfc6266
 
 class PyrusAPI(object):
     """
@@ -273,7 +274,7 @@ class PyrusAPI(object):
         url = self._download_file_base_url + str(file_id)
         response = self._perform_get_file_request(url)
         if response.status_code == 200:
-            filename = re.findall('filename=(.+)', response.headers['Content-Disposition'])
+            filename = rfc6266.parse_headers(response.headers['Content-Disposition']).filename_unsafe
             return resp.DownloadResponse(filename, response.content)
         else: 
             if response.status_code == 401:
@@ -323,7 +324,7 @@ class PyrusAPI(object):
         return resp.SyncCatalogResponse(**response)
         
     def serialize_request(self, body):
-        return jsonpickle.dumps(body, unpicklable=False).encode('utf-8')
+        return jsonpickle.encode(body, unpicklable=False).encode('utf-8')
         
     def _auth(self):
         url = self._create_url('/auth')

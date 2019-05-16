@@ -1,8 +1,6 @@
 from datetime import datetime
 from . import entities
-
-DATE_TIME_FORMAT = '%Y-%m-%dT%H:%M:%SZ'
-DATE_FORMAT = '%Y-%m-%d'
+from . import constants
 
 class FormRegisterRequest(object):
     """
@@ -111,6 +109,9 @@ class TaskCommentRequest(object):
             attachments (:obj:`list` of :obj:`str`, optional): List of file guids to attach to the task
             added_list_ids (:obj:`list` of :obj:`int`, optional): List of list identifiers to which you want to add the task
             removed_list_ids (:obj:`list` of :obj:`int`, optional): List of list identifiers from which you want to remove the task
+            scheduled_date (:obj:`datetime`, optional): task scheduled date
+            scheduled_datetime_utc (:obj:`datetime`, optional): task scheduled date with utc time
+            cancel_schedule (:obj:`bool`, optional): Flag indicating that schedule should be cancelled. The task will be moved to the inbox
         Args(Simple task comment):
             participants_added (:obj:`list` of :obj:`models.entities.Person`, optional): List of participants to add to the task
             participants_removed (:obj:`list` of :obj:`models.entities.Person`, optional): List of participants to remove from the task
@@ -118,8 +119,6 @@ class TaskCommentRequest(object):
             due (:obj:`datetime`, optional): task due date with time (either due_date or due can be used)
             due_date (:obj:`datetime`, optional): task due date (either due_date or due can be used)
             duration (:obj:`int`, optional): duration of the event in minutes (it can only be used with due)
-            scheduled_date (:obj:`datetime`, optional): task scheduled date
-            cancel_schedule (:obj:`bool`, optional): Flag indicating that schedule should be cancelled. The task will be moved to the inbox
             subject (:obj:`str`, optional): New task subject
         Args(Form task comment):
             approval_choice (:obj:`str`, optional): Approval choice (approved/rejected/acknowledged)
@@ -132,8 +131,8 @@ class TaskCommentRequest(object):
 
     def __init__(self, text=None, approval_choice=None, approval_steps=None, action=None,
                  attachments=None, field_updates=None, approvals_added=None,
-                 participants_added=None, reassign_to=None, due=None,
-                 due_date=None, duration=None, scheduled_date=None,
+                 participants_added=None, reassign_to=None, due=None, due_date=None, 
+                 duration=None, scheduled_date=None, scheduled_datetime_utc=None,
                  cancel_schedule=None, added_list_ids=None, removed_list_ids=None,
                  approvals_removed=None, approvals_rerequested=None, subject = None,
                  participants_removed = None):
@@ -244,11 +243,11 @@ class TaskCommentRequest(object):
         if due_date:
             if not isinstance(due_date, datetime):
                 raise TypeError('due_date must be a date')
-            self.due_date = datetime.strftime(due_date, DATE_FORMAT)
+            self.due_date = datetime.strftime(due_date, constants.DATE_FORMAT)
         if due:
             if not isinstance(due, datetime):
                 raise TypeError('due must be a date')
-            self.due = datetime.strftime(due, DATE_TIME_FORMAT)
+            self.due = datetime.strftime(due, constants.DATE_TIME_FORMAT)
         if duration:
             if not isinstance(due, int):
                 raise TypeError('duration must be an int')
@@ -258,11 +257,27 @@ class TaskCommentRequest(object):
         if scheduled_date:
             if not isinstance(scheduled_date, datetime):
                 raise TypeError('scheduled_date must be a date')
-            self.scheduled_date = datetime.strftime(scheduled_date, DATE_FORMAT)
+            self.scheduled_date = datetime.strftime(scheduled_date, constants.DATE_FORMAT)
+            if hasattr(self, 'scheduled_datetime_utc'):
+                delattr(self, 'scheduled_datetime_utc')
+            if hasattr(self, 'cancel_schedule'):
+                delattr(self, 'cancel_schedule')
         if cancel_schedule:
             if not isinstance(cancel_schedule, bool):
                 raise TypeError('cancel_schedule must be a bool')
-            self.cancel_schedule = datetime.strftime(cancel_schedule, DATE_FORMAT)
+            self.cancel_schedule = datetime.strftime(cancel_schedule, constants.DATE_FORMAT)
+            if hasattr(self, 'scheduled_datetime_utc'):
+                delattr(self, 'scheduled_datetime_utc')
+            if hasattr(self, 'scheduled_date'):
+                delattr(self, 'scheduled_date')
+        if scheduled_datetime_utc:
+            if not isinstance(scheduled_datetime_utc, datetime):
+                raise TypeError('scheduled_datetime_utc must be a date')
+            self.scheduled_datetime_utc = datetime.strftime(scheduled_datetime_utc, constants.DATE_TIME_FORMAT)
+            if hasattr(self, 'scheduled_date'):
+                delattr(self, 'scheduled_date')
+            if hasattr(self, 'cancel_schedule'):
+                delattr(self, 'cancel_schedule')
         if added_list_ids:
             if not isinstance(added_list_ids, list):
                 raise TypeError('added_list_ids must be a list of int')
@@ -295,6 +310,8 @@ class CreateTaskRequest(object):
             parent_task_id (:obj:`int`, optional): Parent task id
             attachments (:obj:`list` of :obj:`str`, optional): List of file guids to attach to the task
             list_ids (:obj:`list` of :obj:`int`, optional): List of list identifiers to which you want to add the task
+            scheduled_date (:obj:`datetime`, optional): task scheduled date
+            scheduled_datetime_utc (:obj:`datetime`, optional): task scheduled date with utc time
         Args(Simple task):
             text (:obj:`str`): Task text. Required for a simple task
             subject (:obj:`str`, optional): Task subject
@@ -303,7 +320,6 @@ class CreateTaskRequest(object):
             duration (:obj:`int`, optional): duration of the event in minutes (it can only be used with due)
             responsible (:obj:`models.entities.Person`, optional): Responsible for the task
             participants (:obj:`list` of :obj:`models.entities.Person`, optional): List of task participants
-            scheduled_date (:obj:`datetime`, optional): task scheduled date
         Args(Form task):
             form_id (:obj:`int`) Form template id. Required for a form task
             fields (:obj:`list` of :obj:`models.entities.FormField`, optional): List of field values
@@ -314,7 +330,8 @@ class CreateTaskRequest(object):
     def __init__(self, text=None, subject=None, parent_task_id=None,
                  due_date=None, form_id=None, attachments=None, responsible=None,
                  fields=None, approvals=None, participants=None, list_ids=None,
-                 due=None, duration=None, scheduled_date=None, fill_defaults = None):
+                 due=None, duration=None, scheduled_date=None, scheduled_datetime_utc=None,
+                 fill_defaults=None):
         if text:
             self.text = text
         if subject:
@@ -326,11 +343,11 @@ class CreateTaskRequest(object):
         if due_date:
             if not isinstance(due_date, datetime):
                 raise TypeError('due_date must be a date')
-            self.due_date = datetime.strftime(due_date, DATE_FORMAT)
+            self.due_date = datetime.strftime(due_date, constants.DATE_FORMAT)
         if due:
             if not isinstance(due, datetime):
                 raise TypeError('due must be a date')
-            self.due = datetime.strftime(due, DATE_TIME_FORMAT)
+            self.due = datetime.strftime(due, constants.DATE_TIME_FORMAT)
         if duration:
             if not isinstance(duration, int):
                 raise TypeError('duration must be an int')
@@ -338,7 +355,15 @@ class CreateTaskRequest(object):
         if scheduled_date:
             if not isinstance(scheduled_date, datetime):
                 raise TypeError('scheduled_date must be a date')
-            self.scheduled_date = datetime.strftime(scheduled_date, DATE_FORMAT)
+            self.scheduled_date = datetime.strftime(scheduled_date, constants.DATE_FORMAT)
+            if hasattr(self, 'scheduled_datetime_utc'):
+                delattr(self, 'scheduled_datetime_utc')
+        if scheduled_datetime_utc:
+            if not isinstance(scheduled_datetime_utc, datetime):
+                raise TypeError('scheduled_datetime_utc must be a date')
+            self.scheduled_datetime_utc = datetime.strftime(scheduled_datetime_utc, constants.DATE_TIME_FORMAT)
+            if hasattr(self, 'scheduled_date'):
+                delattr(self, 'scheduled_date')
         if form_id:
             if not isinstance(form_id, int):
                 raise TypeError('form_id must be int')
@@ -478,4 +503,4 @@ def _get_catalog_items(catalog_items):
 def _date_to_str(str_date, property_name):
     if not isinstance(str_date, datetime):
         raise TypeError('{} must be a date'.format(property_name))
-    return datetime.strftime(str_date, DATE_TIME_FORMAT)
+    return datetime.strftime(str_date, constants.DATE_TIME_FORMAT)
