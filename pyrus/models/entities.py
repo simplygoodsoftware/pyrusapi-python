@@ -915,7 +915,7 @@ def _create_field_value(field_type, value):
         if isinstance(value, datetime):
             return value
         return _set_utc_timezone(datetime.strptime(value, constants.TIME_FORMAT).time())
-    if field_type in ['date', 'create_date', 'due_date']:
+    if field_type in ['date', 'creation_date', 'due_date']:
         if isinstance(value, datetime):
             return value
         return _set_utc_timezone(datetime.strptime(value, constants.DATE_FORMAT))
