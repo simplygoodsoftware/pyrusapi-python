@@ -258,20 +258,26 @@ class TaskCommentRequest(object):
             if not isinstance(scheduled_date, datetime):
                 raise TypeError('scheduled_date must be a date')
             self.scheduled_date = datetime.strftime(scheduled_date, constants.DATE_FORMAT)
-            self.scheduled_datetime_utc = None
-            self.cancel_schedule = None
+            if hasattr(self, 'scheduled_datetime_utc'):
+                delattr(self, 'scheduled_datetime_utc')
+            if hasattr(self, 'cancel_schedule'):
+                delattr(self, 'cancel_schedule')
         if cancel_schedule:
             if not isinstance(cancel_schedule, bool):
                 raise TypeError('cancel_schedule must be a bool')
             self.cancel_schedule = datetime.strftime(cancel_schedule, constants.DATE_FORMAT)
-            self.scheduled_datetime_utc = None
-            self.scheduled_date = None
+            if hasattr(self, 'scheduled_datetime_utc'):
+                delattr(self, 'scheduled_datetime_utc')
+            if hasattr(self, 'scheduled_date'):
+                delattr(self, 'scheduled_date')
         if scheduled_datetime_utc:
             if not isinstance(scheduled_datetime_utc, datetime):
                 raise TypeError('scheduled_datetime_utc must be a date')
             self.scheduled_datetime_utc = datetime.strftime(scheduled_datetime_utc, constants.DATE_TIME_FORMAT)
-            self.cancel_schedule = None
-            self.scheduled_date = None
+            if hasattr(self, 'scheduled_date'):
+                delattr(self, 'scheduled_date')
+            if hasattr(self, 'cancel_schedule'):
+                delattr(self, 'cancel_schedule')
         if added_list_ids:
             if not isinstance(added_list_ids, list):
                 raise TypeError('added_list_ids must be a list of int')
@@ -350,12 +356,14 @@ class CreateTaskRequest(object):
             if not isinstance(scheduled_date, datetime):
                 raise TypeError('scheduled_date must be a date')
             self.scheduled_date = datetime.strftime(scheduled_date, constants.DATE_FORMAT)
-            self.scheduled_datetime_utc = None
+            if hasattr(self, 'scheduled_datetime_utc'):
+                delattr(self, 'scheduled_datetime_utc')
         if scheduled_datetime_utc:
             if not isinstance(scheduled_datetime_utc, datetime):
                 raise TypeError('scheduled_datetime_utc must be a date')
             self.scheduled_datetime_utc = datetime.strftime(scheduled_datetime_utc, constants.DATE_TIME_FORMAT)
-            self.scheduled_date = None
+            if hasattr(self, 'scheduled_date'):
+                delattr(self, 'scheduled_date')
         if form_id:
             if not isinstance(form_id, int):
                 raise TypeError('form_id must be int')

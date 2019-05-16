@@ -29,8 +29,7 @@ class FormField(object):
     value = None
     parent_id = None
     row_id = None
-    decimal_places = None
-
+    
     def __init__(self, **kwargs):
         if 'id' in kwargs:
             self.id = kwargs['id']
@@ -49,8 +48,6 @@ class FormField(object):
             self.parent_id = kwargs['parent_id']
         if 'row_id' in kwargs:
             self.row_id = kwargs['row_id']
-        if 'decimal_places' in kwargs:
-            self.decimal_places = kwargs['decimal_places']
 
 class FormFieldInfo(object):
     """
@@ -63,6 +60,7 @@ class FormFieldInfo(object):
             catalog_id (:obj:`int`): Catalog id for catalog field
             columns (:obj:`list` of :obj:`models.entitites.FormField`): Columns description for table field
             fields (:obj:`list` of :obj:`models.entitites.FormField`): Child fields description for title field
+            decimal_places(:obj:`int`): Number of decimal places for number field
     """
 
     required_step = None
@@ -71,7 +69,8 @@ class FormFieldInfo(object):
     catalog_id = None
     columns = None
     fields = None
-
+    decimal_places = None
+    
     def __init__(self, **kwargs):
         if 'required_step' in kwargs:
             self.required_step = kwargs['required_step']
@@ -91,6 +90,8 @@ class FormFieldInfo(object):
             self.fields = []
             for field in kwargs['fields']:
                 self.fields.append(FormField(**field))
+        if 'decimal_places' in kwargs:
+            self.decimal_places = kwargs['decimal_places']
 
 class ChoiceOption(object):
     """
@@ -242,7 +243,9 @@ class Task(TaskHeader):
             for idx, approval in enumerate(kwargs['approvals']):
                 self.approvals.append([])
                 for curr_step in approval:
-                    self.approvals[idx].append(Approval(**curr_step))
+                    approval = Approval(**curr_step)
+                    approval.step = idx
+                    self.approvals[idx].append(approval)
         if 'participants' in kwargs:
             self.participants = []
             for participant in kwargs['participants']:
