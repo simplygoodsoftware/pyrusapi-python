@@ -174,6 +174,8 @@ class Task(TaskHeader):
             linked_task_ids (:obj:`list` of :obj:`int`): List of linked task identifiers
             last_note_id (:obj:`int`): Id of the last comment
             subject (:obj:`str`): Task subject
+            scheduled_date (:obj:`datetime`): task scheduled date
+            scheduled_datetime_utc (:obj:`datetime`): task scheduled date with utc time
         Attributes(Simple Task):
             text (:obj:`str`): Task text
             responsible (:obj:`models.entities.Person`): Task responsible
@@ -181,7 +183,6 @@ class Task(TaskHeader):
             due (:obj:`datetime`): Task due date with time
             duration (:obj:`int`): Task duration in minutes
             participants (:obj:`list` of :obj:`models.entities.Person`): List of task participants
-            scheduled_date (:obj:`datetime`): task scheduled date
         Attributes(Form Task):
             form_id (:obj:`int`): Form template id
             fields (:obj:`list` of obj`models.entities.FormField`): List of field values
@@ -197,6 +198,7 @@ class Task(TaskHeader):
     approvals = None
     participants = None
     scheduled_date = None
+    scheduled_datetime_utc = None
     list_ids = None
     parent_task_id = None
     linked_task_ids = None
@@ -217,6 +219,8 @@ class Task(TaskHeader):
             self.duration = kwargs['duration']
         if 'scheduled_date' in kwargs:
             self.scheduled_date = datetime.strptime(kwargs['scheduled_date'], constants.DATE_FORMAT)
+        if 'scheduled_datetime_utc' in kwargs:
+            self.scheduled_datetime_utc = datetime.strptime(kwargs['scheduled_datetime_utc'], constants.DATE_TIME_FORMAT)
         if 'form_id' in kwargs:
             self.form_id = kwargs['form_id']
         if 'attachments' in kwargs:
@@ -268,6 +272,8 @@ class TaskWithComments(Task):
             last_note_id (:obj:`int`): Id of the last comment
             subject (:obj:`str`): Task subject
             comments (:obj:`list` of :obj:`models.entities.TaskComment`): List of task comments
+            scheduled_date (:obj:`datetime`): task scheduled date
+            scheduled_datetime_utc (:obj:`datetime`): task scheduled date with utc time
         Attributes(Simple Task):
             text (:obj:`str`): Task text
             responsible (:obj:`models.entities.Person`): Task responsible
@@ -275,7 +281,6 @@ class TaskWithComments(Task):
             due (:obj:`datetime`): Task due date with time
             duration (:obj:`int`): Task duration in minutes
             participants (:obj:`list` of :obj:`models.entities.Person`): List of task participants
-            scheduled_date (:obj:`datetime`): task scheduled date
         Attributes(Form Task):
             form_id (:obj:`int`): Form template id
             fields (:obj:`list` of obj`models.entities.FormField`): List of field values
@@ -393,6 +398,9 @@ class TaskComment(object):
             removed_list_ids (:obj:`list` of :obj:`int`): List of list identifiers from the task was removed
             comment_as_roles (:obj:`list` of :obj:`models.entites.Role`) List of roles on behalf of which the task was commented
             subject (:obj:`str`): Updated task subject
+            scheduled_date (:obj:`datetime`): task scheduled date
+            scheduled_datetime_utc (:obj:`datetime`): task scheduled date with utc time
+            cancel_schedule (:obj:`bool`): Flag indicating that schedule was cancelled for the task.
         Attributes(Simple Task comment):
             reassign_to (:obj:`models.entities.Person`): Person to whom the task was reassigned
             participants_added (:obj:`list` of :obj:`models.entities.Person`): List of participants added to the task
@@ -400,8 +408,6 @@ class TaskComment(object):
             due_date (:obj:`datetime`): Task due date
             due (:obj:`datetime`): Task due date with time
             duration (:obj:`int`): Task duration in minutes
-            scheduled_date (:obj:`datetime`): task scheduled date
-            cancel_schedule (:obj:`bool`): Flag indicating that schedule was cancelled for the task.
         Attributes(Form Task comment):
             field_updates (:obj:`list` of obj`models.entities.FormField`): List of updated field values
             approval_choice (:obj:`str`): Approval choice (approved/rejected/acknowledged)
@@ -433,6 +439,7 @@ class TaskComment(object):
     attachments = None
     action = None
     scheduled_date = None
+    scheduled_datetime_utc = None
     cancel_schedule = None
     added_list_ids = None
     removed_list_ids = None
@@ -504,6 +511,8 @@ class TaskComment(object):
             self.action = kwargs['action']
         if 'scheduled_date' in kwargs:
             self.scheduled_date = datetime.strptime(kwargs['scheduled_date'], constants.DATE_FORMAT)
+        if 'scheduled_datetime_utc' in kwargs:
+            self.scheduled_datetime_utc = datetime.strptime(kwargs['scheduled_datetime_utc'], constants.DATE_TIME_FORMAT)
         if 'cancel_schedule' in kwargs:
             self.cancel_schedule = kwargs['cancel_schedule']
         if 'added_list_ids' in kwargs:
