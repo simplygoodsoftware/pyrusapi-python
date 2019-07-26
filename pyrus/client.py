@@ -274,7 +274,10 @@ class PyrusAPI(object):
         url = self._download_file_base_url + str(file_id)
         response = self._perform_get_file_request(url)
         if response.status_code == 200:
-            filename = rfc6266.parse_headers(response.headers['Content-Disposition']).filename_unsafe
+            try:
+                filename = rfc6266.parse_headers(response.headers['Content-Disposition']).filename_unsafe
+            except:
+                filename = re.findall('filename=(.+)', response.headers['Content-Disposition'])	
             return resp.DownloadResponse(filename, response.content)
         else: 
             if response.status_code == 401:

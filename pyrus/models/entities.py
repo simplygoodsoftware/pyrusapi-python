@@ -205,6 +205,8 @@ class Task(TaskHeader):
     linked_task_ids = None
     last_note_id = None
     subject = None
+    current_step = None
+    
     @property
     def flat_fields(self):
         return _get_flat_fields(self.fields)
@@ -256,6 +258,8 @@ class Task(TaskHeader):
                 self.list_ids.append(lst)
         if 'last_note_id' in kwargs:
             self.last_note_id = kwargs['last_note_id']
+        if 'current_step' in kwargs:
+            self.current_step = kwargs['current_step']
         super(Task, self).__init__(**kwargs)
 
 class TaskWithComments(Task):
