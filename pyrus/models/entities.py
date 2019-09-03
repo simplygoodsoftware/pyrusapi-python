@@ -424,6 +424,7 @@ class TaskComment(object):
             approvals_added (:obj:`list` of :obj:`list` of :obj:`models.entities.Person`) List of approval steps added to the task
             approvals_removed (:obj:`list` of :obj:`list` of :obj:`models.entities.Person`) List of approval steps removed from the task
             approvals_rerequested (:obj:`list` of :obj:`list` of :obj:`models.entities.Person`) List of approval steps rerequested for the task
+            channel (:obj:`models.entities.Channel`): External notification
     """
 
     id = None
@@ -453,6 +454,8 @@ class TaskComment(object):
     changed_step = None
     comment_as_roles = None
     subject = None
+    channel = None
+
     @property
     def flat_field_updates(self):
         return _get_flat_fields(self.field_updates)
@@ -538,6 +541,8 @@ class TaskComment(object):
             self.comment_as_roles = []
             for role in kwargs['comment_as_roles']:
                 self.comment_as_roles.append(Role(**role))
+        if 'channel' in kwargs:
+            self.channel = Channel(**kwargs['channel'])
 
 class Organization(object):
     """
@@ -994,3 +999,26 @@ class NewFile(list):
         list.__init__(self)
         for value in args:
             self.append(value)
+
+@customhandlers.ChannelHandler.handles
+class Channel(object):
+    """
+        Channel
+        
+        Attributes:
+            type (:obj:`str`): Channel type (email, telegram, web, facebook, vk, viber, mobile_app, web_widget, moy_sklad, zadarma, amo_crm)
+            to (:obj:`models.entities.ChannelUser`): Notification recipient
+            sender (:obj:`models.entities.ChannelUser`): Notification sender
+    """
+
+    type = None
+    to = None
+    sender = None
+
+    def __init__(self, **kwargs):
+        if 'type' in kwargs:
+            self.type = kwargs['type']
+        if 'to' in kwargs:
+            self.to = kwargs['to']
+        if 'from' in kwargs:
+            self.sender = kwargs['from']
