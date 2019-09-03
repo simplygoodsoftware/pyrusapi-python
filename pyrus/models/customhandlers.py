@@ -41,4 +41,9 @@ class FormFieldHandler(jsonpickle.handlers.BaseHandler):
 
 
 
-  
+class ChannelHandler(jsonpickle.handlers.BaseHandler):
+    
+    def flatten(self, obj, data):
+        if obj.type:
+            data['type'] = obj.type
+        return data
