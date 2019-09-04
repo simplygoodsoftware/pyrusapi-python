@@ -1022,3 +1022,18 @@ class Channel(object):
             self.to = kwargs['to']
         if 'from' in kwargs:
             self.sender = kwargs['from']
+
+class CatalogValue(object):
+    """
+        Catalog field value
+        
+        Attributes:
+            id (:obj:`int`): Catalog item id
+            name (:obj:`str`): Catalog item name
+    """
+
+    def __init__(self, item_id=None, item_name=None):
+        if item_id:
+            self.item_id = item_id
+        if item_name:
+            self.item_name = item_name
