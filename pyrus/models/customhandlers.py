@@ -40,7 +40,6 @@ class FormFieldHandler(jsonpickle.handlers.BaseHandler):
         return p.flatten(value)
 
 
-
 class ChannelHandler(jsonpickle.handlers.BaseHandler):
     
     def flatten(self, obj, data):
