@@ -11,7 +11,7 @@ from . import constants
 class FormField(object):
     """
         Form field
-        
+
         Attributes:
             id (:obj:`int`): Field id
             type (:obj:`str`): Field type
@@ -29,7 +29,7 @@ class FormField(object):
     value = None
     parent_id = None
     row_id = None
-    
+
     def __init__(self, **kwargs):
         if 'id' in kwargs:
             self.id = kwargs['id']
@@ -52,7 +52,7 @@ class FormField(object):
 class FormFieldInfo(object):
     """
         Additional form field information
-        
+
         Attributes:
             required_step (:obj:`int`): Indicates the step number where the field becomes required for filling
             immutable_step (:obj:`int`): indicates the step number from which the user can't change the field value
@@ -70,7 +70,7 @@ class FormFieldInfo(object):
     columns = None
     fields = None
     decimal_places = None
-    
+
     def __init__(self, **kwargs):
         if 'required_step' in kwargs:
             self.required_step = kwargs['required_step']
@@ -96,7 +96,7 @@ class FormFieldInfo(object):
 class ChoiceOption(object):
     """
         multiple_choice options description
-        
+
         Attributes:
             choice_id (:obj:`int`): Choice id
             choice_value (:obj:`str`): Choice name
@@ -123,7 +123,7 @@ class ChoiceOption(object):
 class TaskHeader(object):
     """
         Task header
-        
+
         Attributes:
             id (:obj:`int`): Task id
             create_date (:obj:`datetime`): Task creation date
@@ -162,7 +162,7 @@ class TaskHeader(object):
 class Task(TaskHeader):
     """
         Task header
-        
+
         Attributes:
             id (:obj:`int`): Task id
             create_date (:obj:`datetime`): Task creation date
@@ -206,11 +206,11 @@ class Task(TaskHeader):
     last_note_id = None
     subject = None
     current_step = None
-    
+
     @property
     def flat_fields(self):
         return _get_flat_fields(self.fields)
-    
+
     def __init__(self, **kwargs):
         if 'subject' in kwargs:
             self.subject = kwargs['subject']
@@ -265,7 +265,7 @@ class Task(TaskHeader):
 class TaskWithComments(Task):
     """
         Task with comments
-        
+
         Attributes:
             id (:obj:`int`): Task id
             create_date (:obj:`datetime`): Task creation date
@@ -306,7 +306,7 @@ class TaskWithComments(Task):
 class Person(object):
     """
         Person
-        
+
         Attributes:
             id (:obj:`int`): Person id
             first_name (:obj:`str`): Person first name
@@ -336,7 +336,7 @@ class Person(object):
 class File(object):
     """
         File
-        
+
         Attributes:
             id (:obj:`int`): File id
             name (:obj:`str`): File name
@@ -371,7 +371,7 @@ class File(object):
 class Approval(object):
     """
         Approval
-        
+
         Attributes:
             person (:obj:`entities.models.Person`): Approval person
             approval_choice (:obj:`str`): Approval choice (approved/rejected/revoked/acknowledged)
@@ -393,7 +393,7 @@ class Approval(object):
 class TaskComment(object):
     """
         Task comment
-        
+
         Attributes:
             id (:obj:`int`): Comment id
             text (:obj:`str`): Comment text
@@ -547,7 +547,7 @@ class TaskComment(object):
 class Organization(object):
     """
         Organization
-        
+
         Attributes:
             id (:obj:`int`): Organization id
             name (:obj:`str`): Organization name
@@ -577,7 +577,7 @@ class Organization(object):
 class Role(object):
     """
         Role
-        
+
         Attributes:
             id (:obj:`int`): Role id
             name (:obj:`str`): Role name
@@ -601,11 +601,13 @@ class Role(object):
 class CatalogItem(object):
     """
         Value of FormField catalog
-        
+
         Attributes:
-            item_id (:obj:`int`): Catalog item id
-            values (:obj:`list` of :obj:`str`): List of catalog values
+            item_id (:obj:`int`, deprecated): Catalog item id
+            values (:obj:`list` of :obj:`str`, deprecated): List of catalog values
             headers (:obj:`list` of :obj:`str`): List of catalog headers
+            item_ids (:obj:`list` of :obj:`int`m): List of catalog item ids
+            rows (:obj:`list` of :obj:`list` of :obj:`str`): List of catalog rows
     """
 
     item_id = None
@@ -617,12 +619,31 @@ class CatalogItem(object):
             self.headers = []
             for header in kwargs['headers']:
                 self.headers.append(header)
-        if 'item_id' in kwargs:
+
+        if 'item_ids' in kwargs:
+            self.item_ids = []
+            for _id in kwargs['item_ids']:
+                self.item_ids.append(_id)
+            if len(self.item_ids) == 1:
+                self.item_id = self.item_ids[0]
+        elif 'item_id' in kwargs:
             self.item_id = kwargs['item_id']
-        if 'values' in kwargs:
+            self.item_ids = [kwargs['item_id']]
+
+        if 'rows' in kwargs:
+            self.rows = []
+            for row in kwargs['rows']:
+                row_copy = []
+                for value in row:
+                    row_copy.append(value)
+                self.rows.append(row_copy)
+            if len(self.rows) == 1:
+                self.values = self.rows[0].copy()
+        elif 'values' in kwargs:
             self.values = []
             for value in kwargs['values']:
                 self.values.append(value)
+            self.rows = [self.values.copy()]
 
     @classmethod
     def fromliststr(cls, values):
@@ -648,7 +669,7 @@ class Table(list):
 class TableRow(object):
     """
         Table Row
-        
+
         Attributes:
             row_id (:obj:`int`): Table row id
             cells (:obj:`list` of :obj:`models.entities.FormField`): List of row cells
@@ -677,7 +698,7 @@ class TableRow(object):
 class Title(object):
     """
         Value of FormField title
-        
+
         Attributes:
             checkmark (:obj:`str`): checkmark value (checked/unchecked)
             fields (:obj:`list` of :obj:`models.entities.FormField`): List of title child fields
@@ -697,7 +718,7 @@ class Title(object):
 class MultipleChoice(object):
     """
         Value of FormField multiple_choice
-        
+
         Attributes:
             choice_ids (:obj:`list` of :obj:`int`): choice ids
             choice_names (:obj:`list` of :obj:`str`): choice names
@@ -729,7 +750,7 @@ class MultipleChoice(object):
 class Projects(object):
     """
         Value of FormField project
-        
+
         Attributes:
             projects (:obj:`list` of :obj:`models.entities.Project`): List of projects
     """
@@ -745,7 +766,7 @@ class Projects(object):
 class FormLink(object):
     """
         Value of FormField form_link
-        
+
         Attributes:
             task_ids (:obj:`list` of :obj:`int`): List of task identifiers
             subject (:obj:`str`): task subjects
@@ -769,7 +790,7 @@ class FormLink(object):
 class Project(object):
     """
         Project
-        
+
         Attributes:
             id (:obj:`int`): Project id
             name (:obj:`str`): Project name
@@ -801,7 +822,7 @@ class FormRegisterFilter(object):
 class EqualsFilter(FormRegisterFilter):
     """
         Form register equals filter
-        
+
         Attributes:
             field_id (:obj:`int`): Form field id
             value (:obj:`str`): Form field value
@@ -815,7 +836,7 @@ class EqualsFilter(FormRegisterFilter):
 class GreaterThanFilter(FormRegisterFilter):
     """
         Form register greater than filter
-        
+
         Attributes:
             field_id (:obj:`int`): Form field id
             value (:obj:`str`): Form field value
@@ -829,7 +850,7 @@ class GreaterThanFilter(FormRegisterFilter):
 class LessThanFilter(FormRegisterFilter):
     """
         Form register less than filter
-        
+
         Attributes:
             field_id (:obj:`int`): Form field id
             value (:obj:`str`): Form field value
@@ -843,7 +864,7 @@ class LessThanFilter(FormRegisterFilter):
 class RangeFilter(FormRegisterFilter):
     """
         Form register range filter
-        
+
         Attributes:
             field_id (:obj:`int`): Form field id
             value (:obj:`str`): Form field value
@@ -864,7 +885,7 @@ class RangeFilter(FormRegisterFilter):
 class IsInFilter(FormRegisterFilter):
     """
         Form register is in filter
-        
+
         Attributes:
             field_id (:obj:`int`): Form field id
             value (:obj:`str`): Form field value
@@ -883,7 +904,7 @@ class IsInFilter(FormRegisterFilter):
 class TaskList(object):
     """
         task list
-        
+
         Attributes:
             id (:obj:`int`): Task list id
             name (:obj:`str`): Task list name
@@ -907,7 +928,7 @@ class TaskList(object):
 class CatalogHeader(object):
     """
         catalog header
-        
+
         Attributes:
             name (:obj:`str`): Catalog header name
             type (:obj:`str`): Catalog header type (text/workflow)
@@ -988,7 +1009,7 @@ def _set_utc_timezone(time):
     if time.tzinfo is None:
         time = time.replace(tzinfo=timezone.utc)
     return time
-    
+
 class NewFile(list):
     """
         Value of new FormFieldFile
@@ -1004,7 +1025,7 @@ class NewFile(list):
 class Channel(object):
     """
         Channel
-        
+
         Attributes:
             type (:obj:`str`): Channel type (email, telegram, web, facebook, vk, viber, mobile_app, web_widget, moy_sklad, zadarma, amo_crm)
             to (:obj:`models.entities.ChannelUser`): Notification recipient
@@ -1026,14 +1047,20 @@ class Channel(object):
 class CatalogValue(object):
     """
         Catalog field value
-        
+
         Attributes:
-            id (:obj:`int`): Catalog item id
-            name (:obj:`str`): Catalog item name
+            item_id (:obj:`int`, deprecated): Catalog item id
+            item_name (:obj:`str`, deprecated): Catalog item name
+            item_ids (:obj:`list` of :obj:`int`): List of catalog item ids
+            item_names (:obj:`list` of :obj:`str`): List of catalog item names
     """
 
-    def __init__(self, item_id=None, item_name=None):
+    def __init__(self, item_id=None, item_name=None, item_ids=None, item_names=None):
         if item_id:
             self.item_id = item_id
         if item_name:
             self.item_name = item_name
+        if item_ids:
+            self.item_ids = item_ids
+        if item_names:
+            self.item_names = item_names
