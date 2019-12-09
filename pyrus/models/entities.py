@@ -342,9 +342,9 @@ class File(object):
             name (:obj:`str`): File name
             size (:obj:`int`): File size in bytes
             md5 (:obj:`str`): File md5 hash
-            md5 (:obj:`str`): File md5 hash
             url (:obj:`str`): Url to download the file
-            size (:obj:`int`): File version
+            version (:obj:`int`): File version
+            root_id (:obj:`int`): Root file id
     """
 
     id = None
@@ -353,6 +353,7 @@ class File(object):
     md5 = None
     url = None
     version = None
+    root_id = None
 
     def __init__(self, **kwargs):
         if 'id' in kwargs:
@@ -367,6 +368,8 @@ class File(object):
             self.url = kwargs['url']
         if 'version' in kwargs:
             self.version = kwargs['version']
+        if 'root_id' in kwargs:
+            self.root_id = kwargs['root_id']
 
 class Approval(object):
     """
@@ -1028,8 +1031,8 @@ class CatalogValue(object):
         Catalog field value
         
         Attributes:
-            id (:obj:`int`): Catalog item id
-            name (:obj:`str`): Catalog item name
+            item_id (:obj:`int`): Catalog item id
+            item_name (:obj:`str`): Catalog item name
     """
 
     def __init__(self, item_id=None, item_name=None):
