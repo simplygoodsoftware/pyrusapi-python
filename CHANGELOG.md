@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.23.0] - 2019-10-24
 ### Added
 - support for reading and writing multiple values in catalog field
+- root_id for files with version
 
 ## [1.22.0] - 2019-09-04
 ### Added
