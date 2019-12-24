@@ -400,7 +400,7 @@ class PyrusAPI(object):
             class:`models.responses.TaskListResponse` object
         """
 
-        url = self._create_url('/inbox?tasks_count={}'.format(tasks_count))
+        url = self._create_url('/inbox?item_count={}'.format(tasks_count))
         response = self._perform_get_request(url)
         return resp.TaskListResponse(**response)
         
