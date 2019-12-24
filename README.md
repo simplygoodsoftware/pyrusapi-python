@@ -167,6 +167,42 @@ response = pyrus_client.get_task_list(list_id, item_count=25, include_archived=T
 tasks = response.tasks
 ```
 
+## Roles
+
+* Get all organization roles:
+
+```python
+roles_response = pyrus_client.get_roles()
+roles = roles_response.roles
+```
+
+* Create role:
+
+```python
+create_role_request = CreateRoleRequest(
+            name='TechSupport',
+            members=[1233, 3043])
+role_response = pyrus_client.create_role(create_role_request)
+```
+
+* Update role:
+    
+```python
+Update_role_request = UpdateRoleRequest(
+            name='InternalTechSupport',
+            added_members=[2766],
+            removed_members=[1233])
+role_response = pyrus_client.update_role(create_role_request)
+```
+
+## Profile
+
+* Get profile:
+
+```python
+profile_response = pyrus_client.get_profile()
+```
+
 ## Support
 
 If you have any questions or comments please send an email to support@pyrus.com
