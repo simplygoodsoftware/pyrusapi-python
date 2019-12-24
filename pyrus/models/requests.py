@@ -479,6 +479,48 @@ class CreateCatalogRequest(object):
         if items:
             self.items = _get_catalog_items(items)
 
+class CreateRoleRequest(object):
+    """
+        CreateRoleRequest
+        
+        Args:
+            name (:obj:`str`): Role name
+            members (:obj:`list` of :obj:`int`): List of role member ids
+            external_id (:obj:`str`, optional): Custom role identifier
+    """
+
+    def __init__(self, name=None, members=None, external_id=None):
+        if name:
+            self.name = name
+        if members:
+            self.member_add = members
+        if external_id:
+            self.external_id = external_id
+
+class UpdateRoleRequest(object):
+    """
+        UpdateRoleRequest
+        
+        Args:
+            name (:obj:`str`, optional): Role name
+            added_members (:obj:`list` of :obj:`int`, optional): List of new role members
+            removed_members (:obj:`list` of :obj:`int`, optional): List of remoived role members
+            banned (:obj:`bool`, optional): should we ban or unban role
+            external_id (:obj:`str`, optional): Custom role identifier
+    """
+
+    def __init__(self, name=None, added_members=None, removed_members=None, banned=None, external_id=None):
+        if name:
+            self.name = name
+        if added_members:
+            self.member_add = added_members
+        if removed_members:
+            self.memebr_remove = removed_members
+        if banned is not None:
+            self.banned = banned
+        if external_id:
+            self.external_id = external_id
+
 def _get_catalog_headers(catalog_headers):
     if not isinstance(catalog_headers, list):
         raise TypeError('catalog_headers must be a list of str')

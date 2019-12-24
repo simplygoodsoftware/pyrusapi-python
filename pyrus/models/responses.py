@@ -313,3 +313,91 @@ class SyncCatalogResponse(BaseResponse):
             for header in kwargs['catalog_headers']:
                 self.catalog_headers.append(entities.CatalogHeader(**header))
         super(SyncCatalogResponse, self).__init__(**kwargs)
+
+class RoleResponse(BaseResponse):
+    """
+        RoleResponse
+        
+        Attributes:
+            id (:obj:`int`): Role id
+            name (:obj:`str`): Role name
+            external_id(:obj:`str`): Custom external id
+            banned(:obj:`bool`): Is role banned
+            member_ids(:obj:`list` of :obj:`int`) Role member ids
+    """
+    __doc__ += BaseResponse.__doc__
+
+    id = None
+    name = None
+    external_id = None
+    banned = None
+    member_ids = None
+    
+    def __init__(self, **kwargs):
+        if 'id' in kwargs:
+            self.id = kwargs['id']
+        if 'name' in kwargs:
+            self.name = kwargs['name']
+        if 'external_id' in kwargs:
+            self.external_id = kwargs['external_id']
+        if 'banned' in kwargs:
+            self.banned = kwargs['banned']
+        if 'member_ids' in kwargs:
+            self.member_ids = []
+            for member_id in kwargs['member_ids']:
+                self.member_ids.append(member_id)
+        super(RoleResponse, self).__init__(**kwargs)
+
+class RolesResponse(BaseResponse):
+    """
+        RoleResponse
+        
+        Attributes:
+            roles (:obj:`list` of :obj:`models.entities.Role`): List of roles in user's organization
+    """
+    __doc__ += BaseResponse.__doc__
+
+    roles = None
+    
+    def __init__(self, **kwargs):
+        if 'roles' in kwargs:
+            self.roles = []
+            for role in kwargs['roles']:
+                self.roles.append(entities.Role(**role))
+        super(RolesResponse, self).__init__(**kwargs)
+
+class ProfileResponse(BaseResponse):
+    """
+        ProfileResponse
+        
+        Attributes:
+            person_id (:obj:`int`): Person id
+            first_name (:obj:`str`): Person first name
+            last_name (:obj:`str`): Person last name
+            email(:obj:`str`): Custom external id
+            locale(:obj:`str`): Person locale (ru-RU/en-US/en-GB)
+            organization_id(:obj:`int`) Person organization id
+    """
+    __doc__ += BaseResponse.__doc__
+
+    person_id = None
+    first_name = None
+    last_name = None
+    email = None
+    locale = None
+    organization_id = None
+    
+    def __init__(self, **kwargs):
+        if 'person_id' in kwargs:
+            self.person_id = kwargs['person_id']
+        if 'first_name' in kwargs:
+            self.first_name = kwargs['first_name']
+        if 'last_name' in kwargs:
+            self.last_name = kwargs['last_name']
+        if 'email' in kwargs:
+            self.email = kwargs['email']
+        if 'locale' in kwargs:
+            self.locale = kwargs['locale']
+        if 'organization_id' in kwargs:
+            self.organization_id = kwargs['organization_id']
+        super(ProfileResponse, self).__init__(**kwargs)
