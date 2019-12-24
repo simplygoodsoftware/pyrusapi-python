@@ -203,6 +203,15 @@ role_response = pyrus_client.update_role(create_role_request)
 profile_response = pyrus_client.get_profile()
 ```
 
+## Inbox
+
+* Get inbox:
+
+```python
+inbox_response = pyrus_client.get_inbox(tasks_count=100)
+```
+
+
 ## Support
 
 If you have any questions or comments please send an email to support@pyrus.com
