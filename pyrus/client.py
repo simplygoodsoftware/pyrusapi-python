@@ -40,10 +40,10 @@ class PyrusAPI(object):
         POST = "POST"
         PUT = "PUT"
 
-    _host = 'api.pyrus.com'
+    _host = 'api.pyrus.test'
     _base_path = '/v4'
     access_token = None
-    _protocol = 'https'
+    _protocol = 'http'
     _api_name = 'Pyrus'
     _user_agent = 'Pyrus API python client v 1.17.0'
     proxy = None

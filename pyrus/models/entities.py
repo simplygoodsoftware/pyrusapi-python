@@ -974,8 +974,6 @@ def _create_field_value(field_type, value):
     if field_type == 'catalog':
         return CatalogItem(**value)
     if field_type == 'file':
-        if isinstance(value, NewFile):
-            return value
         res = []
         for file in value:
             res.append(File(**file))
@@ -1013,16 +1011,37 @@ def _set_utc_timezone(time):
         time = time.replace(tzinfo=timezone.utc)
     return time
 
-class NewFile(list):
+class NewFile:
     """
-        Value of new FormFieldFile
-        List of `str`
+        Attachment definition
+
+        Attributes:
+            guid (:obj:`str`): Uploaded file GUID
+            root_id (:obj:`int`): Existing file ID to create new version (optional)
+            
+            attachment_id (:obj:`int`): Existing file ID
+            
+            url (:obj:`str`): Existing file URL
+            name (:obj:`str`): Link name (optional)
     """
 
-    def __init__(self, *args):
-        list.__init__(self)
-        for value in args:
-            self.append(value)
+    guid = None
+    root_id = None
+    attachment_id = None
+    url = None
+    name = None
+
+    def __init__(self, **kwargs):
+        if 'guid' in kwargs:
+            self.guid = kwargs['guid']
+        if 'root_id' in kwargs:
+            self.root_id = kwargs['root_id']
+        if 'attachment_id' in kwargs:
+            self.attachment_id = kwargs['attachment_id']
+        if 'url' in kwargs:
+            self.url = kwargs['url']
+        if 'name' in kwargs:
+            self.name = kwargs['name']
 
 @customhandlers.ChannelHandler.handles
 class Channel(object):

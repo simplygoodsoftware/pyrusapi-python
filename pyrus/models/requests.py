@@ -106,7 +106,7 @@ class TaskCommentRequest(object):
         Args:
             text (:obj:`str`, optional): Comment text
             action (:obj:`str`, optional): Activity action (finished/reopened)
-            attachments (:obj:`list` of :obj:`str`, optional): List of file guids to attach to the task
+            attachments (:obj:`list` of :obj:`str` or :obj:`models.entities.NewFile`, optional): List of files to attach to the task
             added_list_ids (:obj:`list` of :obj:`int`, optional): List of list identifiers to which you want to add the task
             removed_list_ids (:obj:`list` of :obj:`int`, optional): List of list identifiers from which you want to remove the task
             scheduled_date (:obj:`datetime`, optional): task scheduled date
@@ -156,7 +156,7 @@ class TaskCommentRequest(object):
                 self.reassign_to = entities.Person(email=reassign_to)
         if attachments:
             if not isinstance(attachments, list):
-                raise TypeError('attachments must be a list of guids')
+                raise TypeError('attachments must be a list')
             self.attachments = []
             for attachment in attachments:
                 self.attachments.append(attachment)
@@ -315,7 +315,7 @@ class CreateTaskRequest(object):
         
         Args:
             parent_task_id (:obj:`int`, optional): Parent task id
-            attachments (:obj:`list` of :obj:`str`, optional): List of file guids to attach to the task
+            attachments (:obj:`list` of :obj:`str` or :obj:`models.entities.NewFile`, optional): List of files to attach to the task
             list_ids (:obj:`list` of :obj:`int`, optional): List of list identifiers to which you want to add the task
             scheduled_date (:obj:`datetime`, optional): task scheduled date
             scheduled_datetime_utc (:obj:`datetime`, optional): task scheduled date with utc time
@@ -377,7 +377,7 @@ class CreateTaskRequest(object):
             self.form_id = form_id
         if attachments:
             if not isinstance(attachments, list):
-                raise TypeError('attachments must be a list of guids')
+                raise TypeError('attachments must be a list')
             self.attachments = []
             for attachment in attachments:
                 self.attachments.append(attachment)
