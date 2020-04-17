@@ -112,6 +112,7 @@ class TaskCommentRequest(object):
             scheduled_date (:obj:`datetime`, optional): task scheduled date
             scheduled_datetime_utc (:obj:`datetime`, optional): task scheduled date with utc time
             cancel_schedule (:obj:`bool`, optional): Flag indicating that schedule should be cancelled. The task will be moved to the inbox
+            spent_minutes (:obj:`int`, optional): Spent time in minutes
         Args(Simple task comment):
             participants_added (:obj:`list` of :obj:`models.entities.Person`, optional): List of participants to add to the task
             participants_removed (:obj:`list` of :obj:`models.entities.Person`, optional): List of participants to remove from the task
@@ -136,7 +137,7 @@ class TaskCommentRequest(object):
                  duration=None, scheduled_date=None, scheduled_datetime_utc=None,
                  cancel_schedule=None, added_list_ids=None, removed_list_ids=None,
                  approvals_removed=None, approvals_rerequested=None, subject = None,
-                 participants_removed = None, channel=None):
+                 participants_removed = None, channel=None, spent_minutes=None):
         self.text = text
         self.subject = subject
         if approval_choice:
@@ -308,6 +309,10 @@ class TaskCommentRequest(object):
             if channel != 'email':
                 raise TypeError('channel must be equal to email')
             self.channel = entities.Channel(type=channel)
+        if spent_minutes:
+            if not isinstance(spent_minutes, int):
+                raise TypeError('spent_minutes must be an int')
+            self.spent_minutes = spent_minutes
 
 class CreateTaskRequest(object):
     """

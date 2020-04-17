@@ -411,6 +411,7 @@ class TaskComment(object):
             scheduled_date (:obj:`datetime`): task scheduled date
             scheduled_datetime_utc (:obj:`datetime`): task scheduled date with utc time
             cancel_schedule (:obj:`bool`): Flag indicating that schedule was cancelled for the task.
+            spent_minutes (:obj:`int`): Spent time in minutes
         Attributes(Simple Task comment):
             reassign_to (:obj:`models.entities.Person`): Person to whom the task was reassigned
             participants_added (:obj:`list` of :obj:`models.entities.Person`): List of participants added to the task
@@ -458,6 +459,7 @@ class TaskComment(object):
     comment_as_roles = None
     subject = None
     channel = None
+    spent_minutes = None
 
     @property
     def flat_field_updates(self):
@@ -546,6 +548,8 @@ class TaskComment(object):
                 self.comment_as_roles.append(Role(**role))
         if 'channel' in kwargs:
             self.channel = Channel(**kwargs['channel'])
+        if 'spent_minutes' in kwargs:
+            self.spent_minutes = kwargs['spent_minutes']
 
 class Organization(object):
     """
