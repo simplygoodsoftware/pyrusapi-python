@@ -33,7 +33,7 @@ class FormFieldHandler(jsonpickle.handlers.BaseHandler):
                 return time.strftime(value, constants.TIME_FORMAT)
             return datetime.strftime(value, constants.TIME_FORMAT)
         if type == 'file':
-            if not isinstance(value, entities.NewFile) or not isinstance(value, list):
+            if not isinstance(value, list):
                 return
                 
         p = jsonpickle.Pickler(unpicklable=False)

@@ -411,6 +411,7 @@ class TaskComment(object):
             scheduled_date (:obj:`datetime`): task scheduled date
             scheduled_datetime_utc (:obj:`datetime`): task scheduled date with utc time
             cancel_schedule (:obj:`bool`): Flag indicating that schedule was cancelled for the task.
+            spent_minutes (:obj:`int`): Spent time in minutes
         Attributes(Simple Task comment):
             reassign_to (:obj:`models.entities.Person`): Person to whom the task was reassigned
             participants_added (:obj:`list` of :obj:`models.entities.Person`): List of participants added to the task
@@ -458,6 +459,7 @@ class TaskComment(object):
     comment_as_roles = None
     subject = None
     channel = None
+    spent_minutes = None
 
     @property
     def flat_field_updates(self):
@@ -546,6 +548,8 @@ class TaskComment(object):
                 self.comment_as_roles.append(Role(**role))
         if 'channel' in kwargs:
             self.channel = Channel(**kwargs['channel'])
+        if 'spent_minutes' in kwargs:
+            self.spent_minutes = kwargs['spent_minutes']
 
 class Organization(object):
     """
@@ -974,8 +978,6 @@ def _create_field_value(field_type, value):
     if field_type == 'catalog':
         return CatalogItem(**value)
     if field_type == 'file':
-        if isinstance(value, NewFile):
-            return value
         res = []
         for file in value:
             res.append(File(**file))
@@ -1013,16 +1015,37 @@ def _set_utc_timezone(time):
         time = time.replace(tzinfo=timezone.utc)
     return time
 
-class NewFile(list):
+class NewFile:
     """
-        Value of new FormFieldFile
-        List of `str`
+        Attachment definition
+
+        Attributes:
+            guid (:obj:`str`): Uploaded file GUID
+            root_id (:obj:`int`): Existing file ID to create new version (optional)
+            
+            attachment_id (:obj:`int`): Existing file ID
+            
+            url (:obj:`str`): Existing file URL
+            name (:obj:`str`): Link name (optional)
     """
 
-    def __init__(self, *args):
-        list.__init__(self)
-        for value in args:
-            self.append(value)
+    guid = None
+    root_id = None
+    attachment_id = None
+    url = None
+    name = None
+
+    def __init__(self, **kwargs):
+        if 'guid' in kwargs:
+            self.guid = kwargs['guid']
+        if 'root_id' in kwargs:
+            self.root_id = kwargs['root_id']
+        if 'attachment_id' in kwargs:
+            self.attachment_id = kwargs['attachment_id']
+        if 'url' in kwargs:
+            self.url = kwargs['url']
+        if 'name' in kwargs:
+            self.name = kwargs['name']
 
 @customhandlers.ChannelHandler.handles
 class Channel(object):

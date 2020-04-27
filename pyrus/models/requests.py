@@ -106,12 +106,13 @@ class TaskCommentRequest(object):
         Args:
             text (:obj:`str`, optional): Comment text
             action (:obj:`str`, optional): Activity action (finished/reopened)
-            attachments (:obj:`list` of :obj:`str`, optional): List of file guids to attach to the task
+            attachments (:obj:`list` of :obj:`str` or :obj:`models.entities.NewFile`, optional): List of files to attach to the task
             added_list_ids (:obj:`list` of :obj:`int`, optional): List of list identifiers to which you want to add the task
             removed_list_ids (:obj:`list` of :obj:`int`, optional): List of list identifiers from which you want to remove the task
             scheduled_date (:obj:`datetime`, optional): task scheduled date
             scheduled_datetime_utc (:obj:`datetime`, optional): task scheduled date with utc time
             cancel_schedule (:obj:`bool`, optional): Flag indicating that schedule should be cancelled. The task will be moved to the inbox
+            spent_minutes (:obj:`int`, optional): Spent time in minutes
         Args(Simple task comment):
             participants_added (:obj:`list` of :obj:`models.entities.Person`, optional): List of participants to add to the task
             participants_removed (:obj:`list` of :obj:`models.entities.Person`, optional): List of participants to remove from the task
@@ -136,7 +137,7 @@ class TaskCommentRequest(object):
                  duration=None, scheduled_date=None, scheduled_datetime_utc=None,
                  cancel_schedule=None, added_list_ids=None, removed_list_ids=None,
                  approvals_removed=None, approvals_rerequested=None, subject = None,
-                 participants_removed = None, channel=None):
+                 participants_removed = None, channel=None, spent_minutes=None):
         self.text = text
         self.subject = subject
         if approval_choice:
@@ -156,7 +157,7 @@ class TaskCommentRequest(object):
                 self.reassign_to = entities.Person(email=reassign_to)
         if attachments:
             if not isinstance(attachments, list):
-                raise TypeError('attachments must be a list of guids')
+                raise TypeError('attachments must be a list')
             self.attachments = []
             for attachment in attachments:
                 self.attachments.append(attachment)
@@ -308,6 +309,10 @@ class TaskCommentRequest(object):
             if channel != 'email':
                 raise TypeError('channel must be equal to email')
             self.channel = entities.Channel(type=channel)
+        if spent_minutes:
+            if not isinstance(spent_minutes, int):
+                raise TypeError('spent_minutes must be an int')
+            self.spent_minutes = spent_minutes
 
 class CreateTaskRequest(object):
     """
@@ -315,7 +320,7 @@ class CreateTaskRequest(object):
         
         Args:
             parent_task_id (:obj:`int`, optional): Parent task id
-            attachments (:obj:`list` of :obj:`str`, optional): List of file guids to attach to the task
+            attachments (:obj:`list` of :obj:`str` or :obj:`models.entities.NewFile`, optional): List of files to attach to the task
             list_ids (:obj:`list` of :obj:`int`, optional): List of list identifiers to which you want to add the task
             scheduled_date (:obj:`datetime`, optional): task scheduled date
             scheduled_datetime_utc (:obj:`datetime`, optional): task scheduled date with utc time
@@ -377,7 +382,7 @@ class CreateTaskRequest(object):
             self.form_id = form_id
         if attachments:
             if not isinstance(attachments, list):
-                raise TypeError('attachments must be a list of guids')
+                raise TypeError('attachments must be a list')
             self.attachments = []
             for attachment in attachments:
                 self.attachments.append(attachment)
