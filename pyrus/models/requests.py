@@ -399,9 +399,9 @@ class CreateTaskRequest(object):
                 if isinstance(field, entities.FormField):
                     self.fields.append(field)
                 else:
-                    if 'name' not in field and 'id' not in field:
+                    if 'name' not in field and 'id' not in field and 'code' not in field:
                         raise TypeError('each field in fields '
-                                        'must contain field id or name')
+                                        'must contain field id, name or code')
                     if 'value' not in field:
                         raise TypeError('each field in fields must '
                                         'contain field value')

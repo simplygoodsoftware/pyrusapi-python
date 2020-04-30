@@ -9,6 +9,8 @@ class FormFieldHandler(jsonpickle.handlers.BaseHandler):
     def flatten(self, obj, data):
         if obj.id:
             data['id'] = obj.id
+        if obj.code:
+            data['code'] = obj.code
         if obj.name:
             data['name'] = obj.name
 

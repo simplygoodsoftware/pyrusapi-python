@@ -15,6 +15,7 @@ class FormField(object):
         Attributes:
             id (:obj:`int`): Field id
             type (:obj:`str`): Field type
+            code (:obj:`str`): Field code
             name (:obj:`str`): Field name
             info (:obj:`models.entitites.FormFieldInfo`): Additional field information
             value (:obj:`object`, optional): Field value
@@ -24,6 +25,7 @@ class FormField(object):
 
     id = None
     type = None
+    code = None
     name = None
     info = None
     value = None
@@ -35,6 +37,8 @@ class FormField(object):
             self.id = kwargs['id']
         if 'type' in kwargs:
             self.type = kwargs['type']
+        if 'code' in kwargs:
+            self.code = kwargs['code']
         if 'name' in kwargs:
             self.name = kwargs['name']
         if 'info' in kwargs:
