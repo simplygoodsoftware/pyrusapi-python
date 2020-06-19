@@ -128,7 +128,7 @@ class TaskCommentRequest(object):
             approvals_added (:obj:`list` of :obj:`list` of :obj:`models.entities.Person`, optional) List of approval steps to add to the task
             approvals_removed (:obj:`list` of :obj:`list` of :obj:`models.entities.Person`, optional) List of approval steps to remove from the task
             approvals_rerequested (:obj:`list` of :obj:`list` of :obj:`models.entities.Person`, optional) List of approval steps to rerequest for the task
-            channel (:obj:`str`) External channel to send notification (email, telegram, web, facebook, vk, viber, mobile_app, web_widget, moy_sklad, zadarma, amo_crm)
+            channel (:obj:`str`) External channel to send notification (email, telegram, web, facebook, vk, viber, mobile_app, web_widget, moy_sklad, zadarma, amo_crm, instagram)
     """
 
     def __init__(self, text=None, approval_choice=None, approval_steps=None, action=None,
@@ -306,7 +306,7 @@ class TaskCommentRequest(object):
         if channel:
             if not isinstance(channel, str):
                 raise TypeError('channel must be an instance of str')
-			if channel not in ['email', 'telegram', 'web', 'facebook', 'vk', 'viber', 'mobile_app', 'web_widget', 'moy_sklad', 'zadarma', 'amo_crm']:
+			if channel not in ['email', 'telegram', 'web', 'facebook', 'vk', 'viber', 'mobile_app', 'web_widget', 'moy_sklad', 'zadarma', 'amo_crm', 'instagram']:
                 raise TypeError('channel must be correct')
             self.channel = entities.Channel(type=channel)
         if spent_minutes:
