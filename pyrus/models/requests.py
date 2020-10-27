@@ -113,6 +113,9 @@ class TaskCommentRequest(object):
             scheduled_datetime_utc (:obj:`datetime`, optional): task scheduled date with utc time
             cancel_schedule (:obj:`bool`, optional): Flag indicating that schedule should be cancelled. The task will be moved to the inbox
             spent_minutes (:obj:`int`, optional): Spent time in minutes
+            subscribers_added (:obj:`list` of :obj:`models.entities.Person`, optional): List of subscribers to add to the task
+            subscribers_removed (:obj:`list` of :obj:`models.entities.Person`, optional): List of subscribers to remove from the task
+            subscribers_rerequested (:obj:`list` of :obj:`models.entities.Person`, optional): List of subscribers to add to the task
         Args(Simple task comment):
             participants_added (:obj:`list` of :obj:`models.entities.Person`, optional): List of participants to add to the task
             participants_removed (:obj:`list` of :obj:`models.entities.Person`, optional): List of participants to remove from the task
@@ -136,7 +139,7 @@ class TaskCommentRequest(object):
                  participants_added=None, reassign_to=None, due=None, due_date=None, 
                  duration=None, scheduled_date=None, scheduled_datetime_utc=None,
                  cancel_schedule=None, added_list_ids=None, removed_list_ids=None,
-                 approvals_removed=None, approvals_rerequested=None, subject = None,
+                 approvals_removed=None, approvals_rerequested=None, subscribers_added=None, subscribers_removed=None, subscribers_rerequested=None, subject = None,
                  participants_removed = None, channel=None, spent_minutes=None):
         self.text = text
         self.subject = subject
@@ -209,6 +212,39 @@ class TaskCommentRequest(object):
                         self.approvals_rerequested[idx].append(entities.Person(id=person))
                     else:
                         self.approvals_rerequested[idx].append(entities.Person(email=person))
+        if subscribers_added:
+            if not isinstance(subscribers_added, list):
+                raise TypeError('subscribers_added must be a list')
+            self.subscribers_added = []
+            for person in subscribers_added:
+                if isinstance(person, entities.Person):
+                    self.subscribers_added.append(person)
+                elif isinstance(person, int):
+                    self.subscribers_added.append(entities.Person(id=person))
+                else:
+                    self.subscribers_added.append(entities.Person(email=person))
+        if subscribers_removed:
+            if not isinstance(subscribers_removed, list):
+                raise TypeError('subscribers_removed must be a list')
+            self.subscribers_removed = []
+            for person in subscribers_removed:
+                if isinstance(person, entities.Person):
+                    self.subscribers_removed.append(person)
+                elif isinstance(person, int):
+                    self.subscribers_removed.append(entities.Person(id=person))
+                else:
+                    self.subscribers_removed.append(entities.Person(email=person))
+        if subscribers_rerequested:
+            if not isinstance(subscribers_rerequested, list):
+                raise TypeError('subscribers_rerequested must be a list')
+            self.subscribers_rerequested = []
+            for person in subscribers_rerequested:
+                if isinstance(person, entities.Person):
+                    self.subscribers_rerequested.append(person)
+                elif isinstance(person, int):
+                    self.subscribers_rerequested.append(entities.Person(id=person))
+                else:
+                    self.subscribers_rerequested.append(entities.Person(email=person))
         if participants_added:
             if not isinstance(participants_added, list):
                 raise TypeError('participants_added must be a list')
@@ -324,6 +360,7 @@ class CreateTaskRequest(object):
             list_ids (:obj:`list` of :obj:`int`, optional): List of list identifiers to which you want to add the task
             scheduled_date (:obj:`datetime`, optional): task scheduled date
             scheduled_datetime_utc (:obj:`datetime`, optional): task scheduled date with utc time
+            subscribers (:obj:`list` of :obj:`models.entities.Person`, optional): List of task subscribers
         Args(Simple task):
             text (:obj:`str`): Task text. Required for a simple task
             subject (:obj:`str`, optional): Task subject
@@ -341,7 +378,7 @@ class CreateTaskRequest(object):
 
     def __init__(self, text=None, subject=None, parent_task_id=None,
                  due_date=None, form_id=None, attachments=None, responsible=None,
-                 fields=None, approvals=None, participants=None, list_ids=None,
+                 fields=None, approvals=None, subscribers=None, participants=None, list_ids=None,
                  due=None, duration=None, scheduled_date=None, scheduled_datetime_utc=None,
                  fill_defaults=None):
         if text:
@@ -422,9 +459,20 @@ class CreateTaskRequest(object):
                         self.approvals[idx].append(entities.Person(id=person))
                     else:
                         self.approvals[idx].append(entities.Person(email=person))
+        if subscribers:
+            if not isinstance(subscribers, list):
+                raise TypeError('subscribers must be a list')
+            self.subscribers = []
+            for person in subscribers:
+                if isinstance(person, entities.Person):
+                    self.subscribers.append(person)
+                elif isinstance(person, int):
+                    self.subscribers.append(entities.Person(id=person))
+                else:
+                    self.subscribers.append(entities.Person(email=person))
         if participants:
             if not isinstance(participants, list):
-                raise TypeError('approvals_added must be a list')
+                raise TypeError('participants must be a list')
             self.participants = []
             for person in participants:
                 try:
