@@ -450,9 +450,9 @@ class TaskComment(object):
             scheduled_datetime_utc (:obj:`datetime`): task scheduled date with utc time
             cancel_schedule (:obj:`bool`): Flag indicating that schedule was cancelled for the task.
             spent_minutes (:obj:`int`): Spent time in minutes
-            subscribers_added (:obj:`list` of :obj:`models.entities.Subscriber`) List of subscribers added to the task
-            subscribers_removed (:obj:`list` of :obj:`models.entities.Subscriber`) List of subscribers removed from the task
-            subscribers_rerequested (:obj:`list` of :obj:`models.entities.Subscriber`) List of subscribers rerequested for the task
+            subscribers_added (:obj:`list` of :obj:`models.entities.Person`) List of subscribers added to the task
+            subscribers_removed (:obj:`list` of :obj:`models.entities.Person`) List of subscribers removed from the task
+            subscribers_rerequested (:obj:`list` of :obj:`models.entities.Person`) List of subscribers rerequested for the task
         Attributes(Simple Task comment):
             reassign_to (:obj:`models.entities.Person`): Person to whom the task was reassigned
             participants_added (:obj:`list` of :obj:`models.entities.Person`): List of participants added to the task
@@ -551,15 +551,15 @@ class TaskComment(object):
         if 'subscribers_added' in kwargs:
             self.subscribers_added = []
             for subscriber in kwargs['subscribers_added']:
-                self.subscribers_added.append(Subscriber(**subscriber))
+                self.subscribers_added.append(Person(**subscriber))
         if 'subscribers_removed' in kwargs:
             self.subscribers_removed = []
             for subscriber in kwargs['subscribers_removed']:
-                self.subscribers_removed.append(Subscriber(**subscriber))
+                self.subscribers_removed.append(Person(**subscriber))
         if 'subscribers_rerequested' in kwargs:
             self.subscribers_rerequested = []
             for subscriber in kwargs['subscribers_rerequested']:
-                self.subscribers_rerequested.append(Subscriber(**subscriber))
+                self.subscribers_rerequested.append(Person(**subscriber))
         if 'participants_added' in kwargs:
             self.participants_added = []
             for participant in kwargs['participants_added']:

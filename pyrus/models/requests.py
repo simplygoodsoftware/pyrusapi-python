@@ -2,6 +2,7 @@ from datetime import datetime
 from . import entities
 from . import constants
 
+
 class FormRegisterRequest(object):
     """
         FormRegisterRequest
@@ -22,10 +23,10 @@ class FormRegisterRequest(object):
             simple_format (:obj:`bool`, optional): Returns csv in simple for parsing format. Applicable only for csv format
             encoding (:obj:`str`, optional): Response encoding. Applicable only for csv format
     """
-    
-    def __init__(self, steps=None, include_archived=None, filters=None, modified_before=None, modified_after=None, 
-                field_ids=None, format=None, delimiter=None, simple_format=None, encoding=None,
-                closed_before=None, closed_after=None, created_before=None, created_after=None):
+
+    def __init__(self, steps=None, include_archived=None, filters=None, modified_before=None, modified_after=None,
+                 field_ids=None, format=None, delimiter=None, simple_format=None, encoding=None,
+                 closed_before=None, closed_after=None, created_before=None, created_after=None):
         if steps:
             if not isinstance(steps, list):
                 raise TypeError('steps must be a list of int')
@@ -76,7 +77,7 @@ class FormRegisterRequest(object):
                 if not isinstance(field_id, int):
                     raise TypeError('field_ids must be a list of int')
             self.field_ids = field_ids
-        
+
         if format:
             if not isinstance(format, str):
                 raise TypeError('format must be an instance of str')
@@ -98,6 +99,7 @@ class FormRegisterRequest(object):
             if not isinstance(encoding, str):
                 raise TypeError('encoding must be a string')
             self.encoding = encoding
+
 
 class TaskCommentRequest(object):
     """
@@ -136,16 +138,20 @@ class TaskCommentRequest(object):
 
     def __init__(self, text=None, approval_choice=None, approval_steps=None, action=None,
                  attachments=None, field_updates=None, approvals_added=None,
-                 participants_added=None, reassign_to=None, due=None, due_date=None, 
+                 participants_added=None, reassign_to=None, due=None, due_date=None,
                  duration=None, scheduled_date=None, scheduled_datetime_utc=None,
                  cancel_schedule=None, added_list_ids=None, removed_list_ids=None,
-                 approvals_removed=None, approvals_rerequested=None, subscribers_added=None, subscribers_removed=None, subscribers_rerequested=None, subject = None,
-                 participants_removed = None, channel=None, spent_minutes=None):
-        self.text = text
-        self.subject = subject
+                 approvals_removed=None, approvals_rerequested=None, subscribers_added=None, subscribers_removed=None,
+                 subscribers_rerequested=None, subject=None,
+                 participants_removed=None, channel=None, spent_minutes=None):
+        if text:
+            self.text = text
+        if subject:
+            self.subject = subject
         if approval_choice:
             if approval_choice not in ['approved', 'rejected', 'revoked', 'acknowledged']:
-                raise TypeError('approval_choice can only be \'approved\', \'rejected\', \'acknowledged\', or \'revoked\'')
+                raise TypeError(
+                    'approval_choice can only be \'approved\', \'rejected\', \'acknowledged\', or \'revoked\'')
             self.approval_choice = approval_choice
         if action:
             if action not in ['finished', 'reopened']:
@@ -303,7 +309,7 @@ class TaskCommentRequest(object):
         if cancel_schedule:
             if not isinstance(cancel_schedule, bool):
                 raise TypeError('cancel_schedule must be a bool')
-            self.cancel_schedule = datetime.strftime(cancel_schedule, constants.DATE_FORMAT)
+            self.cancel_schedule = cancel_schedule
             if hasattr(self, 'scheduled_datetime_utc'):
                 delattr(self, 'scheduled_datetime_utc')
             if hasattr(self, 'scheduled_date'):
@@ -342,13 +348,15 @@ class TaskCommentRequest(object):
         if channel:
             if not isinstance(channel, str):
                 raise TypeError('channel must be an instance of str')
-			if channel not in ['email', 'telegram', 'web', 'facebook', 'vk', 'viber', 'mobile_app', 'web_widget', 'moy_sklad', 'zadarma', 'amo_crm', 'instagram']:
+            if channel not in ['email', 'telegram', 'web', 'facebook', 'vk', 'viber', 'mobile_app', 'web_widget',
+                               'moy_sklad', 'zadarma', 'amo_crm', 'instagram']:
                 raise TypeError('channel must be correct')
             self.channel = entities.Channel(type=channel)
         if spent_minutes:
             if not isinstance(spent_minutes, int):
                 raise TypeError('spent_minutes must be an int')
             self.spent_minutes = spent_minutes
+
 
 class CreateTaskRequest(object):
     """
@@ -492,6 +500,7 @@ class CreateTaskRequest(object):
                 raise TypeError("fill_defaults must be a boolean")
             self.fill_defaults = fill_defaults
 
+
 class SyncCatalogRequest(object):
     """
         SyncCatalogRequest
@@ -511,6 +520,7 @@ class SyncCatalogRequest(object):
             self.catalog_headers = _get_catalog_headers(catalog_headers)
         if items:
             self.items = _get_catalog_items(items)
+
 
 class CreateCatalogRequest(object):
     """
@@ -532,6 +542,7 @@ class CreateCatalogRequest(object):
         if items:
             self.items = _get_catalog_items(items)
 
+
 def _get_catalog_headers(catalog_headers):
     if not isinstance(catalog_headers, list):
         raise TypeError('catalog_headers must be a list of str')
@@ -546,10 +557,11 @@ def _get_catalog_headers(catalog_headers):
             raise TypeError('list_ids must be a list of str or models.entities.CatalogHeader')
     return headers
 
+
 def _get_catalog_items(catalog_items):
     if not isinstance(catalog_items, list):
         raise TypeError('catalog_items must be a list')
-    
+
     items = []
     for item in catalog_items:
         try:
@@ -559,6 +571,7 @@ def _get_catalog_items(catalog_items):
                 raise TypeError('catalog_items must be a list of str or models.entities.CatalogItems')
             items.append(item)
     return items
+
 
 def _date_to_str(str_date, property_name):
     if not isinstance(str_date, datetime):
