@@ -117,7 +117,7 @@ class TaskCommentRequest(object):
             spent_minutes (:obj:`int`, optional): Spent time in minutes
             subscribers_added (:obj:`list` of :obj:`models.entities.Person`, optional): List of subscribers to add to the task
             subscribers_removed (:obj:`list` of :obj:`models.entities.Person`, optional): List of subscribers to remove from the task
-            subscribers_rerequested (:obj:`list` of :obj:`models.entities.Person`, optional): List of subscribers to add to the task
+            subscribers_rerequested (:obj:`list` of :obj:`models.entities.Person`, optional): List of subscribers to rerequest for the task
         Args(Simple task comment):
             participants_added (:obj:`list` of :obj:`models.entities.Person`, optional): List of participants to add to the task
             participants_removed (:obj:`list` of :obj:`models.entities.Person`, optional): List of participants to remove from the task
