@@ -49,10 +49,11 @@ class FormResponse(BaseResponse):
         Attributes:
             id (:obj:`int`): Form id
             name (:obj:`str`): Form name
-            steps (:obj:`dict`): Form name
+            steps (:obj:`dict`): Form steps
                 key (:obj:`int`): Step number
                 value (:obj:`str`): Step name
             fields (:obj:`list` of :obj:`models.entities.FormField`): List of form fields
+            deletedOrClosed (:obj:`bool`): Form state
     """
     __doc__ += BaseResponse.__doc__
 
@@ -60,6 +61,7 @@ class FormResponse(BaseResponse):
     name = None
     steps = None
     fields = None
+    deletedOrClosed = None
     @property
     def flat_fields(self):
         return self._get_flat_fields(self.fields)
@@ -75,6 +77,8 @@ class FormResponse(BaseResponse):
             self.fields = []
             for field in kwargs['fields']:
                 self.fields.append(entities.FormField(**field))
+        if 'deleted_or_closed' in kwargs:
+            self.deletedOrClosed = kwargs['deleted_or_closed']
         super(FormResponse, self).__init__(**kwargs)
 
     def _get_flat_fields(self, fields):
