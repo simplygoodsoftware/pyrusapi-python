@@ -313,6 +313,8 @@ class Person(object):
             last_name (:obj:`str`): Person last name
             email (:obj:`str`): Person email
             type (:obj:`str`): Person type (user/bot/role)
+            department_id (:obj:`int`): Person department id
+            department_name (:obj:`str`): Person department
     """
 
     id = None
@@ -320,6 +322,8 @@ class Person(object):
     last_name = None
     email = None
     type = None
+    department_id = None
+    department_name = None
 
     def __init__(self, **kwargs):
         if 'id' in kwargs:
@@ -332,6 +336,10 @@ class Person(object):
             self.email = kwargs['email']
         if 'type' in kwargs:
             self.type = kwargs['type']
+        if 'department_id' in kwargs:
+            self.department_id = kwargs['department_id']
+        if 'department_name' in kwargs:
+            self.department_name = kwargs['department_name']
 
 class File(object):
     """
