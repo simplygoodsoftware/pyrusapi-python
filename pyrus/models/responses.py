@@ -5,6 +5,7 @@
 from . import entities
 from . import constants
 
+
 class BaseResponse(object):
     """
         error_code (:obj:`str`): Error code
@@ -21,7 +22,8 @@ class BaseResponse(object):
             self.error_code = kwargs['error_code']
         if 'error' in kwargs:
             self.error = kwargs['error']
-        
+
+
 class AuthResponse(BaseResponse):
     """
         AuthResponse
@@ -42,6 +44,7 @@ class AuthResponse(BaseResponse):
             self.success = False
         super(AuthResponse, self).__init__(**kwargs)
 
+
 class FormResponse(BaseResponse):
     """
         FormResponse
@@ -49,10 +52,11 @@ class FormResponse(BaseResponse):
         Attributes:
             id (:obj:`int`): Form id
             name (:obj:`str`): Form name
-            steps (:obj:`dict`): Form name
+            steps (:obj:`dict`): Form steps
                 key (:obj:`int`): Step number
                 value (:obj:`str`): Step name
             fields (:obj:`list` of :obj:`models.entities.FormField`): List of form fields
+            deletedOrClosed (:obj:`bool`): Form state
     """
     __doc__ += BaseResponse.__doc__
 
@@ -60,6 +64,8 @@ class FormResponse(BaseResponse):
     name = None
     steps = None
     fields = None
+    deletedOrClosed = None
+
     @property
     def flat_fields(self):
         return self._get_flat_fields(self.fields)
@@ -75,6 +81,8 @@ class FormResponse(BaseResponse):
             self.fields = []
             for field in kwargs['fields']:
                 self.fields.append(entities.FormField(**field))
+        if 'deleted_or_closed' in kwargs:
+            self.deletedOrClosed = kwargs['deleted_or_closed']
         super(FormResponse, self).__init__(**kwargs)
 
     def _get_flat_fields(self, fields):
@@ -92,9 +100,9 @@ class FormResponse(BaseResponse):
                     res.extend(self._get_flat_fields(option.fields))
             elif field.info.columns:
                 res.extend(field.info.columns)
-            
+
         return res
-        
+
 
 class FormsResponse(BaseResponse):
     """
@@ -114,6 +122,7 @@ class FormsResponse(BaseResponse):
                 self.forms.append(FormResponse(**form))
         super(FormsResponse, self).__init__(**kwargs)
 
+
 class TaskResponse(BaseResponse):
     """
         TaskResponse
@@ -124,11 +133,12 @@ class TaskResponse(BaseResponse):
     __doc__ += BaseResponse.__doc__
 
     task = None
-    
+
     def __init__(self, **kwargs):
         if 'task' in kwargs:
             self.task = entities.TaskWithComments(**kwargs['task'])
         super(TaskResponse, self).__init__(**kwargs)
+
 
 class ContactsResponse(BaseResponse):
     """
@@ -147,6 +157,7 @@ class ContactsResponse(BaseResponse):
             for organization in kwargs['organizations']:
                 self.organizations.append(entities.Organization(**organization))
         super(ContactsResponse, self).__init__(**kwargs)
+
 
 class CatalogResponse(BaseResponse):
     """
@@ -176,6 +187,7 @@ class CatalogResponse(BaseResponse):
                 self.catalog_headers.append(entities.CatalogHeader(**item))
         super(CatalogResponse, self).__init__(**kwargs)
 
+
 class FormRegisterResponse(BaseResponse):
     """
         FormRegisterResponse
@@ -196,6 +208,7 @@ class FormRegisterResponse(BaseResponse):
                 self.tasks.append(entities.Task(**task))
         super(FormRegisterResponse, self).__init__(**kwargs)
 
+
 class UploadResponse(BaseResponse):
     """
         UploadResponse
@@ -208,13 +221,14 @@ class UploadResponse(BaseResponse):
 
     guid = None
     md5_hash = None
-    
+
     def __init__(self, **kwargs):
         if 'guid' in kwargs:
             self.guid = kwargs['guid']
         if 'md5_hash' in kwargs:
             self.md5_hash = kwargs['md5_hash']
         super(UploadResponse, self).__init__(**kwargs)
+
 
 class ListsResponse(BaseResponse):
     """
@@ -234,6 +248,7 @@ class ListsResponse(BaseResponse):
                 self.lists.append(entities.TaskList(**lst))
         super(ListsResponse, self).__init__(**kwargs)
 
+
 class TaskListResponse(BaseResponse):
     """
         TaskListResponse
@@ -246,7 +261,7 @@ class TaskListResponse(BaseResponse):
 
     tasks = None
     has_more = None
-    
+
     def __init__(self, **kwargs):
         if 'has_more' in kwargs:
             self.has_more = kwargs['has_more']
@@ -255,6 +270,7 @@ class TaskListResponse(BaseResponse):
             for task in kwargs['tasks']:
                 self.tasks.append(entities.TaskHeader(**task))
         super(TaskListResponse, self).__init__(**kwargs)
+
 
 class DownloadResponse(BaseResponse):
     """
@@ -274,6 +290,7 @@ class DownloadResponse(BaseResponse):
         self.raw_file = raw_file
         super(DownloadResponse, self).__init__(**{})
 
+
 class SyncCatalogResponse(BaseResponse):
     """
         SyncCatalogResponse
@@ -292,7 +309,7 @@ class SyncCatalogResponse(BaseResponse):
     deleted = None
     updated = None
     catalog_headers = None
-    
+
     def __init__(self, **kwargs):
         if 'apply' in kwargs:
             self.apply = kwargs['apply']
