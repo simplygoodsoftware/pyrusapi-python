@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - 'DeletedOrClosed' property in GetForm response
 
+## [1.27.0] - 2020-10-27
+### Added
+- support for reading and writing subscribers in task comments
+
 ## [1.26.1] - 2020-06-26
 ### Changed
 - bugfix
