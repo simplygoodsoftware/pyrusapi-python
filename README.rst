@@ -87,6 +87,31 @@ Get catalog with all items:
     >>> catalog_response = pyrus_client.get_catalog(catalog_id)
     >>> items = catalog_response.items
 
+
+Get all organization roles:
+    
+    >>> roles_response = pyrus_client.get_roles()
+    >>> roles = roles_response.roles
+
+Create role:
+    
+    >>> create_role_request = CreateRoleRequest(
+            name='TechSupport',
+            members=[1233, 3043])
+    >>> role_response = pyrus_client.create_role(create_role_request)
+
+Update role:
+    
+    >>> Update_role_request = UpdateRoleRequest(
+            name='InternalTechSupport',
+            added_members=[2766],
+            removed_members=[1233])
+    >>> role_response = pyrus_client.update_role(create_role_request)
+
+Get profile:
+
+    >>>profile_response = pyrus_client.get_profile()
+
 -----------------
 Support
 -----------------
