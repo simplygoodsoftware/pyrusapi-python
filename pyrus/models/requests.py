@@ -2,6 +2,7 @@ from datetime import datetime
 from . import entities
 from . import constants
 
+
 class FormRegisterRequest(object):
     """
         FormRegisterRequest
@@ -22,10 +23,10 @@ class FormRegisterRequest(object):
             simple_format (:obj:`bool`, optional): Returns csv in simple for parsing format. Applicable only for csv format
             encoding (:obj:`str`, optional): Response encoding. Applicable only for csv format
     """
-    
-    def __init__(self, steps=None, include_archived=None, filters=None, modified_before=None, modified_after=None, 
-                field_ids=None, format=None, delimiter=None, simple_format=None, encoding=None,
-                closed_before=None, closed_after=None, created_before=None, created_after=None):
+
+    def __init__(self, steps=None, include_archived=None, filters=None, modified_before=None, modified_after=None,
+                 field_ids=None, format=None, delimiter=None, simple_format=None, encoding=None,
+                 closed_before=None, closed_after=None, created_before=None, created_after=None):
         if steps:
             if not isinstance(steps, list):
                 raise TypeError('steps must be a list of int')
@@ -76,7 +77,7 @@ class FormRegisterRequest(object):
                 if not isinstance(field_id, int):
                     raise TypeError('field_ids must be a list of int')
             self.field_ids = field_ids
-        
+
         if format:
             if not isinstance(format, str):
                 raise TypeError('format must be an instance of str')
@@ -99,6 +100,7 @@ class FormRegisterRequest(object):
                 raise TypeError('encoding must be a string')
             self.encoding = encoding
 
+
 class TaskCommentRequest(object):
     """
         TaskCommentRequest
@@ -106,12 +108,16 @@ class TaskCommentRequest(object):
         Args:
             text (:obj:`str`, optional): Comment text
             action (:obj:`str`, optional): Activity action (finished/reopened)
-            attachments (:obj:`list` of :obj:`str`, optional): List of file guids to attach to the task
+            attachments (:obj:`list` of :obj:`str` or :obj:`models.entities.NewFile`, optional): List of files to attach to the task
             added_list_ids (:obj:`list` of :obj:`int`, optional): List of list identifiers to which you want to add the task
             removed_list_ids (:obj:`list` of :obj:`int`, optional): List of list identifiers from which you want to remove the task
             scheduled_date (:obj:`datetime`, optional): task scheduled date
             scheduled_datetime_utc (:obj:`datetime`, optional): task scheduled date with utc time
             cancel_schedule (:obj:`bool`, optional): Flag indicating that schedule should be cancelled. The task will be moved to the inbox
+            spent_minutes (:obj:`int`, optional): Spent time in minutes
+            subscribers_added (:obj:`list` of :obj:`models.entities.Person`, optional): List of subscribers to add to the task
+            subscribers_removed (:obj:`list` of :obj:`models.entities.Person`, optional): List of subscribers to remove from the task
+            subscribers_rerequested (:obj:`list` of :obj:`models.entities.Person`, optional): List of subscribers to rerequest for the task
         Args(Simple task comment):
             participants_added (:obj:`list` of :obj:`models.entities.Person`, optional): List of participants to add to the task
             participants_removed (:obj:`list` of :obj:`models.entities.Person`, optional): List of participants to remove from the task
@@ -127,21 +133,25 @@ class TaskCommentRequest(object):
             approvals_added (:obj:`list` of :obj:`list` of :obj:`models.entities.Person`, optional) List of approval steps to add to the task
             approvals_removed (:obj:`list` of :obj:`list` of :obj:`models.entities.Person`, optional) List of approval steps to remove from the task
             approvals_rerequested (:obj:`list` of :obj:`list` of :obj:`models.entities.Person`, optional) List of approval steps to rerequest for the task
-            channel (:obj:`str`) External channel to send notification (email)
+            channel (:obj:`str`) External channel to send notification (email, telegram, web, facebook, vk, viber, mobile_app, web_widget, moy_sklad, zadarma, amo_crm, instagram)
     """
 
     def __init__(self, text=None, approval_choice=None, approval_steps=None, action=None,
                  attachments=None, field_updates=None, approvals_added=None,
-                 participants_added=None, reassign_to=None, due=None, due_date=None, 
+                 participants_added=None, reassign_to=None, due=None, due_date=None,
                  duration=None, scheduled_date=None, scheduled_datetime_utc=None,
                  cancel_schedule=None, added_list_ids=None, removed_list_ids=None,
-                 approvals_removed=None, approvals_rerequested=None, subject = None,
-                 participants_removed = None, channel=None):
-        self.text = text
-        self.subject = subject
+                 approvals_removed=None, approvals_rerequested=None, subscribers_added=None, subscribers_removed=None,
+                 subscribers_rerequested=None, subject=None,
+                 participants_removed=None, channel=None, spent_minutes=None):
+        if text:
+            self.text = text
+        if subject:
+            self.subject = subject
         if approval_choice:
             if approval_choice not in ['approved', 'rejected', 'revoked', 'acknowledged']:
-                raise TypeError('approval_choice can only be \'approved\', \'rejected\', \'acknowledged\', or \'revoked\'')
+                raise TypeError(
+                    'approval_choice can only be \'approved\', \'rejected\', \'acknowledged\', or \'revoked\'')
             self.approval_choice = approval_choice
         if action:
             if action not in ['finished', 'reopened']:
@@ -156,7 +166,7 @@ class TaskCommentRequest(object):
                 self.reassign_to = entities.Person(email=reassign_to)
         if attachments:
             if not isinstance(attachments, list):
-                raise TypeError('attachments must be a list of guids')
+                raise TypeError('attachments must be a list')
             self.attachments = []
             for attachment in attachments:
                 self.attachments.append(attachment)
@@ -208,6 +218,39 @@ class TaskCommentRequest(object):
                         self.approvals_rerequested[idx].append(entities.Person(id=person))
                     else:
                         self.approvals_rerequested[idx].append(entities.Person(email=person))
+        if subscribers_added:
+            if not isinstance(subscribers_added, list):
+                raise TypeError('subscribers_added must be a list')
+            self.subscribers_added = []
+            for person in subscribers_added:
+                if isinstance(person, entities.Person):
+                    self.subscribers_added.append(person)
+                elif isinstance(person, int):
+                    self.subscribers_added.append(entities.Person(id=person))
+                else:
+                    self.subscribers_added.append(entities.Person(email=person))
+        if subscribers_removed:
+            if not isinstance(subscribers_removed, list):
+                raise TypeError('subscribers_removed must be a list')
+            self.subscribers_removed = []
+            for person in subscribers_removed:
+                if isinstance(person, entities.Person):
+                    self.subscribers_removed.append(person)
+                elif isinstance(person, int):
+                    self.subscribers_removed.append(entities.Person(id=person))
+                else:
+                    self.subscribers_removed.append(entities.Person(email=person))
+        if subscribers_rerequested:
+            if not isinstance(subscribers_rerequested, list):
+                raise TypeError('subscribers_rerequested must be a list')
+            self.subscribers_rerequested = []
+            for person in subscribers_rerequested:
+                if isinstance(person, entities.Person):
+                    self.subscribers_rerequested.append(person)
+                elif isinstance(person, int):
+                    self.subscribers_rerequested.append(entities.Person(id=person))
+                else:
+                    self.subscribers_rerequested.append(entities.Person(email=person))
         if participants_added:
             if not isinstance(participants_added, list):
                 raise TypeError('participants_added must be a list')
@@ -266,7 +309,7 @@ class TaskCommentRequest(object):
         if cancel_schedule:
             if not isinstance(cancel_schedule, bool):
                 raise TypeError('cancel_schedule must be a bool')
-            self.cancel_schedule = datetime.strftime(cancel_schedule, constants.DATE_FORMAT)
+            self.cancel_schedule = cancel_schedule
             if hasattr(self, 'scheduled_datetime_utc'):
                 delattr(self, 'scheduled_datetime_utc')
             if hasattr(self, 'scheduled_date'):
@@ -305,9 +348,15 @@ class TaskCommentRequest(object):
         if channel:
             if not isinstance(channel, str):
                 raise TypeError('channel must be an instance of str')
-            if channel != 'email':
-                raise TypeError('channel must be equal to email')
+            if channel not in ['email', 'telegram', 'web', 'facebook', 'vk', 'viber', 'mobile_app', 'web_widget',
+                               'moy_sklad', 'zadarma', 'amo_crm', 'instagram']:
+                raise TypeError('channel must be correct')
             self.channel = entities.Channel(type=channel)
+        if spent_minutes:
+            if not isinstance(spent_minutes, int):
+                raise TypeError('spent_minutes must be an int')
+            self.spent_minutes = spent_minutes
+
 
 class CreateTaskRequest(object):
     """
@@ -315,10 +364,11 @@ class CreateTaskRequest(object):
         
         Args:
             parent_task_id (:obj:`int`, optional): Parent task id
-            attachments (:obj:`list` of :obj:`str`, optional): List of file guids to attach to the task
+            attachments (:obj:`list` of :obj:`str` or :obj:`models.entities.NewFile`, optional): List of files to attach to the task
             list_ids (:obj:`list` of :obj:`int`, optional): List of list identifiers to which you want to add the task
             scheduled_date (:obj:`datetime`, optional): task scheduled date
             scheduled_datetime_utc (:obj:`datetime`, optional): task scheduled date with utc time
+            subscribers (:obj:`list` of :obj:`models.entities.Person`, optional): List of task subscribers
         Args(Simple task):
             text (:obj:`str`): Task text. Required for a simple task
             subject (:obj:`str`, optional): Task subject
@@ -336,7 +386,7 @@ class CreateTaskRequest(object):
 
     def __init__(self, text=None, subject=None, parent_task_id=None,
                  due_date=None, form_id=None, attachments=None, responsible=None,
-                 fields=None, approvals=None, participants=None, list_ids=None,
+                 fields=None, approvals=None, subscribers=None, participants=None, list_ids=None,
                  due=None, duration=None, scheduled_date=None, scheduled_datetime_utc=None,
                  fill_defaults=None):
         if text:
@@ -377,7 +427,7 @@ class CreateTaskRequest(object):
             self.form_id = form_id
         if attachments:
             if not isinstance(attachments, list):
-                raise TypeError('attachments must be a list of guids')
+                raise TypeError('attachments must be a list')
             self.attachments = []
             for attachment in attachments:
                 self.attachments.append(attachment)
@@ -417,9 +467,20 @@ class CreateTaskRequest(object):
                         self.approvals[idx].append(entities.Person(id=person))
                     else:
                         self.approvals[idx].append(entities.Person(email=person))
+        if subscribers:
+            if not isinstance(subscribers, list):
+                raise TypeError('subscribers must be a list')
+            self.subscribers = []
+            for person in subscribers:
+                if isinstance(person, entities.Person):
+                    self.subscribers.append(person)
+                elif isinstance(person, int):
+                    self.subscribers.append(entities.Person(id=person))
+                else:
+                    self.subscribers.append(entities.Person(email=person))
         if participants:
             if not isinstance(participants, list):
-                raise TypeError('approvals_added must be a list')
+                raise TypeError('participants must be a list')
             self.participants = []
             for person in participants:
                 try:
@@ -438,6 +499,7 @@ class CreateTaskRequest(object):
             if not isinstance(fill_defaults, bool):
                 raise TypeError("fill_defaults must be a boolean")
             self.fill_defaults = fill_defaults
+
 
 class SyncCatalogRequest(object):
     """
@@ -458,6 +520,7 @@ class SyncCatalogRequest(object):
             self.catalog_headers = _get_catalog_headers(catalog_headers)
         if items:
             self.items = _get_catalog_items(items)
+
 
 class CreateCatalogRequest(object):
     """
@@ -535,10 +598,11 @@ def _get_catalog_headers(catalog_headers):
             raise TypeError('list_ids must be a list of str or models.entities.CatalogHeader')
     return headers
 
+
 def _get_catalog_items(catalog_items):
     if not isinstance(catalog_items, list):
         raise TypeError('catalog_items must be a list')
-    
+
     items = []
     for item in catalog_items:
         try:
@@ -548,6 +612,7 @@ def _get_catalog_items(catalog_items):
                 raise TypeError('catalog_items must be a list of str or models.entities.CatalogItems')
             items.append(item)
     return items
+
 
 def _date_to_str(str_date, property_name):
     if not isinstance(str_date, datetime):
