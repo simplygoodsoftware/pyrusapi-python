@@ -57,6 +57,7 @@ class FormResponse(BaseResponse):
                 value (:obj:`str`): Step name
             fields (:obj:`list` of :obj:`models.entities.FormField`): List of form fields
             deletedOrClosed (:obj:`bool`): Form state
+            folder (:obj:`list` of :obj:`str`): Folder of form
     """
     __doc__ += BaseResponse.__doc__
 
@@ -65,6 +66,7 @@ class FormResponse(BaseResponse):
     steps = None
     fields = None
     deletedOrClosed = None
+    folder = None
 
     @property
     def flat_fields(self):
@@ -83,6 +85,10 @@ class FormResponse(BaseResponse):
                 self.fields.append(entities.FormField(**field))
         if 'deleted_or_closed' in kwargs:
             self.deletedOrClosed = kwargs['deleted_or_closed']
+        if 'folder' in kwargs:
+            self.folder = []
+            for fld in kwargs['folder']:
+                self.folder.append(fld)
         super(FormResponse, self).__init__(**kwargs)
 
     def _get_flat_fields(self, fields):
