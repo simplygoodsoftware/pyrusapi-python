@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.30.0] - 2021-03-02
 ### Added
--  'DeletedOrClosed' property in GetForm response
+-  'Folder' property in GetForm response
 
 ## [1.29.0] - 2020-11-16
 ### Added
