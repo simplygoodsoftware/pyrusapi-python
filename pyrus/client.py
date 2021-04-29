@@ -23,6 +23,7 @@ import requests
 from .models import responses as resp, requests as req, entities as ent
 import rfc6266
 
+
 class PyrusAPI(object):
     """
     PyrusApi client
@@ -45,7 +46,7 @@ class PyrusAPI(object):
     access_token = None
     _protocol = 'https'
     _api_name = 'Pyrus'
-    _user_agent = 'Pyrus API python client v 1.17.0'
+    _user_agent = 'Pyrus API python client v 1.31.0'
     proxy = None
     _download_file_base_url = 'https://files.pyrus.com/services/attachment?Id='
 
@@ -107,7 +108,7 @@ class PyrusAPI(object):
 
         if form_register_request and getattr(form_register_request, 'format', 'json') == "csv":
             return response
-        
+
         return resp.FormRegisterResponse(**response)
 
     def get_contacts(self):
@@ -277,15 +278,15 @@ class PyrusAPI(object):
             try:
                 filename = rfc6266.parse_headers(response.headers['Content-Disposition']).filename_unsafe
             except:
-                filename = re.findall('filename=(.+)', response.headers['Content-Disposition'])	
+                filename = re.findall('filename=(.+)', response.headers['Content-Disposition'])
             return resp.DownloadResponse(filename, response.content)
-        else: 
+        else:
             if response.status_code == 401:
-                return resp.BaseResponse(**{'error_code' : 'authorization_error'})
+                return resp.BaseResponse(**{'error_code': 'authorization_error'})
             if response.status_code == 403 or response.status_code == 404:
-                return resp.BaseResponse(**{'error_code' : 'access_denied_file'})
+                return resp.BaseResponse(**{'error_code': 'access_denied_file'})
             else:
-                return resp.BaseResponse(**{'error_code' : 'ServerError'})
+                return resp.BaseResponse(**{'error_code': 'ServerError'})
 
     def create_catalog(self, create_catalog_request):
         """
@@ -325,21 +326,22 @@ class PyrusAPI(object):
                             'of models.requests.SyncCatalogRequest')
         response = self._perform_post_request(url, sync_catalog_request)
         return resp.SyncCatalogResponse(**response)
-        
+
     def serialize_request(self, body):
         return jsonpickle.encode(body, unpicklable=False).encode('utf-8')
-        
+
     def _auth(self):
         url = self._create_url('/auth')
         headers = {
             'User-Agent': '{}'.format(self._user_agent),
             'Content-Type': 'application/json'
         }
-        params = {
-            'login': self.login,
-            'security_key': self.security_key
-        }
-        auth_response = requests.get(url, headers=headers, params=params)
+        auth_request = req.AuthRequest(login=self.login, security_key=self.security_key)
+        
+        if auth_request:
+            data = self.serialize_request(auth_request)
+
+        auth_response = requests.post(url, headers=headers, data=data)
         # pylint: disable=no-member
         if auth_response.status_code == requests.codes.ok:
             response = auth_response.json()
@@ -369,25 +371,25 @@ class PyrusAPI(object):
         if not isinstance(method, self.HTTPMethod):
             raise TypeError('method must be an instanse of HTTPMethod Enum.')
 
-        #try auth if no access token
+        # try auth if no access token
         if not self.access_token:
             response = self._auth()
             if not self.access_token:
                 return response
 
-        #try to call api method
+        # try to call api method
         response = self._perform_request(url, method, body, file_path, get_file)
-        #if 401 try auth and call method again
+        # if 401 try auth and call method again
         if response.status_code == 401:
             response = self._auth()
-            #if failed return auth response
+            # if failed return auth response
             if not self.access_token:
                 return response
 
             response = self._perform_request(url, method, body, file_path, get_file)
 
         return self._get_response(response, get_file, body)
-        
+
     def _perform_request(self, url, method, body, file_path, get_file):
         if method == self.HTTPMethod.POST:
             if file_path:
