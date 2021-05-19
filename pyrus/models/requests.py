@@ -510,7 +510,7 @@ class AuthRequest(object):
             security_key (:obj:`str`): User's secret key
     """
 
-    def __init__(self, login=None, security_key=None):
+    def __init__(self, login, security_key):
 
         if login:
             self.login = login

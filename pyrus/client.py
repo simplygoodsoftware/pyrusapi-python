@@ -337,9 +337,8 @@ class PyrusAPI(object):
             'Content-Type': 'application/json'
         }
         auth_request = req.AuthRequest(login=self.login, security_key=self.security_key)
-        
-        if auth_request:
-            data = self.serialize_request(auth_request)
+
+        data = self.serialize_request(auth_request)
 
         auth_response = requests.post(url, headers=headers, data=data)
         # pylint: disable=no-member
