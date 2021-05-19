@@ -501,6 +501,23 @@ class CreateTaskRequest(object):
             self.fill_defaults = fill_defaults
 
 
+class AuthRequest(object):
+    """
+        AuthRequest
+
+        Args:
+            login (:obj:`str`): User's login (email)
+            security_key (:obj:`str`): User's secret key
+    """
+
+    def __init__(self, login, security_key):
+
+        if login:
+            self.login = login
+        if security_key:
+            self.security_key = security_key
+
+
 class SyncCatalogRequest(object):
     """
         SyncCatalogRequest
