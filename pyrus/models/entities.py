@@ -63,6 +63,7 @@ class FormFieldInfo(object):
             columns (:obj:`list` of :obj:`models.entitites.FormField`): Columns description for table field
             fields (:obj:`list` of :obj:`models.entitites.FormField`): Child fields description for title field
             decimal_places(:obj:`int`): Number of decimal places for number field
+            multiple_choice (:obj:`bool`, optional): Flag indicating that mutliple values can be selected in Catalog field 
     """
 
     required_step = None
@@ -72,6 +73,7 @@ class FormFieldInfo(object):
     columns = None
     fields = None
     decimal_places = None
+    multiple_choice = None
 
     def __init__(self, **kwargs):
         if 'required_step' in kwargs:
@@ -94,6 +96,8 @@ class FormFieldInfo(object):
                 self.fields.append(FormField(**field))
         if 'decimal_places' in kwargs:
             self.decimal_places = kwargs['decimal_places']
+        if 'multiple_choice' in kwargs:
+            self.multiple_choice = kwargs['multiple_choice']
 
 
 class ChoiceOption(object):
@@ -461,6 +465,7 @@ class TaskComment(object):
             subscribers_added (:obj:`list` of :obj:`models.entities.Person`) List of subscribers added to the task
             subscribers_removed (:obj:`list` of :obj:`models.entities.Person`) List of subscribers removed from the task
             subscribers_rerequested (:obj:`list` of :obj:`models.entities.Person`) List of subscribers rerequested for the task
+            skip_satisfaction (:obj:`bool`, optional): Flag indicating that user satisfaction poll should be skipped
         Attributes(Simple Task comment):
             reassign_to (:obj:`models.entities.Person`): Person to whom the task was reassigned
             participants_added (:obj:`list` of :obj:`models.entities.Person`): List of participants added to the task
@@ -512,6 +517,7 @@ class TaskComment(object):
     subject = None
     channel = None
     spent_minutes = None
+    skip_satisfaction = None
 
     @property
     def flat_field_updates(self):
@@ -615,6 +621,8 @@ class TaskComment(object):
             self.channel = Channel(**kwargs['channel'])
         if 'spent_minutes' in kwargs:
             self.spent_minutes = kwargs['spent_minutes']
+        if 'skip_satisfaction' in kwargs:
+            self.skip_satisfaction = kwargs['skip_satisfactions']
 
 
 class Organization(object):

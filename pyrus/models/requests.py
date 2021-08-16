@@ -118,6 +118,7 @@ class TaskCommentRequest(object):
             subscribers_added (:obj:`list` of :obj:`models.entities.Person`, optional): List of subscribers to add to the task
             subscribers_removed (:obj:`list` of :obj:`models.entities.Person`, optional): List of subscribers to remove from the task
             subscribers_rerequested (:obj:`list` of :obj:`models.entities.Person`, optional): List of subscribers to rerequest for the task
+            skip_satisfaction (:obj:`bool`, optional): Flag indicating that user satisfaction poll should be skipped
         Args(Simple task comment):
             participants_added (:obj:`list` of :obj:`models.entities.Person`, optional): List of participants to add to the task
             participants_removed (:obj:`list` of :obj:`models.entities.Person`, optional): List of participants to remove from the task
@@ -143,7 +144,8 @@ class TaskCommentRequest(object):
                  cancel_schedule=None, added_list_ids=None, removed_list_ids=None,
                  approvals_removed=None, approvals_rerequested=None, subscribers_added=None, subscribers_removed=None,
                  subscribers_rerequested=None, subject=None,
-                 participants_removed=None, channel=None, spent_minutes=None):
+                 participants_removed=None, channel=None, spent_minutes=None,
+                 skip_satisfaction = None):
         if text:
             self.text = text
         if subject:
@@ -356,6 +358,10 @@ class TaskCommentRequest(object):
             if not isinstance(spent_minutes, int):
                 raise TypeError('spent_minutes must be an int')
             self.spent_minutes = spent_minutes
+        if skip_satisfaction:
+            if not isinstance(skip_satisfaction, bool):
+                raise TypeError('skip_satisfaction must be bool')
+            self.skip_satisfaction = skip_satisfaction
 
 
 class CreateTaskRequest(object):
