@@ -1150,7 +1150,7 @@ class Channel(object):
         Channel
 
         Attributes:
-            type (:obj:`str`): Channel type (email, telegram, web, facebook, vk, viber, mobile_app, web_widget, moy_sklad, zadarma, amo_crm)
+            type (:obj:`str`): Channel type (email, telegram, web, facebook, vk, viber, mobile_app, web_widget, moy_sklad, zadarma, amo_crm, beeline, api_telephony, zoom, instagram, private_channel, web_form, whats_app)
             to (:obj:`models.entities.ChannelUser`): Notification recipient
             sender (:obj:`models.entities.ChannelUser`): Notification sender
     """
