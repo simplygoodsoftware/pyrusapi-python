@@ -17,7 +17,7 @@ class FormField(object):
             id (:obj:`int`): Field id
             type (:obj:`str`): Field type
             name (:obj:`str`): Field name
-            info (:obj:`models.entitites.FormFieldInfo`): Additional field information
+            info (:obj:`models.entities.FormFieldInfo`): Additional field information
             value (:obj:`object`, optional): Field value
             parent_id (:obj:`int`, optional) Parent field id (returned if field has parent)
             row_id (:obj:`int`, optional) Table row id (returned if field is in table)
