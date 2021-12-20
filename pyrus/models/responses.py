@@ -336,3 +336,43 @@ class SyncCatalogResponse(BaseResponse):
             for header in kwargs['catalog_headers']:
                 self.catalog_headers.append(entities.CatalogHeader(**header))
         super(SyncCatalogResponse, self).__init__(**kwargs)
+
+class ProfileResponse(BaseResponse):
+    """
+        ProfileResponse
+        
+        Attributes:
+            person_id (:obj:`int`): Person id
+            first_name (:obj:`str`): Person first name
+            last_name (:obj:`str`): Person last name
+            email(:obj:`str`): Custom external id
+            locale(:obj:`str`): Person locale (ru-RU/en-US/en-GB)
+            organization_id(:obj:`int`) Person organization id
+            organization(:obj:`obj`models.entities.Organization) Person organization
+    """
+    __doc__ += BaseResponse.__doc__
+
+    person_id = None
+    first_name = None
+    last_name = None
+    email = None
+    locale = None
+    organization_id = None
+    organization = None
+
+    def __init__(self, **kwargs):
+        if 'person_id' in kwargs:
+            self.person_id = kwargs['person_id']
+        if 'first_name' in kwargs:
+            self.first_name = kwargs['first_name']
+        if 'last_name' in kwargs:
+            self.last_name = kwargs['last_name']
+        if 'email' in kwargs:
+            self.email = kwargs['email']
+        if 'locale' in kwargs:
+            self.locale = kwargs['locale']
+        if 'organization_id' in kwargs:
+            self.organization_id = kwargs['organization_id']
+        if 'organization' in kwargs:
+            self.organization = entities.Organization(**kwargs['organization'])
+        super(ProfileResponse, self).__init__(**kwargs)

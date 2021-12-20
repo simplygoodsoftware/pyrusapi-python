@@ -622,20 +622,22 @@ class Organization(object):
         Organization
 
         Attributes:
-            id (:obj:`int`): Organization id
+            organization_id (:obj:`int`): Organization id
             name (:obj:`str`): Organization name
             persons (:obj:`list` of :obj:`models.entities.Person`): List of persons in the organization
             roles (:obj:`list` of :obj:`models.entities.Role`): List of roles in the organization
+            department_catalog_id (:obj:`int`): Department catalog id
     """
 
-    id = None
+    organization_id = None
     name = None
     persons = None
     roles = None
+    department_catalog_id = None
 
     def __init__(self, **kwargs):
-        if 'id' in kwargs:
-            self.id = kwargs['id']
+        if 'organization_id' in kwargs:
+            self.organization_id = kwargs['organization_id']
         if 'name' in kwargs:
             self.name = kwargs['name']
         if 'persons' in kwargs:
@@ -646,6 +648,8 @@ class Organization(object):
             self.roles = []
             for role in kwargs['roles']:
                 self.roles.append(Role(**role))
+        if 'department_catalog_id' in kwargs:
+            self.department_catalog_id = kwargs['department_catalog_id']
 
 
 class Role(object):
