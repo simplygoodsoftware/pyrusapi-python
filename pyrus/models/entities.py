@@ -622,7 +622,7 @@ class TaskComment(object):
         if 'spent_minutes' in kwargs:
             self.spent_minutes = kwargs['spent_minutes']
         if 'skip_satisfaction' in kwargs:
-            self.skip_satisfaction = kwargs['skip_satisfactions']
+            self.skip_satisfaction = kwargs['skip_satisfaction']
 
 
 class Organization(object):
