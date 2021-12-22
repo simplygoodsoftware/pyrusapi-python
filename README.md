@@ -57,7 +57,7 @@ forms = forms_response.forms
 
 ```python
 request = pyrus.models.requests.FormRegisterRequest(
-        include_archive=True,
+        include_archived=True,
         steps=[1,2],
         filters=[pyrus.models.entities.EqualsFilter(1, "hello world")])
 form_register_response = pyrus_client.get_registry(forms[0].id, request)

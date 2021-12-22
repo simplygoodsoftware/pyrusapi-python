@@ -21,7 +21,7 @@ import os
 import re
 import requests
 from .models import responses as resp, requests as req, entities as ent
-import rfc6266
+import cgi
 
 
 class PyrusAPI(object):
@@ -46,7 +46,7 @@ class PyrusAPI(object):
     access_token = None
     _protocol = 'https'
     _api_name = 'Pyrus'
-    _user_agent = 'Pyrus API python client v 1.31.0'
+    _user_agent = 'Pyrus API python client v 1.33.0'
     proxy = None
     _download_file_base_url = 'https://files.pyrus.com/services/attachment?Id='
 
@@ -276,7 +276,8 @@ class PyrusAPI(object):
         response = self._perform_get_file_request(url)
         if response.status_code == 200:
             try:
-                filename = rfc6266.parse_headers(response.headers['Content-Disposition']).filename_unsafe
+                _ , params= cgi.parse_header(response.headers['Content-Disposition'])
+                filename = params['filename']
             except:
                 filename = re.findall('filename=(.+)', response.headers['Content-Disposition'])
             return resp.DownloadResponse(filename, response.content)
