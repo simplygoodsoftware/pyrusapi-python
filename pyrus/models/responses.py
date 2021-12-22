@@ -345,7 +345,7 @@ class ProfileResponse(BaseResponse):
             person_id (:obj:`int`): Person id
             first_name (:obj:`str`): Person first name
             last_name (:obj:`str`): Person last name
-            email(:obj:`str`): Custom external id
+            email(:obj:`str`): Person email
             locale(:obj:`str`): Person locale (ru-RU/en-US/en-GB)
             organization_id(:obj:`int`) Person organization id
             organization(:obj:`obj`models.entities.Organization) Person organization
