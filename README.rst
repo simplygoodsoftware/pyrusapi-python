@@ -86,6 +86,10 @@ Get catalog with all items:
     >>> catalog_id = 1525
     >>> catalog_response = pyrus_client.get_catalog(catalog_id)
     >>> items = catalog_response.items
+	
+Get profile:
+
+    >>>profile_response = pyrus_client.get_profile()
 
 -----------------
 Support

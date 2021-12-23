@@ -167,6 +167,14 @@ response = pyrus_client.get_task_list(list_id, item_count=25, include_archived=T
 tasks = response.tasks
 ```
 
+## Profile
+
+* Get profile:
+
+```python
+profile_response = pyrus_client.get_profile()
+```
+
 ## Support
 
 If you have any questions or comments please send an email to support@pyrus.com
