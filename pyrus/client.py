@@ -46,7 +46,7 @@ class PyrusAPI(object):
     access_token = None
     _protocol = 'https'
     _api_name = 'Pyrus'
-    _user_agent = 'Pyrus API python client v 1.33.0'
+    _user_agent = 'Pyrus API python client v 1.34.0'
     proxy = None
     _download_file_base_url = 'https://files.pyrus.com/services/attachment?Id='
 
@@ -327,7 +327,18 @@ class PyrusAPI(object):
                             'of models.requests.SyncCatalogRequest')
         response = self._perform_post_request(url, sync_catalog_request)
         return resp.SyncCatalogResponse(**response)
+        
+    def get_profile(self):
+        """
+        Get a profile
+        Returns: 
+            class:`models.responses.ProfileResponse` object
+        """
 
+        url = self._create_url('/profile')
+        response = self._perform_get_request(url)
+        return resp.ProfileResponse(**response)
+        
     def serialize_request(self, body):
         return jsonpickle.encode(body, unpicklable=False).encode('utf-8')
 
