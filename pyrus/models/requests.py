@@ -118,6 +118,7 @@ class TaskCommentRequest(object):
             subscribers_added (:obj:`list` of :obj:`models.entities.Person`, optional): List of subscribers to add to the task
             subscribers_removed (:obj:`list` of :obj:`models.entities.Person`, optional): List of subscribers to remove from the task
             subscribers_rerequested (:obj:`list` of :obj:`models.entities.Person`, optional): List of subscribers to rerequest for the task
+            skip_satisfaction (:obj:`bool`, optional): Flag indicating that user satisfaction poll should be skipped
         Args(Simple task comment):
             participants_added (:obj:`list` of :obj:`models.entities.Person`, optional): List of participants to add to the task
             participants_removed (:obj:`list` of :obj:`models.entities.Person`, optional): List of participants to remove from the task
@@ -133,7 +134,7 @@ class TaskCommentRequest(object):
             approvals_added (:obj:`list` of :obj:`list` of :obj:`models.entities.Person`, optional) List of approval steps to add to the task
             approvals_removed (:obj:`list` of :obj:`list` of :obj:`models.entities.Person`, optional) List of approval steps to remove from the task
             approvals_rerequested (:obj:`list` of :obj:`list` of :obj:`models.entities.Person`, optional) List of approval steps to rerequest for the task
-            channel (:obj:`str`) External channel to send notification (email, telegram, web, facebook, vk, viber, mobile_app, web_widget, moy_sklad, zadarma, amo_crm, instagram)
+            channel (:obj:`str`) External channel to send notification (email, telegram, facebook, vk, viber, mobile_app, web_widget, instagram, private_channel, whats_app)
     """
 
     def __init__(self, text=None, approval_choice=None, approval_steps=None, action=None,
@@ -143,7 +144,8 @@ class TaskCommentRequest(object):
                  cancel_schedule=None, added_list_ids=None, removed_list_ids=None,
                  approvals_removed=None, approvals_rerequested=None, subscribers_added=None, subscribers_removed=None,
                  subscribers_rerequested=None, subject=None,
-                 participants_removed=None, channel=None, spent_minutes=None):
+                 participants_removed=None, channel=None, spent_minutes=None,
+                 skip_satisfaction = None):
         if text:
             self.text = text
         if subject:
@@ -348,14 +350,17 @@ class TaskCommentRequest(object):
         if channel:
             if not isinstance(channel, str):
                 raise TypeError('channel must be an instance of str')
-            if channel not in ['email', 'telegram', 'web', 'facebook', 'vk', 'viber', 'mobile_app', 'web_widget',
-                               'moy_sklad', 'zadarma', 'amo_crm', 'instagram']:
+            if channel not in ['email', 'telegram', 'facebook', 'vk', 'viber', 'instagram', 'private_channel', 'whats_app', 'mobile_app', 'web_widget']:
                 raise TypeError('channel must be correct')
             self.channel = entities.Channel(type=channel)
         if spent_minutes:
             if not isinstance(spent_minutes, int):
                 raise TypeError('spent_minutes must be an int')
             self.spent_minutes = spent_minutes
+        if skip_satisfaction:
+            if not isinstance(skip_satisfaction, bool):
+                raise TypeError('skip_satisfaction must be bool')
+            self.skip_satisfaction = skip_satisfaction
 
 
 class CreateTaskRequest(object):
