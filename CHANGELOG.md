@@ -6,10 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.36.0] - 2021-12-30
 ### Added
-- Support using custom channel and send sms with external channel 
+- Support for custom channel and sms sending via external channel 
 
 ### Changed
-- 'сhannel' property became a :obj:`models.entities.Channel`
+- 'сhannel' property type changed to :obj:models.entities.Channel
 - Renamed 'deletedOrClosed' property to 'deleted_or_closed'
 
 ## [1.35.0] - 2021-12-27
