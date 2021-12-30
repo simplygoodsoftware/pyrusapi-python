@@ -18,7 +18,7 @@ class FormFieldHandler(jsonpickle.handlers.BaseHandler):
         if obj.type in ['step', 'status', 'note', 'author', 'project', 'creation_date']:
             return data
 
-        if obj.value:
+        if obj.value is not None:
             data['value'] = self._get_flatten_value(obj.type, obj.value)
         return data
     

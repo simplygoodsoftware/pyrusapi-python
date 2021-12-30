@@ -7,6 +7,7 @@ from datetime import timezone
 from . import customhandlers
 from . import constants
 
+
 @customhandlers.FormFieldHandler.handles
 class FormField(object):
     """
@@ -17,7 +18,7 @@ class FormField(object):
             type (:obj:`str`): Field type
             code (:obj:`str`): Field code
             name (:obj:`str`): Field name
-            info (:obj:`models.entitites.FormFieldInfo`): Additional field information
+            info (:obj:`models.entities.FormFieldInfo`): Additional field information
             value (:obj:`object`, optional): Field value
             parent_id (:obj:`int`, optional) Parent field id (returned if field has parent)
             row_id (:obj:`int`, optional) Table row id (returned if field is in table)
@@ -53,6 +54,7 @@ class FormField(object):
         if 'row_id' in kwargs:
             self.row_id = kwargs['row_id']
 
+
 class FormFieldInfo(object):
     """
         Additional form field information
@@ -65,6 +67,7 @@ class FormFieldInfo(object):
             columns (:obj:`list` of :obj:`models.entitites.FormField`): Columns description for table field
             fields (:obj:`list` of :obj:`models.entitites.FormField`): Child fields description for title field
             decimal_places(:obj:`int`): Number of decimal places for number field
+            multiple_choice (:obj:`bool`, optional): Flag indicating that mutliple values can be selected in Catalog field 
     """
 
     required_step = None
@@ -74,6 +77,7 @@ class FormFieldInfo(object):
     columns = None
     fields = None
     decimal_places = None
+    multiple_choice = None
 
     def __init__(self, **kwargs):
         if 'required_step' in kwargs:
@@ -96,6 +100,9 @@ class FormFieldInfo(object):
                 self.fields.append(FormField(**field))
         if 'decimal_places' in kwargs:
             self.decimal_places = kwargs['decimal_places']
+        if 'multiple_choice' in kwargs:
+            self.multiple_choice = kwargs['multiple_choice']
+
 
 class ChoiceOption(object):
     """
@@ -123,6 +130,7 @@ class ChoiceOption(object):
                 self.fields.append(FormField(**field))
         if 'deleted' in kwargs:
             self.deleted = kwargs['deleted']
+
 
 class TaskHeader(object):
     """
@@ -155,13 +163,15 @@ class TaskHeader(object):
         if 'create_date' in kwargs:
             self.create_date = _set_utc_timezone(datetime.strptime(kwargs['create_date'], constants.DATE_TIME_FORMAT))
         if 'last_modified_date' in kwargs:
-            self.last_modified_date = _set_utc_timezone(datetime.strptime(kwargs['last_modified_date'], constants.DATE_TIME_FORMAT))
+            self.last_modified_date = _set_utc_timezone(
+                datetime.strptime(kwargs['last_modified_date'], constants.DATE_TIME_FORMAT))
         if 'author' in kwargs:
             self.author = Person(**kwargs['author'])
         if 'close_date' in kwargs:
             self.close_date = _set_utc_timezone(datetime.strptime(kwargs['close_date'], constants.DATE_TIME_FORMAT))
         if 'responsible' in kwargs:
             self.responsible = Person(**kwargs['responsible'])
+
 
 class Task(TaskHeader):
     """
@@ -181,6 +191,7 @@ class Task(TaskHeader):
             subject (:obj:`str`): Task subject
             scheduled_date (:obj:`datetime`): task scheduled date
             scheduled_datetime_utc (:obj:`datetime`): task scheduled date with utc time
+            subscribers (:obj:`list` of :obj:`models.entities.Subscriber`): List of task subscribers
         Attributes(Simple Task):
             text (:obj:`str`): Task text
             responsible (:obj:`models.entities.Person`): Task responsible
@@ -201,6 +212,7 @@ class Task(TaskHeader):
     attachments = None
     fields = None
     approvals = None
+    subscribers = None
     participants = None
     scheduled_date = None
     scheduled_datetime_utc = None
@@ -227,7 +239,8 @@ class Task(TaskHeader):
         if 'scheduled_date' in kwargs:
             self.scheduled_date = datetime.strptime(kwargs['scheduled_date'], constants.DATE_FORMAT)
         if 'scheduled_datetime_utc' in kwargs:
-            self.scheduled_datetime_utc = datetime.strptime(kwargs['scheduled_datetime_utc'], constants.DATE_TIME_FORMAT)
+            self.scheduled_datetime_utc = datetime.strptime(kwargs['scheduled_datetime_utc'],
+                                                            constants.DATE_TIME_FORMAT)
         if 'form_id' in kwargs:
             self.form_id = kwargs['form_id']
         if 'attachments' in kwargs:
@@ -252,6 +265,10 @@ class Task(TaskHeader):
                     approval = Approval(**curr_step)
                     approval.step = idx
                     self.approvals[idx].append(approval)
+        if 'subscribers' in kwargs:
+            self.subscribers = []
+            for subscriber in kwargs['subscribers']:
+                self.subscribers.append(Subscriber(**subscriber))
         if 'participants' in kwargs:
             self.participants = []
             for participant in kwargs['participants']:
@@ -265,6 +282,7 @@ class Task(TaskHeader):
         if 'current_step' in kwargs:
             self.current_step = kwargs['current_step']
         super(Task, self).__init__(**kwargs)
+
 
 class TaskWithComments(Task):
     """
@@ -285,6 +303,7 @@ class TaskWithComments(Task):
             comments (:obj:`list` of :obj:`models.entities.TaskComment`): List of task comments
             scheduled_date (:obj:`datetime`): task scheduled date
             scheduled_datetime_utc (:obj:`datetime`): task scheduled date with utc time
+            subscribers (:obj:`list` of :obj:`models.entities.Subscriber`): List of task subscribers
         Attributes(Simple Task):
             text (:obj:`str`): Task text
             responsible (:obj:`models.entities.Person`): Task responsible
@@ -307,6 +326,7 @@ class TaskWithComments(Task):
                 self.comments.append(TaskComment(**comment))
         super(TaskWithComments, self).__init__(**kwargs)
 
+
 class Person(object):
     """
         Person
@@ -317,6 +337,8 @@ class Person(object):
             last_name (:obj:`str`): Person last name
             email (:obj:`str`): Person email
             type (:obj:`str`): Person type (user/bot/role)
+            department_id (:obj:`int`): Person department id
+            department_name (:obj:`str`): Person department
     """
 
     id = None
@@ -324,6 +346,8 @@ class Person(object):
     last_name = None
     email = None
     type = None
+    department_id = None
+    department_name = None
 
     def __init__(self, **kwargs):
         if 'id' in kwargs:
@@ -336,6 +360,11 @@ class Person(object):
             self.email = kwargs['email']
         if 'type' in kwargs:
             self.type = kwargs['type']
+        if 'department_id' in kwargs:
+            self.department_id = kwargs['department_id']
+        if 'department_name' in kwargs:
+            self.department_name = kwargs['department_name']
+
 
 class File(object):
     """
@@ -375,6 +404,7 @@ class File(object):
         if 'root_id' in kwargs:
             self.root_id = kwargs['root_id']
 
+
 class Approval(object):
     """
         Approval
@@ -397,6 +427,26 @@ class Approval(object):
         if 'step' in kwargs:
             self.step = kwargs['step']
 
+
+class Subscriber(object):
+    """
+        Subscriber
+
+        Attributes:
+            person (:obj:`entities.models.Person`): Subscriber person
+            approval_choice (:obj:`str`): Approval choice (approved/rejected/revoked/acknowledged)
+    """
+
+    person = None
+    approval_choice = None
+
+    def __init__(self, **kwargs):
+        if 'person' in kwargs:
+            self.person = Person(**kwargs['person'])
+        if 'approval_choice' in kwargs:
+            self.approval_choice = kwargs['approval_choice']
+
+
 class TaskComment(object):
     """
         Task comment
@@ -416,6 +466,10 @@ class TaskComment(object):
             scheduled_datetime_utc (:obj:`datetime`): task scheduled date with utc time
             cancel_schedule (:obj:`bool`): Flag indicating that schedule was cancelled for the task.
             spent_minutes (:obj:`int`): Spent time in minutes
+            subscribers_added (:obj:`list` of :obj:`models.entities.Person`) List of subscribers added to the task
+            subscribers_removed (:obj:`list` of :obj:`models.entities.Person`) List of subscribers removed from the task
+            subscribers_rerequested (:obj:`list` of :obj:`models.entities.Person`) List of subscribers rerequested for the task
+            skip_satisfaction (:obj:`bool`, optional): Flag indicating that user satisfaction poll should be skipped
         Attributes(Simple Task comment):
             reassign_to (:obj:`models.entities.Person`): Person to whom the task was reassigned
             participants_added (:obj:`list` of :obj:`models.entities.Person`): List of participants added to the task
@@ -447,6 +501,9 @@ class TaskComment(object):
     approvals_added = None
     approvals_removed = None
     approvals_rerequested = None
+    subscribers_added = None
+    subscribers_removed = None
+    subscribers_rerequested = None
     participants_added = None
     participants_removed = None
     due_date = None
@@ -464,6 +521,7 @@ class TaskComment(object):
     subject = None
     channel = None
     spent_minutes = None
+    skip_satisfaction = None
 
     @property
     def flat_field_updates(self):
@@ -508,6 +566,18 @@ class TaskComment(object):
                 self.approvals_rerequested.append([])
                 for curr_step in approval:
                     self.approvals_rerequested[idx].append(Approval(**curr_step))
+        if 'subscribers_added' in kwargs:
+            self.subscribers_added = []
+            for subscriber in kwargs['subscribers_added']:
+                self.subscribers_added.append(Person(**subscriber))
+        if 'subscribers_removed' in kwargs:
+            self.subscribers_removed = []
+            for subscriber in kwargs['subscribers_removed']:
+                self.subscribers_removed.append(Person(**subscriber))
+        if 'subscribers_rerequested' in kwargs:
+            self.subscribers_rerequested = []
+            for subscriber in kwargs['subscribers_rerequested']:
+                self.subscribers_rerequested.append(Person(**subscriber))
         if 'participants_added' in kwargs:
             self.participants_added = []
             for participant in kwargs['participants_added']:
@@ -531,7 +601,8 @@ class TaskComment(object):
         if 'scheduled_date' in kwargs:
             self.scheduled_date = datetime.strptime(kwargs['scheduled_date'], constants.DATE_FORMAT)
         if 'scheduled_datetime_utc' in kwargs:
-            self.scheduled_datetime_utc = datetime.strptime(kwargs['scheduled_datetime_utc'], constants.DATE_TIME_FORMAT)
+            self.scheduled_datetime_utc = datetime.strptime(kwargs['scheduled_datetime_utc'],
+                                                            constants.DATE_TIME_FORMAT)
         if 'cancel_schedule' in kwargs:
             self.cancel_schedule = kwargs['cancel_schedule']
         if 'added_list_ids' in kwargs:
@@ -554,26 +625,31 @@ class TaskComment(object):
             self.channel = Channel(**kwargs['channel'])
         if 'spent_minutes' in kwargs:
             self.spent_minutes = kwargs['spent_minutes']
+        if 'skip_satisfaction' in kwargs:
+            self.skip_satisfaction = kwargs['skip_satisfaction']
+
 
 class Organization(object):
     """
         Organization
 
         Attributes:
-            id (:obj:`int`): Organization id
+            organization_id (:obj:`int`): Organization id
             name (:obj:`str`): Organization name
             persons (:obj:`list` of :obj:`models.entities.Person`): List of persons in the organization
             roles (:obj:`list` of :obj:`models.entities.Role`): List of roles in the organization
+            department_catalog_id (:obj:`int`): Department catalog id
     """
 
-    id = None
+    organization_id = None
     name = None
     persons = None
     roles = None
+    department_catalog_id = None
 
     def __init__(self, **kwargs):
-        if 'id' in kwargs:
-            self.id = kwargs['id']
+        if 'organization_id' in kwargs:
+            self.organization_id = kwargs['organization_id']
         if 'name' in kwargs:
             self.name = kwargs['name']
         if 'persons' in kwargs:
@@ -584,6 +660,9 @@ class Organization(object):
             self.roles = []
             for role in kwargs['roles']:
                 self.roles.append(Role(**role))
+        if 'department_catalog_id' in kwargs:
+            self.department_catalog_id = kwargs['department_catalog_id']
+
 
 class Role(object):
     """
@@ -608,6 +687,7 @@ class Role(object):
             self.member_ids = []
             for member_id in kwargs['member_ids']:
                 self.member_ids.append(member_id)
+
 
 class CatalogItem(object):
     """
@@ -666,6 +746,7 @@ class CatalogItem(object):
         values = {'values': values}
         return cls(**values)
 
+
 class Table(list):
     """
         Value of FormField table
@@ -676,6 +757,7 @@ class Table(list):
         list.__init__(self)
         for value in args:
             self.append(TableRow(**value))
+
 
 class TableRow(object):
     """
@@ -706,6 +788,7 @@ class TableRow(object):
             if not isinstance(self.delete, bool):
                 raise TypeError('delete must be a boolean')
 
+
 class Title(object):
     """
         Value of FormField title
@@ -725,6 +808,7 @@ class Title(object):
             self.fields = []
             for field in kwargs['fields']:
                 self.fields.append(FormField(**field))
+
 
 class MultipleChoice(object):
     """
@@ -758,6 +842,7 @@ class MultipleChoice(object):
             for field in kwargs['fields']:
                 self.fields.append(FormField(**field))
 
+
 class Projects(object):
     """
         Value of FormField project
@@ -773,6 +858,7 @@ class Projects(object):
             self.projects = []
             for project in kwargs['projects']:
                 self.projects.append(Project(**project))
+
 
 class FormLink(object):
     """
@@ -798,6 +884,7 @@ class FormLink(object):
             for task in kwargs['task_ids']:
                 self.task_ids.append(task)
 
+
 class Project(object):
     """
         Project
@@ -820,6 +907,7 @@ class Project(object):
         if 'parent' in kwargs:
             self.parent = Project(**kwargs['parent'])
 
+
 class FormRegisterFilter(object):
     """
         Base form register filter. Should never be created explictly
@@ -829,6 +917,7 @@ class FormRegisterFilter(object):
         self.field_id = kwargs['field_id']
         self.operator = kwargs['operator']
         self.values = kwargs['values']
+
 
 class EqualsFilter(FormRegisterFilter):
     """
@@ -841,8 +930,9 @@ class EqualsFilter(FormRegisterFilter):
 
     def __init__(self, field_id, value):
         _validate_field_id(field_id)
-        super(EqualsFilter, self).\
+        super(EqualsFilter, self). \
             __init__(field_id=field_id, operator='equals', values=_get_value(value))
+
 
 class GreaterThanFilter(FormRegisterFilter):
     """
@@ -855,8 +945,9 @@ class GreaterThanFilter(FormRegisterFilter):
 
     def __init__(self, field_id, value):
         _validate_field_id(field_id)
-        super(GreaterThanFilter, self).\
+        super(GreaterThanFilter, self). \
             __init__(field_id=field_id, operator='greater_than', values=_get_value(value))
+
 
 class LessThanFilter(FormRegisterFilter):
     """
@@ -869,8 +960,9 @@ class LessThanFilter(FormRegisterFilter):
 
     def __init__(self, field_id, value):
         _validate_field_id(field_id)
-        super(LessThanFilter, self).\
+        super(LessThanFilter, self). \
             __init__(field_id=field_id, operator='less_than', values=_get_value(value))
+
 
 class RangeFilter(FormRegisterFilter):
     """
@@ -890,8 +982,9 @@ class RangeFilter(FormRegisterFilter):
         formated_values = []
         for value in values:
             formated_values.append(_get_value(value))
-        super(RangeFilter, self).\
+        super(RangeFilter, self). \
             __init__(field_id=field_id, operator='range', values=formated_values)
+
 
 class IsInFilter(FormRegisterFilter):
     """
@@ -909,8 +1002,9 @@ class IsInFilter(FormRegisterFilter):
         formated_values = []
         for value in values:
             formated_values.append(_get_value(value))
-        super(IsInFilter, self).\
+        super(IsInFilter, self). \
             __init__(field_id=field_id, operator='is_in', values=formated_values)
+
 
 class TaskList(object):
     """
@@ -936,6 +1030,7 @@ class TaskList(object):
             for child in kwargs['children']:
                 self.children.append(TaskList(**child))
 
+
 class CatalogHeader(object):
     """
         catalog header
@@ -954,14 +1049,17 @@ class CatalogHeader(object):
         if 'type' in kwargs:
             self.type = kwargs['type']
 
+
 def _get_value(value):
     if isinstance(value, datetime):
         return value.strftime(constants.DATE_FORMAT)
     return value
 
+
 def _validate_field_id(field_id):
     if not isinstance(field_id, int):
         raise TypeError('field_id must be valid int.')
+
 
 def _create_field_value(field_type, value):
     if field_type in ['text', 'money', 'number', 'checkmark', 'email',
@@ -1014,10 +1112,12 @@ def _get_flat_fields(fields):
                     res.extend(table_row.cells)
     return res
 
+
 def _set_utc_timezone(time):
     if time.tzinfo is None:
         time = time.replace(tzinfo=timezone.utc)
     return time
+
 
 class NewFile:
     """
@@ -1051,13 +1151,14 @@ class NewFile:
         if 'name' in kwargs:
             self.name = kwargs['name']
 
+
 @customhandlers.ChannelHandler.handles
 class Channel(object):
     """
         Channel
 
         Attributes:
-            type (:obj:`str`): Channel type (email, telegram, web, facebook, vk, viber, mobile_app, web_widget, moy_sklad, zadarma, amo_crm)
+            type (:obj:`str`): Channel type (email, telegram, web, facebook, vk, viber, mobile_app, web_widget, moy_sklad, zadarma, amo_crm, beeline, api_telephony, zoom, instagram, private_channel, web_form, whats_app)
             to (:obj:`models.entities.ChannelUser`): Notification recipient
             sender (:obj:`models.entities.ChannelUser`): Notification sender
     """
@@ -1073,6 +1174,7 @@ class Channel(object):
             self.to = kwargs['to']
         if 'from' in kwargs:
             self.sender = kwargs['from']
+
 
 class CatalogValue(object):
     """
