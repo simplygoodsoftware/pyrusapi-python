@@ -2,7 +2,7 @@ import os
 from setuptools import setup, find_packages
 
 setup(name="pyrus-api",
-      version="1.36.1",
+      version="2.1.0",
       python_requires='>=3.4',
       description="Python Pyrus API client",
       author="Pyrus",
@@ -10,6 +10,7 @@ setup(name="pyrus-api",
       author_email="contact@pyrus.com",
       url="https://pyrus.com/en/help/api",
       packages=find_packages(exclude=["*tests.*", "*test.*"]),
+      license='MIT',
       keywords="pyrus api",
       install_requires=[
           'requests',
