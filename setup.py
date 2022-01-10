@@ -9,8 +9,11 @@ setup(name="pyrus-api",
       long_description=open('README.rst', 'r').read(),
       author_email="contact@pyrus.com",
       url="https://pyrus.com/en/help/api",
+      project_urls={
+        'GitHub Project': 'https://github.com/simplygoodsoftware/pyrusapi-python'
+    },
       packages=find_packages(exclude=["*tests.*", "*test.*"]),
-      license='MIT',
+      license='MIT License',
       keywords="pyrus api",
       install_requires=[
           'requests',
