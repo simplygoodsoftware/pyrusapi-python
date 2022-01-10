@@ -46,7 +46,7 @@ class PyrusAPI(object):
     access_token = None
     _protocol = 'https'
     _api_name = 'Pyrus'
-    _user_agent = 'Pyrus API python client v 1.35.0'
+    _user_agent = 'Pyrus API python client v 1.36.1'
     proxy = None
     _download_file_base_url = 'https://files.pyrus.com/services/attachment?Id='
 
@@ -338,6 +338,21 @@ class PyrusAPI(object):
         url = self._create_url('/profile')
         response = self._perform_get_request(url)
         return resp.ProfileResponse(**response)
+
+    def get_inbox(self, tasks_count=50):
+        """
+        Get inbox tasks
+
+        Args:
+            tasks_count (:obj:`int`, optional): The maximum number of tasks in the response, the default is 50
+
+        Returns: 
+            class:`models.responses.TaskListResponse` object
+        """
+
+        url = self._create_url('/inbox?item_count={}'.format(tasks_count))
+        response = self._perform_get_request(url)
+        return resp.TaskListResponse(**response)
         
     def serialize_request(self, body):
         return jsonpickle.encode(body, unpicklable=False).encode('utf-8')

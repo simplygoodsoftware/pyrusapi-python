@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.36.1] - 2022-01-10
+### Added
+-  Get inbox request
+
+
 ## [1.35.0] - 2021-12-27
 ### Added
 -  Support for skipping user satisfaction poll in task comments
@@ -17,9 +22,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -  Department catalog id property added in 'Organization' entity
 
 ## [1.33.0] - 2021-12-17
-### Added
--  Support for skipping user satisfaction poll in task comments
--  Return 'multiple_choice' in 'Catalog' form field
+### Changed
+-  Fixed custom handler
 
 ### Changed
 -  Fixed custom handler
