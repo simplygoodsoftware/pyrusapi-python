@@ -338,7 +338,37 @@ class PyrusAPI(object):
         url = self._create_url('/profile')
         response = self._perform_get_request(url)
         return resp.ProfileResponse(**response)
-        
+
+    def get_calendar_tasks(self, calendar_request):
+        """
+        Get a calendar tasks. This method returns tasks from calendar for time interval
+        Tasks can be with form or without. Response returns only last comment for all task
+
+        Args:
+            calendar_request: (:obj:`models.requests.CalendarRequest`): Calendar request data.
+
+        Returns:
+            class:`models.responses.CalendarResponse` object
+        """
+        if not isinstance(calendar_request, req.CalendarRequest):
+            raise TypeError('calendar_request must be an instance '
+                            'of models.requests.CalendarRequest')
+        query = ('/calendar?'
+                 'start_date_utc={}'
+                 '&end_date_utc={}'
+                 '&item_count={}'
+                 '&all_accessed_tasks={}'
+                 '&filter_mask={}').format(
+            calendar_request.start_date_utc_str,
+            calendar_request.end_date_utc_str,
+            calendar_request.item_count, calendar_request.all_accessed_tasks,
+            calendar_request.filter_mask
+        )
+
+        url = self._create_url(query)
+        response = self._perform_get_request(url)
+        return resp.CalendarResponse(**response)
+
     def serialize_request(self, body):
         return jsonpickle.encode(body, unpicklable=False).encode('utf-8')
 
