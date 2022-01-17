@@ -56,7 +56,7 @@ class FormResponse(BaseResponse):
                 key (:obj:`int`): Step number
                 value (:obj:`str`): Step name
             fields (:obj:`list` of :obj:`models.entities.FormField`): List of form fields
-            deletedOrClosed (:obj:`bool`): Form state
+            deleted_or_closed (:obj:`bool`): Form state
             folder (:obj:`list` of :obj:`str`): Folder of form
     """
     __doc__ += BaseResponse.__doc__
@@ -65,7 +65,7 @@ class FormResponse(BaseResponse):
     name = None
     steps = None
     fields = None
-    deletedOrClosed = None
+    deleted_or_closed = None
     folder = None
 
     @property
@@ -84,7 +84,7 @@ class FormResponse(BaseResponse):
             for field in kwargs['fields']:
                 self.fields.append(entities.FormField(**field))
         if 'deleted_or_closed' in kwargs:
-            self.deletedOrClosed = kwargs['deleted_or_closed']
+            self.deleted_or_closed = kwargs['deleted_or_closed']
         if 'folder' in kwargs:
             self.folder = []
             for fld in kwargs['folder']:
