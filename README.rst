@@ -89,7 +89,11 @@ Get catalog with all items:
 	
 Get profile:
 
-    >>>profile_response = pyrus_client.get_profile()
+    >>> profile_response = pyrus_client.get_profile()
+
+Get inbox:
+
+    >>> inbox_response = pyrus_client.get_inbox(tasks_count=100)
 
 -----------------
 Support
