@@ -94,7 +94,16 @@ Get profile:
 Get inbox:
 
     >>> inbox_response = pyrus_client.get_inbox(tasks_count=100)
+    
+Get calendar:
 
+    >>> calendar_response = (pyrus_client.get_calendar_tasks(req.CalendarRequest(
+	        datetime.datetime.utcnow() - datetime.timedelta(days=30),
+	        datetime.datetime.utcnow() + datetime.timedelta(days=30),
+	        all_accessed_tasks=True,
+	        item_count=55,
+	        filter_mask=0b0111)))
+	        
 -----------------
 Support
 -----------------
