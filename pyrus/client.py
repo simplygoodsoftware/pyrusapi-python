@@ -46,7 +46,7 @@ class PyrusAPI(object):
     access_token = None
     _protocol = 'https'
     _api_name = 'Pyrus'
-    _user_agent = 'Pyrus API python client v 2.3.0'
+    _user_agent = 'Pyrus API python client v 2.4.0'
     proxy = None
     _download_file_base_url = 'https://files.pyrus.com/services/attachment?Id='
 
@@ -111,14 +111,17 @@ class PyrusAPI(object):
 
         return resp.FormRegisterResponse(**response)
 
-    def get_contacts(self):
+    def get_contacts(self, with_inactive = False):
         """
         Get a list of contacts available to the current user and grouped by organization
+
+        Args:
+            with_inactive (:obj:`bool`, optional):  Should inactive persons be included to the response
 
         Returns: 
             class:`models.responses.ContactsResponse` object
         """
-        url = self._create_url('/contacts')
+        url = self._create_url('/contacts?withinactive={}'.format(with_inactive))
         response = self._perform_get_request(url)
         return resp.ContactsResponse(**response)
 
@@ -328,14 +331,18 @@ class PyrusAPI(object):
         response = self._perform_post_request(url, sync_catalog_request)
         return resp.SyncCatalogResponse(**response)
         
-    def get_profile(self):
+    def get_profile(self, with_inactive = False):
         """
         Get a profile
+        
+        Args:
+            with_inactive (:obj:`bool`, optional):  Should inactive persons be included to the response
+        
         Returns: 
             class:`models.responses.ProfileResponse` object
         """
 
-        url = self._create_url('/profile')
+        url = self._create_url('/profile?withinactive={}'.format(with_inactive))
         response = self._perform_get_request(url)
         return resp.ProfileResponse(**response)
 
