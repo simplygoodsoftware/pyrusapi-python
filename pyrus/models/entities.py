@@ -450,6 +450,7 @@ class TaskComment(object):
         Attributes:
             id (:obj:`int`): Comment id
             text (:obj:`str`): Comment text
+            mentions (:obj:`list` of :obj:`int`) Mentioned users in comment text
             create_date (:obj:`datetime`): Comment creation date
             author (:obj:`models.entities.Person`): Comment author
             attachments (:obj:`list` of :obj:`models.entities.File`): List of comment attachments
@@ -487,6 +488,7 @@ class TaskComment(object):
 
     id = None
     text = None
+    mentions = None
     create_date = None
     author = None
     reassigned_to = None
@@ -528,6 +530,8 @@ class TaskComment(object):
             self.id = kwargs['id']
         if 'text' in kwargs:
             self.text = kwargs['text']
+        if 'mentions' in kwargs:
+            self.mentions = kwargs['mentions']
         if 'subject' in kwargs:
             self.subject = kwargs['subject']
         if 'create_date' in kwargs:
