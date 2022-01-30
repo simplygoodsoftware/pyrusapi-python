@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2.4.0] - 2021-01-21
 ### Added
-- 'with_inactive' argument in get_contacts and get_profile methods
+- 'include_inactive' argument in get_contacts and get_profile methods
 
 ## [2.3.0] - 2021-01-20
 ### Added
