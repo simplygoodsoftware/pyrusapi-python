@@ -22,11 +22,12 @@ class FormRegisterRequest(object):
             delimiter (:obj:`str`, optional): Csv delimiter. Applicable only for csv format
             simple_format (:obj:`bool`, optional): Returns csv in simple for parsing format. Applicable only for csv format
             encoding (:obj:`str`, optional): Response encoding. Applicable only for csv format
+            task_ids (:obj:`list` of :obj:`int`, optional): Include only tasks from task_ids list
     """
 
     def __init__(self, steps=None, include_archived=None, filters=None, modified_before=None, modified_after=None,
                  field_ids=None, format=None, delimiter=None, simple_format=None, encoding=None,
-                 closed_before=None, closed_after=None, created_before=None, created_after=None):
+                 closed_before=None, closed_after=None, created_before=None, created_after=None, task_ids = None):
         if steps:
             if not isinstance(steps, list):
                 raise TypeError('steps must be a list of int')
@@ -34,6 +35,14 @@ class FormRegisterRequest(object):
                 if not isinstance(item, int):
                     raise TypeError('steps must be a list of int')
             self.steps = steps
+            
+        if task_ids:
+            if not isinstance(task_ids, list):
+                raise TypeError('task_ids must be a list of int')
+            for item in task_ids:
+                if not isinstance(item, int):
+                    raise TypeError('task_ids must be a list of int')
+            self.task_ids = task_ids
 
         if include_archived:
             if not isinstance(include_archived, bool):
