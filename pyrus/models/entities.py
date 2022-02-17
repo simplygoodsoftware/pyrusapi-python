@@ -138,9 +138,9 @@ class TaskHeader(object):
             last_modified_date (:obj:`datetime`): Task last modified date
             close_date (:obj:`datetime`): Task closing date
             author (:obj:`models.entities.Person`): Task author
+            responsible (:obj:`models.entities.Person`): Task responsible
         Attributes(Simple Task):
             text (:obj:`str`): Task text
-            responsible (:obj:`models.entities.Person`): Task responsible
     """
 
     id = None
@@ -300,9 +300,9 @@ class TaskWithComments(Task):
             scheduled_date (:obj:`datetime`): task scheduled date
             scheduled_datetime_utc (:obj:`datetime`): task scheduled date with utc time
             subscribers (:obj:`list` of :obj:`models.entities.Subscriber`): List of task subscribers
+            responsible (:obj:`models.entities.Person`): Task responsible
         Attributes(Simple Task):
             text (:obj:`str`): Task text
-            responsible (:obj:`models.entities.Person`): Task responsible
             due_date (:obj:`datetime`): Task due date
             due (:obj:`datetime`): Task due date with time
             duration (:obj:`int`): Task duration in minutes
