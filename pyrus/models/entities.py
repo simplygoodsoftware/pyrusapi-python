@@ -223,6 +223,10 @@ class Task(TaskHeader):
     def flat_fields(self):
         return _get_flat_fields(self.fields)
 
+    @property
+    def named_fields(self):
+        return _get_named_fields(self.flat_fields)
+
     def __init__(self, **kwargs):
         if 'subject' in kwargs:
             self.subject = kwargs['subject']
@@ -1110,6 +1114,15 @@ def _get_flat_fields(fields):
             for table_row in field.value:
                 if table_row.cells:
                     res.extend(table_row.cells)
+    return res
+
+def _get_named_fields(flat_fields):
+    res = {}
+    if not flat_fields:
+        return res
+    for field in flat_fields:
+        if field.info.code:
+            res[field.info.code] = field
     return res
 
 
