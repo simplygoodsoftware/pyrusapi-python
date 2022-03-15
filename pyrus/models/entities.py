@@ -63,7 +63,8 @@ class FormFieldInfo(object):
             columns (:obj:`list` of :obj:`models.entitites.FormField`): Columns description for table field
             fields (:obj:`list` of :obj:`models.entitites.FormField`): Child fields description for title field
             decimal_places(:obj:`int`): Number of decimal places for number field
-            multiple_choice (:obj:`bool`, optional): Flag indicating that mutliple values can be selected in Catalog field 
+            multiple_choice (:obj:`bool`, optional): Flag indicating that mutliple values can be selected in Catalog field
+            code (:obj:`str`): String id for field
     """
 
     required_step = None
@@ -74,6 +75,7 @@ class FormFieldInfo(object):
     fields = None
     decimal_places = None
     multiple_choice = None
+    code = None
 
     def __init__(self, **kwargs):
         if 'required_step' in kwargs:
@@ -98,6 +100,8 @@ class FormFieldInfo(object):
             self.decimal_places = kwargs['decimal_places']
         if 'multiple_choice' in kwargs:
             self.multiple_choice = kwargs['multiple_choice']
+        if 'code' in kwargs:
+            self.code = kwargs['code']
 
 
 class ChoiceOption(object):
