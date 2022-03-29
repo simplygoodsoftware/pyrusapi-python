@@ -1112,6 +1112,7 @@ def _get_flat_fields(fields):
                     res.extend(table_row.cells)
     return res
 
+
 def _set_utc_timezone(time):
     if time.tzinfo is None:
         time = time.replace(tzinfo=timezone.utc)
