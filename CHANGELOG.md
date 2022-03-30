@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2.6.0] - 2022-03-30
 ### Added
-- 'code' property in FormFieldInfo
+- 'code' property in FormFieldInfo and _get_named_fields method
 
 ## [2.5.0] - 2021-02-15
 ### Added
