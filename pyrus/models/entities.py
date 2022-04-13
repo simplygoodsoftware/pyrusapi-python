@@ -143,6 +143,7 @@ class TaskHeader(object):
             close_date (:obj:`datetime`): Task closing date
             author (:obj:`models.entities.Person`): Task author
             responsible (:obj:`models.entities.Person`): Task responsible
+            due_date (:obj:`datetime`): Task due date
         Attributes(Simple Task):
             text (:obj:`str`): Task text
     """
@@ -154,6 +155,7 @@ class TaskHeader(object):
     author = None
     close_date = None
     responsible = None
+    due_date = None
 
     def __init__(self, **kwargs):
         if 'id' in kwargs:
@@ -171,6 +173,8 @@ class TaskHeader(object):
             self.close_date = _set_utc_timezone(datetime.strptime(kwargs['close_date'], constants.DATE_TIME_FORMAT))
         if 'responsible' in kwargs:
             self.responsible = Person(**kwargs['responsible'])
+        if 'due_date' in kwargs:
+            self.due_date = datetime.strptime(kwargs['due_date'], constants.DATE_FORMAT)
 
 
 class Task(TaskHeader):
@@ -471,6 +475,7 @@ class TaskComment(object):
             subscribers_removed (:obj:`list` of :obj:`models.entities.Person`) List of subscribers removed from the task
             subscribers_rerequested (:obj:`list` of :obj:`models.entities.Person`) List of subscribers rerequested for the task
             skip_satisfaction (:obj:`bool`, optional): Flag indicating that user satisfaction poll should be skipped
+            reply_note_id (:obj:`int`, optional): Id of the comment that was replied to
         Attributes(Simple Task comment):
             reassign_to (:obj:`models.entities.Person`): Person to whom the task was reassigned
             participants_added (:obj:`list` of :obj:`models.entities.Person`): List of participants added to the task
@@ -524,6 +529,7 @@ class TaskComment(object):
     channel = None
     spent_minutes = None
     skip_satisfaction = None
+    reply_note_id = None
 
     @property
     def flat_field_updates(self):
@@ -631,6 +637,8 @@ class TaskComment(object):
             self.spent_minutes = kwargs['spent_minutes']
         if 'skip_satisfaction' in kwargs:
             self.skip_satisfaction = kwargs['skip_satisfaction']
+        if 'reply_note_id' in kwargs:
+            self.reply_note_id = kwargs['reply_note_id']
 
 
 class Organization(object):

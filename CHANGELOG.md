@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.7.0] - 2022-04-11
+### Added
+- 'reply_note_id' property in :obj:models.entities.TaskComment entity
+- 'due_date' property in :obj:models.entities.TaskHeader entity
+
 ## [2.6.0] - 2022-03-30
 ### Added
 - 'code' property in FormFieldInfo and _get_named_fields method
