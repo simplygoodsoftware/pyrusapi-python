@@ -265,7 +265,7 @@ class PyrusAPI(object):
     
     def get_task_list(self, list_id, task_list_request=None):
         """
-         Get all tasks in the list.
+        Get all tasks in the list.
 
         Args:
             list_id (:obj:`int`): List id
