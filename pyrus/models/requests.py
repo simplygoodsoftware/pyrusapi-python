@@ -109,6 +109,36 @@ class FormRegisterRequest(object):
                 raise TypeError('encoding must be a string')
             self.encoding = encoding
 
+class TaskListRequest(object):
+    """
+        TaskListRequest
+        
+        Args:
+            include_archived (:obj:`bool`, optional): Flag indicating if we need to include archived tasks to the response. False by default
+            modified_before (:obj:`datetime`, optional): Include only tasks that were modified before specified date
+            modified_after (:obj:`datetime`, optional): Include only tasks that were modified after specified date
+            item_count (:obj:`int`, optional): Max count of tasks
+    """
+
+    def __init__(self, include_archived=None, modified_before=None, modified_after=None, item_count=200):
+     
+        if include_archived:
+            if not isinstance(include_archived, bool):
+                raise TypeError('include_archived must be bool')
+            self.include_archived = 'y' if include_archived else None
+        if modified_before:
+            if not isinstance(modified_before, datetime):
+                raise TypeError("modified_before must be datetime")
+            self.modified_before = _date_to_str(modified_before, 'modified_before')
+        if modified_after:
+            if not isinstance(modified_after, datetime):
+                raise TypeError("modified_after must be datetime")
+            self.modified_after = _date_to_str(modified_after, 'modified_after')
+        if item_count:
+            if not isinstance(item_count, int):
+                raise TypeError("item_count must be int")
+            self.item_count = item_count
+
 
 class TaskCommentRequest(object):
     """

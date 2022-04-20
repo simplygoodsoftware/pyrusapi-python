@@ -46,7 +46,7 @@ class PyrusAPI(object):
     access_token = None
     _protocol = 'https'
     _api_name = 'Pyrus'
-    _user_agent = 'Pyrus API python client v 2.6.0'
+    _user_agent = 'Pyrus API python client v 2.8.0'
     proxy = None
     _download_file_base_url = 'https://files.pyrus.com/services/attachment?Id='
 
@@ -262,6 +262,28 @@ class PyrusAPI(object):
         url = self._create_url(url_suffix)
         response = self._perform_get_request(url)
         return resp.TaskListResponse(**response)
+    
+    def get_task_list(self, list_id, task_list_request=None):
+        """
+        Get all tasks in the list.
+
+        Args:
+            list_id (:obj:`int`): List id
+            task_list_request (:obj:`models.requests.TaskListRequest`, optional): Request filters.
+
+        Returns: 
+            class:`models.responses.FormRegisterResponse` object
+        """
+        url = self._create_url('/lists/{}/tasks'.format(list_id))
+        if task_list_request:
+            if not isinstance(task_list_request, req.TaskListRequest):
+                raise TypeError('task_list_request must be an instance '
+                                'of models.requests.TaskListRequest')
+            response = self._perform_post_request(url, task_list_request)
+        else:
+            response = self._perform_get_request(url)
+
+        return resp.FormRegisterResponse(**response)
 
     def download_file(self, file_id):
         """
