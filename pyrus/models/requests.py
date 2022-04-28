@@ -402,6 +402,286 @@ class TaskCommentRequest(object):
             self.skip_satisfaction = skip_satisfaction
 
 
+class TaskCommentRequest(object):
+    """
+        TaskCommentRequest
+        
+        Args:
+            text (:obj:`str`, optional): Comment text
+            action (:obj:`str`, optional): Activity action (finished/reopened)
+            attachments (:obj:`list` of :obj:`str` or :obj:`models.entities.NewFile`, optional): List of files to attach to the task
+            added_list_ids (:obj:`list` of :obj:`int`, optional): List of list identifiers to which you want to add the task
+            removed_list_ids (:obj:`list` of :obj:`int`, optional): List of list identifiers from which you want to remove the task
+            scheduled_date (:obj:`datetime`, optional): task scheduled date
+            scheduled_datetime_utc (:obj:`datetime`, optional): task scheduled date with utc time
+            cancel_schedule (:obj:`bool`, optional): Flag indicating that schedule should be cancelled. The task will be moved to the inbox
+            spent_minutes (:obj:`int`, optional): Spent time in minutes
+            subscribers_added (:obj:`list` of :obj:`models.entities.Person`, optional): List of subscribers to add to the task
+            subscribers_removed (:obj:`list` of :obj:`models.entities.Person`, optional): List of subscribers to remove from the task
+            subscribers_rerequested (:obj:`list` of :obj:`models.entities.Person`, optional): List of subscribers to rerequest for the task
+            skip_satisfaction (:obj:`bool`, optional): Flag indicating that user satisfaction poll should be skipped
+        Args(Simple task comment):
+            participants_added (:obj:`list` of :obj:`models.entities.Person`, optional): List of participants to add to the task
+            participants_removed (:obj:`list` of :obj:`models.entities.Person`, optional): List of participants to remove from the task
+            reassign_to (:obj:`models.entities.Person`, optional): new responsible for the task
+            due (:obj:`datetime`, optional): task due date with time (either due_date or due can be used)
+            due_date (:obj:`datetime`, optional): task due date (either due_date or due can be used)
+            duration (:obj:`int`, optional): duration of the event in minutes (it can only be used with due)
+            subject (:obj:`str`, optional): New task subject
+        Args(Form task comment):
+            approval_choice (:obj:`str`, optional): Approval choice (approved/rejected/acknowledged)
+            approval_steps (:obj:`list` of :obj:`int`, optional): Indicates for which steps approval_choice must be applied. By default: current step
+            field_updates (:obj:`list` of :obj:`models.entities.FormField`, optional): List of field values to update
+            approvals_added (:obj:`list` of :obj:`list` of :obj:`models.entities.Person`, optional) List of approval steps to add to the task
+            approvals_removed (:obj:`list` of :obj:`list` of :obj:`models.entities.Person`, optional) List of approval steps to remove from the task
+            approvals_rerequested (:obj:`list` of :obj:`list` of :obj:`models.entities.Person`, optional) List of approval steps to rerequest for the task
+            channel (:obj:`str`) External channel to send notification (email, telegram, facebook, vk, viber, mobile_app, web_widget, instagram, private_channel, whats_app, sms, custom)
+    """
+
+    def __init__(self, text=None, approval_choice=None, approval_steps=None, action=None,
+                 attachments=None, field_updates=None, approvals_added=None,
+                 participants_added=None, reassign_to=None, due=None, due_date=None,
+                 duration=None, scheduled_date=None, scheduled_datetime_utc=None,
+                 cancel_schedule=None, added_list_ids=None, removed_list_ids=None,
+                 approvals_removed=None, approvals_rerequested=None, subscribers_added=None, subscribers_removed=None,
+                 subscribers_rerequested=None, subject=None,
+                 participants_removed=None, channel=None, spent_minutes=None,
+                 skip_satisfaction = None):
+        if text:
+            self.text = text
+        if subject:
+            self.subject = subject
+        if approval_choice:
+            if approval_choice not in ['approved', 'rejected', 'revoked', 'acknowledged']:
+                raise TypeError(
+                    'approval_choice can only be \'approved\', \'rejected\', \'acknowledged\', or \'revoked\'')
+            self.approval_choice = approval_choice
+        if action:
+            if action not in ['finished', 'reopened']:
+                raise TypeError('action can only be \'finished\' or \'reopened\'')
+            self.action = action
+        if reassign_to:
+            if isinstance(reassign_to, entities.Person):
+                self.reassign_to = reassign_to
+            elif isinstance(reassign_to, int):
+                self.reassign_to = entities.Person(id=reassign_to)
+            else:
+                self.reassign_to = entities.Person(email=reassign_to)
+        if attachments:
+            if not isinstance(attachments, list):
+                raise TypeError('attachments must be a list')
+            self.attachments = []
+            for attachment in attachments:
+                self.attachments.append(attachment)
+        if approvals_added:
+            if not isinstance(approvals_added, list):
+                raise TypeError('approvals_added must be a list')
+            self.approvals_added = []
+            for idx, approval_step in enumerate(approvals_added):
+                if not isinstance(approval_step, list):
+                    raise TypeError('approval_step must be a list of persons, person ids'
+                                    ', or person emails')
+                self.approvals_added.append([])
+                for person in approval_step:
+                    if isinstance(person, entities.Person):
+                        self.approvals_added[idx].append(person)
+                    elif isinstance(person, int):
+                        self.approvals_added[idx].append(entities.Person(id=person))
+                    else:
+                        self.approvals_added[idx].append(entities.Person(email=person))
+        if approvals_removed:
+            if not isinstance(approvals_removed, list):
+                raise TypeError('approvals_removed must be a list')
+            self.approvals_removed = []
+            for idx, approval_step in enumerate(approvals_removed):
+                if not isinstance(approval_step, list):
+                    raise TypeError('approval_step must be a list of persons, person ids'
+                                    ', or person emails')
+                self.approvals_removed.append([])
+                for person in approval_step:
+                    if isinstance(person, entities.Person):
+                        self.approvals_removed[idx].append(person)
+                    elif isinstance(person, int):
+                        self.approvals_removed[idx].append(entities.Person(id=person))
+                    else:
+                        self.approvals_removed[idx].append(entities.Person(email=person))
+        if approvals_rerequested:
+            if not isinstance(approvals_rerequested, list):
+                raise TypeError('approvals_rerequested must be a list')
+            self.approvals_rerequested = []
+            for idx, approval_step in enumerate(approvals_rerequested):
+                if not isinstance(approval_step, list):
+                    raise TypeError('approval_step must be a list of persons, person ids'
+                                    ', or person emails')
+                self.approvals_rerequested.append([])
+                for person in approval_step:
+                    if isinstance(person, entities.Person):
+                        self.approvals_rerequested[idx].append(person)
+                    elif isinstance(person, int):
+                        self.approvals_rerequested[idx].append(entities.Person(id=person))
+                    else:
+                        self.approvals_rerequested[idx].append(entities.Person(email=person))
+        if subscribers_added:
+            if not isinstance(subscribers_added, list):
+                raise TypeError('subscribers_added must be a list')
+            self.subscribers_added = []
+            for person in subscribers_added:
+                if isinstance(person, entities.Person):
+                    self.subscribers_added.append(person)
+                elif isinstance(person, int):
+                    self.subscribers_added.append(entities.Person(id=person))
+                else:
+                    self.subscribers_added.append(entities.Person(email=person))
+        if subscribers_removed:
+            if not isinstance(subscribers_removed, list):
+                raise TypeError('subscribers_removed must be a list')
+            self.subscribers_removed = []
+            for person in subscribers_removed:
+                if isinstance(person, entities.Person):
+                    self.subscribers_removed.append(person)
+                elif isinstance(person, int):
+                    self.subscribers_removed.append(entities.Person(id=person))
+                else:
+                    self.subscribers_removed.append(entities.Person(email=person))
+        if subscribers_rerequested:
+            if not isinstance(subscribers_rerequested, list):
+                raise TypeError('subscribers_rerequested must be a list')
+            self.subscribers_rerequested = []
+            for person in subscribers_rerequested:
+                if isinstance(person, entities.Person):
+                    self.subscribers_rerequested.append(person)
+                elif isinstance(person, int):
+                    self.subscribers_rerequested.append(entities.Person(id=person))
+                else:
+                    self.subscribers_rerequested.append(entities.Person(email=person))
+        if participants_added:
+            if not isinstance(participants_added, list):
+                raise TypeError('participants_added must be a list')
+            self.participants_added = []
+            for person in participants_added:
+                try:
+                    int(person)
+                    self.participants_added.append(entities.Person(id=person))
+                except ValueError:
+                    self.participants_added.append(entities.Person(email=person))
+        if participants_removed:
+            if not isinstance(participants_removed, list):
+                raise TypeError('participants_removed must be a list')
+            self.participants_removed = []
+            for person in participants_removed:
+                try:
+                    int(person)
+                    self.participants_removed.append(entities.Person(id=person))
+                except ValueError:
+                    self.participants_removed.append(entities.Person(email=person))
+        if field_updates:
+            self.field_updates = []
+            for field_update in field_updates:
+                if isinstance(field_update, entities.FormField):
+                    self.field_updates.append(field_update)
+                else:
+                    if 'name' not in field_update and 'id' not in field_update:
+                        raise TypeError('each field_update in field_updates '
+                                        'must contain field id or name')
+                    if 'value' not in field_update:
+                        raise TypeError('each field_update in field_updates must '
+                                        'contain field value')
+                    self.field_updates.append(field_update)
+        if due_date:
+            if not isinstance(due_date, datetime):
+                raise TypeError('due_date must be a date')
+            self.due_date = datetime.strftime(due_date, constants.DATE_FORMAT)
+        if due:
+            if not isinstance(due, datetime):
+                raise TypeError('due must be a date')
+            self.due = datetime.strftime(due, constants.DATE_TIME_FORMAT)
+        if duration:
+            if not isinstance(due, int):
+                raise TypeError('duration must be an int')
+            if not due:
+                raise ValueError("duration can only be used with due")
+            self.duration = duration
+        if scheduled_date:
+            if not isinstance(scheduled_date, datetime):
+                raise TypeError('scheduled_date must be a date')
+            self.scheduled_date = datetime.strftime(scheduled_date, constants.DATE_FORMAT)
+            if hasattr(self, 'scheduled_datetime_utc'):
+                delattr(self, 'scheduled_datetime_utc')
+            if hasattr(self, 'cancel_schedule'):
+                delattr(self, 'cancel_schedule')
+        if cancel_schedule:
+            if not isinstance(cancel_schedule, bool):
+                raise TypeError('cancel_schedule must be a bool')
+            self.cancel_schedule = cancel_schedule
+            if hasattr(self, 'scheduled_datetime_utc'):
+                delattr(self, 'scheduled_datetime_utc')
+            if hasattr(self, 'scheduled_date'):
+                delattr(self, 'scheduled_date')
+        if scheduled_datetime_utc:
+            if not isinstance(scheduled_datetime_utc, datetime):
+                raise TypeError('scheduled_datetime_utc must be a date')
+            self.scheduled_datetime_utc = datetime.strftime(scheduled_datetime_utc, constants.DATE_TIME_FORMAT)
+            if hasattr(self, 'scheduled_date'):
+                delattr(self, 'scheduled_date')
+            if hasattr(self, 'cancel_schedule'):
+                delattr(self, 'cancel_schedule')
+        if added_list_ids:
+            if not isinstance(added_list_ids, list):
+                raise TypeError('added_list_ids must be a list of int')
+            for item in added_list_ids:
+                if not isinstance(item, int):
+                    raise TypeError('added_list_ids must be a list of int')
+            self.added_list_ids = added_list_ids
+        if removed_list_ids:
+            if not isinstance(removed_list_ids, list):
+                raise TypeError('removed_list_ids must be a list of int')
+            for item in removed_list_ids:
+                if not isinstance(item, int):
+                    raise TypeError('removed_list_ids must be a list of int')
+            self.removed_list_ids = removed_list_ids
+        if approval_steps:
+            if not isinstance(approval_steps, list):
+                raise TypeError('approval_steps must be a list of int')
+            for item in approval_steps:
+                if not isinstance(item, int):
+                    raise TypeError('approval_steps must be a list of int')
+            self.approval_steps = approval_steps
+        if due and due_date:
+            raise ValueError("either due_date or due can be set")
+        if channel:
+            if not isinstance(channel, str):
+                raise TypeError('channel must be an instance of str')
+            if channel not in ['email', 'telegram', 'facebook', 'vk', 'viber', 'instagram', 'private_channel', 'whats_app', 'mobile_app', 'web_widget', 'sms', 'custom']:
+                raise TypeError('channel must be correct')
+            self.channel = entities.Channel(type=channel)
+        if spent_minutes:
+            if not isinstance(spent_minutes, int):
+                raise TypeError('spent_minutes must be an int')
+            self.spent_minutes = spent_minutes
+        if skip_satisfaction:
+            if not isinstance(skip_satisfaction, bool):
+                raise TypeError('skip_satisfaction must be bool')
+            self.skip_satisfaction = skip_satisfaction
+
+class AnnouncementCommentRequest(object):
+    """
+        AnnouncementCommentRequest
+        
+        Args:
+            text (:obj:`str`, optional): Comment text
+            attachments (:obj:`list` of :obj:`str` or :obj:`models.entities.NewFile`, optional): List of files to attach to the announcement
+    """
+
+    def __init__(self, text=None, attachments=None):
+        if text:
+            self.text = text
+        if attachments:
+            if not isinstance(attachments, list):
+                raise TypeError('attachments must be a list')
+            self.attachments = []
+            for attachment in attachments:
+                self.attachments.append(attachment)
+
 class CreateTaskRequest(object):
     """
         CreateTaskRequest
@@ -544,6 +824,25 @@ class CreateTaskRequest(object):
                 raise TypeError("fill_defaults must be a boolean")
             self.fill_defaults = fill_defaults
 
+class CreateAnnouncementRequest(object):
+    """
+        CreateAnnouncementRequest
+        
+        Args:
+            text (:obj:`str`): Task text. Required for an announcement
+            attachments (:obj:`list` of :obj:`str` or :obj:`models.entities.NewFile`, optional): List of files to attach to the announcement
+    """
+
+    def __init__(self, text=None, attachments=None):
+        if text:
+            self.text = text
+
+        if attachments:
+            if not isinstance(attachments, list):
+                raise TypeError('attachments must be a list')
+            self.attachments = []
+            for attachment in attachments:
+                self.attachments.append(attachment)
 
 class AuthRequest(object):
     """
