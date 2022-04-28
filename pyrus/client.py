@@ -177,7 +177,7 @@ class PyrusAPI(object):
     
     def get_announcement(self, announcement_id):
         """
-        Get the Announcement
+        Get the announcement
 
         Args:
             announcement_id (:obj:`int`): Announcement id
@@ -212,7 +212,7 @@ class PyrusAPI(object):
     
     def comment_announcement(self, announcement_id, announcement_comment_request):
         """
-        Add announcement comment. This method returns a announcement with all comments.
+        Add announcement comment. This method returns the announcement with all comments.
         Args:
             announcement_id (:obj:`int`): Announcement id
             announcement_comment_request (:obj:`models.requests.AnnouncementCommentRequest`): Comment data.
@@ -248,7 +248,7 @@ class PyrusAPI(object):
 
     def create_announcement(self, create_announcement_request):
         """
-        Create announcement. This method returns a created announcement.
+        Create announcement. This method returns the created announcement.
 
         Args:
             task_announcement_request (:obj:`models.requests.CreateAnnouncementRequest`)
