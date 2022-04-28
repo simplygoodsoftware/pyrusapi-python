@@ -160,6 +160,24 @@ class TaskResponse(BaseResponse):
         super(TaskResponse, self).__init__(**kwargs)
 
 
+class AnnouncementResponse(BaseResponse):
+    """
+        AnnouncementResponse
+        
+        Attributes:
+            announcement (:obj:`models.entities.AnnouncementWithComments`): Announcement
+    """
+    __doc__ += BaseResponse.__doc__
+
+    announcement = None
+
+    def __init__(self, **kwargs):
+        if 'announcement' in kwargs:
+            self.announcement = entities.AnnouncementWithComments(**kwargs['announcement'])
+        super(AnnouncementResponse, self).__init__(**kwargs)
+
+
+
 class ContactsResponse(BaseResponse):
     """
         ContactsResponse
