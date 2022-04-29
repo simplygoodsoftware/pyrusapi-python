@@ -330,6 +330,45 @@ class TaskWithComments(Task):
                 self.comments.append(TaskComment(**comment))
         super(TaskWithComments, self).__init__(**kwargs)
 
+class AnnouncementWithComments(object):
+    """
+        Announcement with comments
+
+        Attributes:
+            id (:obj:`int`): Announcement id
+            create_date (:obj:`datetime`): Announcement creation date
+            author (:obj:`models.entities.Person`): Announcement author
+            attachments (:obj:`list` of :obj:`models.entities.File`): List of announcement attachments
+            comments (:obj:`list` of :obj:`models.entities.AnnouncementComment`): List of announcement comments
+            text (:obj:`str`): Announcement text
+    
+    """
+    id = None
+    create_date = None
+    author = None
+    attachments = None
+    comments = None
+    text = None
+
+    def __init__(self, **kwargs):
+        if 'id' in kwargs:
+            self.id = kwargs['id']
+        if 'text' in kwargs:
+            self.text = kwargs['text']
+        if 'create_date' in kwargs:
+            self.create_date = _set_utc_timezone(datetime.strptime(kwargs['create_date'], constants.DATE_TIME_FORMAT))
+        if 'attachments' in kwargs:
+            self.attachments = []
+            for attachment in kwargs['attachments']:
+                self.attachments.append(File(**attachment))
+        if 'author' in kwargs:
+            self.author = Person(**kwargs['author'])
+        if 'comments' in kwargs:
+            self.comments = []
+            for comment in kwargs['comments']:
+                self.comments.append(AnnouncementComment(**comment))
+
+
 
 class Person(object):
     """
@@ -640,6 +679,37 @@ class TaskComment(object):
         if 'reply_note_id' in kwargs:
             self.reply_note_id = kwargs['reply_note_id']
 
+class AnnouncementComment(object):
+    """
+        Announcement comment
+
+        Attributes:
+            id (:obj:`int`): Comment id
+            text (:obj:`str`): Comment text
+            create_date (:obj:`datetime`): Comment creation date
+            author (:obj:`models.entities.Person`): Comment author
+            attachments (:obj:`list` of :obj:`models.entities.File`): List of comment attachments
+    """
+
+    id = None
+    text = None
+    create_date = None
+    author = None
+    attachments = None
+
+    def __init__(self, **kwargs):
+        if 'id' in kwargs:
+            self.id = kwargs['id']
+        if 'text' in kwargs:
+            self.text = kwargs['text']
+        if 'create_date' in kwargs:
+            self.create_date = _set_utc_timezone(datetime.strptime(kwargs['create_date'], constants.DATE_TIME_FORMAT))
+        if 'author' in kwargs:
+            self.author = Person(**kwargs['author'])
+        if 'attachments' in kwargs:
+            self.attachments = []
+            for attachment in kwargs['attachments']:
+                self.attachments.append(File(**attachment))
 
 class Organization(object):
     """

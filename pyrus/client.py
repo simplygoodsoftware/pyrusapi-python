@@ -174,6 +174,22 @@ class PyrusAPI(object):
         url = self._create_url('/tasks/{}'.format(task_id))
         response = self._perform_get_request(url)
         return resp.TaskResponse(**response)
+    
+    def get_announcement(self, announcement_id):
+        """
+        Get the announcement
+
+        Args:
+            announcement_id (:obj:`int`): Announcement id
+
+        Returns: 
+            class:`models.responses.AnnouncementResponse` object
+        """
+        if not isinstance(announcement_id, int):
+            raise Exception("announcement_id should be valid int")
+        url = self._create_url('/announcements/{}'.format(announcement_id))
+        response = self._perform_get_request(url)
+        return resp.AnnouncementResponse(**response)
 
     def comment_task(self, task_id, task_comment_request):
         """
@@ -193,6 +209,25 @@ class PyrusAPI(object):
                             'of models.requests.TaskCommentRequest')
         response = self._perform_post_request(url, task_comment_request)
         return resp.TaskResponse(**response)
+    
+    def comment_announcement(self, announcement_id, announcement_comment_request):
+        """
+        Add announcement comment. This method returns the announcement with all comments.
+        Args:
+            announcement_id (:obj:`int`): Announcement id
+            announcement_comment_request (:obj:`models.requests.AnnouncementCommentRequest`): Comment data.
+
+        Returns:
+            class:`models.responses.AnnouncementResponse` object
+        """
+        if not isinstance(announcement_id, int):
+            raise Exception("announcement_id should be valid int")
+        url = self._create_url('/announcements/{}/comments'.format(announcement_id))
+        if not isinstance(announcement_comment_request, req.AnnouncementCommentRequest):
+            raise TypeError('announcement_comment_request must be an instance '
+                            'of models.requests.AnnouncementCommentRequest')
+        response = self._perform_post_request(url, announcement_comment_request)
+        return resp.AnnouncementResponse(**response)
 
     def create_task(self, create_task_request):
         """
@@ -210,6 +245,23 @@ class PyrusAPI(object):
                             'of models.requests.CreateTaskRequest')
         response = self._perform_post_request(url, create_task_request)
         return resp.TaskResponse(**response)
+
+    def create_announcement(self, create_announcement_request):
+        """
+        Create announcement. This method returns the created announcement.
+
+        Args:
+            task_announcement_request (:obj:`models.requests.CreateAnnouncementRequest`)
+
+        Returns: 
+            class:`models.responses.AnnouncementResponse` object
+        """
+        url = self._create_url('/announcements')
+        if not isinstance(create_announcement_request, req.CreateAnnouncementRequest):
+            raise TypeError('create_announcement_request must be an instance '
+                            'of models.requests.CreateAnnouncementRequest')
+        response = self._perform_post_request(url, create_announcement_request)
+        return resp.AnnouncementResponse(**response)
 
     def upload_file(self, file_path):
         """

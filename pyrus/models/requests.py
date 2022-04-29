@@ -414,6 +414,24 @@ class TaskCommentRequest(object):
                 raise TypeError('skip_satisfaction must be bool')
             self.skip_satisfaction = skip_satisfaction
 
+class AnnouncementCommentRequest(object):
+    """
+        AnnouncementCommentRequest
+        
+        Args:
+            text (:obj:`str`, optional): Comment text
+            attachments (:obj:`list` of :obj:`str` or :obj:`models.entities.NewFile`, optional): List of files to attach to the announcement
+    """
+
+    def __init__(self, text=None, attachments=None):
+        if text:
+            self.text = text
+        if attachments:
+            if not isinstance(attachments, list):
+                raise TypeError('attachments must be a list')
+            self.attachments = []
+            for attachment in attachments:
+                self.attachments.append(attachment)
 
 class CreateTaskRequest(object):
     """
@@ -557,6 +575,25 @@ class CreateTaskRequest(object):
                 raise TypeError("fill_defaults must be a boolean")
             self.fill_defaults = fill_defaults
 
+class CreateAnnouncementRequest(object):
+    """
+        CreateAnnouncementRequest
+        
+        Args:
+            text (:obj:`str`): Task text. Required for an announcement
+            attachments (:obj:`list` of :obj:`str` or :obj:`models.entities.NewFile`, optional): List of files to attach to the announcement
+    """
+
+    def __init__(self, text=None, attachments=None):
+        if text:
+            self.text = text
+
+        if attachments:
+            if not isinstance(attachments, list):
+                raise TypeError('attachments must be a list')
+            self.attachments = []
+            for attachment in attachments:
+                self.attachments.append(attachment)
 
 class AuthRequest(object):
     """

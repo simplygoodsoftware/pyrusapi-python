@@ -230,6 +230,30 @@ calendar_response = (pyrus_client.get_calendar_tasks(req.CalendarRequest(
 	item_count=55,
 	filter_mask=0b0111)))
 ```
+
+## Tasks
+
+* Get announcement with all comments:
+
+```python
+announcement = pyrus_client.get_announcement(12321321).announcement
+```
+
+* Add announcement comment:
+
+```python
+request = pyrus.models.requests.AnnouncementCommentRequest(text="hello", attachments = ['BEFCE22E-AEFF-4771-83D4-2A4B78FB05C6'])
+announcement = pyrus_client.comment_announcement(12321321, request).announcement
+```
+
+* Create an announcement:
+
+```python
+request = CreateAnnouncementRequest(
+        text="Announcement from python client", 
+        attachments = ['BEFCE22E-AEFF-4771-83D4-2A4B78FB05C6'])
+announcement = pyrus_client.create_announcement(request).announcement
+```
 ## Support
 
 If you have any questions or comments please send an email to support@pyrus.com
