@@ -46,7 +46,7 @@ class PyrusAPI(object):
     access_token = None
     _protocol = 'https'
     _api_name = 'Pyrus'
-    _user_agent = 'Pyrus API python client v 2.9.0'
+    _user_agent = 'Pyrus API python client v 2.9.1'
     proxy = None
     _download_file_base_url = 'https://files.pyrus.com/services/attachment?Id='
 
@@ -324,7 +324,7 @@ class PyrusAPI(object):
             task_list_request (:obj:`models.requests.TaskListRequest`, optional): Request filters.
 
         Returns: 
-            class:`models.responses.FormRegisterResponse` object
+            class:`models.responses.TaskListResponse` object
         """
         url = self._create_url('/lists/{}/tasks'.format(list_id))
         if task_list_request:
@@ -335,7 +335,7 @@ class PyrusAPI(object):
         else:
             response = self._perform_get_request(url)
 
-        return resp.FormRegisterResponse(**response)
+        return resp.TaskListResponse(**response)
 
     def download_file(self, file_id):
         """
