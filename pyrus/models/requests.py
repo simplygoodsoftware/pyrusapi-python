@@ -23,11 +23,13 @@ class FormRegisterRequest(object):
             simple_format (:obj:`bool`, optional): Returns csv in simple for parsing format. Applicable only for csv format
             encoding (:obj:`str`, optional): Response encoding. Applicable only for csv format
             task_ids (:obj:`list` of :obj:`int`, optional): Include only tasks from task_ids list
+            item_count (:obj:`int`, optional): Max count of tasks (item_count > 0 & item_count <= 20000)
+            
     """
 
     def __init__(self, steps=None, include_archived=None, filters=None, modified_before=None, modified_after=None,
                  field_ids=None, format=None, delimiter=None, simple_format=None, encoding=None,
-                 closed_before=None, closed_after=None, created_before=None, created_after=None, task_ids = None):
+                 closed_before=None, closed_after=None, created_before=None, created_after=None, task_ids = None, item_count = None):
         if steps:
             if not isinstance(steps, list):
                 raise TypeError('steps must be a list of int')
@@ -108,6 +110,11 @@ class FormRegisterRequest(object):
             if not isinstance(encoding, str):
                 raise TypeError('encoding must be a string')
             self.encoding = encoding
+        
+        if item_count:
+            if not isinstance(item_count, int):
+                raise TypeError("item_count must be int")
+            self.item_count = item_count
 
 class TaskListRequest(object):
     """
