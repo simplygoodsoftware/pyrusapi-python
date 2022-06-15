@@ -239,6 +239,12 @@ calendar_response = (pyrus_client.get_calendar_tasks(req.CalendarRequest(
 announcement = pyrus_client.get_announcement(12321321).announcement
 ```
 
+* Get announcements with all comments:
+
+```python
+announcements = pyrus_client.get_announcements().announcements
+```
+
 * Add announcement comment:
 
 ```python

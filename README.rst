@@ -106,7 +106,11 @@ Get calendar:
 
 Get announcement with all comments:
 
-    >>> announcement = pyrus_client.get_task(12321321).announcement
+    >>> announcement = pyrus_client.get_announcement(12321321).announcement
+    
+Get announcements with all comments:
+
+    >>> announcements = pyrus_client.get_announcements().announcements
 
 Add new comment to the announcement:
 
