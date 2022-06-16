@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.11.0] - 2022-06-15
+### Added
+- get_announcements method
+
+## [2.10.0] - 2022-06-06
+### Added
+- item_count parameter for get_registry method
+
 ## [2.9.1] - 2022-06-02
 ### Fixed
 - get_task_list method response type fix
@@ -66,9 +74,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -  Department catalog id property added in 'Organization' entity
 
 ## [1.33.0] - 2021-12-17
-### Changed
--  Fixed custom handler
-
 ### Changed
 -  Fixed custom handler
 
