@@ -191,7 +191,7 @@ class AnnouncementsResponse(BaseResponse):
             self.announcements = []
             for announcement in kwargs['announcements']:
                 self.announcements.append(AnnouncementsResponse(**announcement))
-        super(AnnouncementsResponse, self).__init__(**kwargs
+        super(AnnouncementsResponse, self).__init__(**kwargs)
 
 class ContactsResponse(BaseResponse):
     """
