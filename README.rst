@@ -103,9 +103,14 @@ Get calendar:
 	        all_accessed_tasks=True,
 	        item_count=55,
 	        filter_mask=0b0111)))
+
 Get announcement with all comments:
 
-    >>> announcement = pyrus_client.get_task(12321321).announcement
+    >>> announcement = pyrus_client.get_announcement(12321321).announcement
+    
+Get announcements with all comments:
+
+    >>> announcements = pyrus_client.get_announcements().announcements
 
 Add new comment to the announcement:
 
@@ -116,7 +121,7 @@ Create an announcement:
 
     >>> request = CreateAnnouncementRequest(
             text="Announcement from python client", 
-            attachments = ['BEFCE22E-AEFF-4771-83D4-2A4B78FB05C6'])
+            attachments = [guid])
     >>> announcement = pyrus_client.create_announcement(request).announcement
 	        
 -----------------

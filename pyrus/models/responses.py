@@ -176,7 +176,22 @@ class AnnouncementResponse(BaseResponse):
             self.announcement = entities.AnnouncementWithComments(**kwargs['announcement'])
         super(AnnouncementResponse, self).__init__(**kwargs)
 
+class AnnouncementsResponse(BaseResponse):
+    """
+        AnnouncementResponse
+        
+        Attributes:
+            announcements (:obj:`list` of :obj:`models.entities.AnnouncementWithComments`): List of announcements
+    """
+    __doc__ += BaseResponse.__doc__
 
+    announcements = None
+    def __init__(self, **kwargs):
+        if 'announcements' in kwargs:
+            self.announcements = []
+            for announcement in kwargs['announcements']:
+                self.announcements.append(AnnouncementsResponse(**announcement))
+        super(AnnouncementsResponse, self).__init__(**kwargs
 
 class ContactsResponse(BaseResponse):
     """
