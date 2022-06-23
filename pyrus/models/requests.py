@@ -29,8 +29,7 @@ class FormRegisterRequest(object):
 
     def __init__(self, steps=None, include_archived=None, filters=None, modified_before=None, modified_after=None,
                  field_ids=None, format=None, delimiter=None, simple_format=None, encoding=None,
-                 closed_before=None, closed_after=None, created_before=None, created_after=None, task_ids = None, item_count = None,
-                 due_filter=None):
+                 closed_before=None, closed_after=None, created_before=None, created_after=None, task_ids = None, item_count = None, due_filter=None):
 
         if steps:
             if not isinstance(steps, list):
