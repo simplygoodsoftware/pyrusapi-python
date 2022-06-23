@@ -123,10 +123,10 @@ class FormRegisterRequest(object):
                 raise TypeError('due_filter has a wrong type')
             
             if (due_filter in ['overdue', 'overdue_on_step', 'past_due']):
-                self.due_filer = due_filter
+                self.due_filter = due_filter
             elif isinstance(due_filter, list):
                 due_settings = { 'overdue_steps': due_filter }
-                self.due_filer = due_settings
+                self.due_filter = due_settings
 
 
 class TaskListRequest(object):
