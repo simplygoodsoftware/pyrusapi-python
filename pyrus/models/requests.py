@@ -24,12 +24,13 @@ class FormRegisterRequest(object):
             encoding (:obj:`str`, optional): Response encoding. Applicable only for csv format
             task_ids (:obj:`list` of :obj:`int`, optional): Include only tasks from task_ids list
             item_count (:obj:`int`, optional): Max count of tasks (item_count > 0 & item_count <= 20000)
-            
+            due_filter (:obj:`str` or :obj:`list` of :obj:`int`, optional): Task due filter. (overdue/overdue_on_step/past_due/list of overdue_steps)
     """
 
     def __init__(self, steps=None, include_archived=None, filters=None, modified_before=None, modified_after=None,
                  field_ids=None, format=None, delimiter=None, simple_format=None, encoding=None,
-                 closed_before=None, closed_after=None, created_before=None, created_after=None, task_ids = None, item_count = None):
+                 closed_before=None, closed_after=None, created_before=None, created_after=None, task_ids = None, item_count = None, due_filter=None):
+
         if steps:
             if not isinstance(steps, list):
                 raise TypeError('steps must be a list of int')
@@ -115,6 +116,17 @@ class FormRegisterRequest(object):
             if not isinstance(item_count, int):
                 raise TypeError("item_count must be int")
             self.item_count = item_count
+
+        if due_filter:
+            if not (isinstance(due_filter, list) or due_filter in ['overdue', 'overdue_on_step', 'past_due']):
+                raise TypeError('due_filter has a wrong type')
+            
+            if (due_filter in ['overdue', 'overdue_on_step', 'past_due']):
+                self.due_filter = due_filter
+            elif isinstance(due_filter, list):
+                due_settings = { 'overdue_steps': due_filter }
+                self.due_filter = due_settings
+
 
 class TaskListRequest(object):
     """
