@@ -363,12 +363,6 @@ class TaskCommentRequest(object):
             if not isinstance(cancel_due, bool):
                 raise TypeError('cancel_due must be a bool')
             self.cancel_due = cancel_due
-            if hasattr(self, 'due_date'):
-                delattr(self, 'due_date')
-            if hasattr(self, 'due'):
-                delattr(self, 'due')
-            if hasattr(self, 'duration'):
-                delattr(self, 'duration')
         if scheduled_date:
             if not isinstance(scheduled_date, datetime):
                 raise TypeError('scheduled_date must be a date')
