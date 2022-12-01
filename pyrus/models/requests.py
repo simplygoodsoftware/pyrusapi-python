@@ -184,6 +184,7 @@ class TaskCommentRequest(object):
             due (:obj:`datetime`, optional): task due date with time (either due_date or due can be used)
             due_date (:obj:`datetime`, optional): task due date (either due_date or due can be used)
             duration (:obj:`int`, optional): duration of the event in minutes (it can only be used with due)
+            cancel_due (:obj:`bool`, optional): Flag indicating that due (due_date) should be cancelled. The due, due_date, duration will be set to null
             subject (:obj:`str`, optional): New task subject
         Args(Form task comment):
             approval_choice (:obj:`str`, optional): Approval choice (approved/rejected/acknowledged)
@@ -198,7 +199,7 @@ class TaskCommentRequest(object):
     def __init__(self, text=None, approval_choice=None, approval_steps=None, action=None,
                  attachments=None, field_updates=None, approvals_added=None,
                  participants_added=None, reassign_to=None, due=None, due_date=None,
-                 duration=None, scheduled_date=None, scheduled_datetime_utc=None,
+                 duration=None, cancel_due=None, scheduled_date=None, scheduled_datetime_utc=None,
                  cancel_schedule=None, added_list_ids=None, removed_list_ids=None,
                  approvals_removed=None, approvals_rerequested=None, subscribers_added=None, subscribers_removed=None,
                  subscribers_rerequested=None, subject=None,
@@ -358,6 +359,16 @@ class TaskCommentRequest(object):
             if not due:
                 raise ValueError("duration can only be used with due")
             self.duration = duration
+        if cancel_due:
+            if not isinstance(cancel_due, bool):
+                raise TypeError('cancel_due must be a bool')
+            self.cancel_due = cancel_due
+            if hasattr(self, 'due_date'):
+                delattr(self, 'due_date')
+            if hasattr(self, 'due'):
+                delattr(self, 'due')
+            if hasattr(self, 'duration'):
+                delattr(self, 'duration')
         if scheduled_date:
             if not isinstance(scheduled_date, datetime):
                 raise TypeError('scheduled_date must be a date')
