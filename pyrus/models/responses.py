@@ -446,3 +446,21 @@ class CalendarResponse(BaseResponse):
             for task in kwargs['tasks']:
                 self.tasks.append(entities.TaskWithComments(**task))
         super(CalendarResponse, self).__init__(**kwargs)
+
+class PermissionsResponse(BaseResponse):
+    """
+            PermissionsResponse
+
+            Attributes:
+                permissions (:obj:`dict` of :obj:`int` as key and :obj:`string` as value): dictionary of form permissions by person id, where value is one of the permission levels (member, manager, administrator)
+        """
+    __doc__ += BaseResponse.__doc__
+
+    permissions = None
+
+    def __init__(self, **kwargs):
+        if 'permissions' in kwargs:
+            self.permissions = {}
+            for key in kwargs['permissions']:
+                self.permissions[int(key)] = kwargs['permissions'][key]
+        super(PermissionsResponse, self).__init__(**kwargs)

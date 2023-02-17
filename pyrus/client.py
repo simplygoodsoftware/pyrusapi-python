@@ -46,7 +46,7 @@ class PyrusAPI(object):
     access_token = None
     _protocol = 'https'
     _api_name = 'Pyrus'
-    _user_agent = 'Pyrus API python client v 2.13.0'
+    _user_agent = 'Pyrus API python client v 2.14.0'
     proxy = None
     _download_file_base_url = 'https://files.pyrus.com/services/attachment?Id='
 
@@ -479,6 +479,39 @@ class PyrusAPI(object):
 
     def serialize_request(self, body):
         return jsonpickle.encode(body, unpicklable=False).encode('utf-8')
+
+    def get_form_permissions(self, form_id):
+        """
+        Get form permissions
+
+        Args:
+            form_id (:obj:`int`): Form id
+
+        Returns: 
+            class:`models.responses.PermissionsResponse` object
+        """
+
+        url = self._create_url('/forms/{}/permissions'.format(form_id))
+        response = self._perform_get_request(url)
+        return resp.PermissionsResponse(**response)
+
+    def change_form_permissions(self, form_id, request):
+        """
+        Change form permissions
+
+        Args:
+            form_id (:obj:`int`): Form id
+
+        Returns: 
+            class:`models.responses.PermissionsResponse` object
+        """
+
+        if not isinstance(request, req.ChangePermissionsRequest):
+            raise TypeError('request must be an instance of models.requests.ChangePermissionsRequest')
+
+        url = self._create_url('/forms/{}/permissions'.format(form_id))
+        response = self._perform_post_request(url, request)
+        return resp.PermissionsResponse(**response)
 
     def _auth(self):
         url = self._create_url('/auth')
