@@ -261,6 +261,21 @@ request = CreateAnnouncementRequest(
 announcement = pyrus_client.create_announcement(request).announcement
 ```
 
+## Form permissions
+
+* Get form permissions:
+
+```python
+permissions = pyrus_client.get_permissions(123)
+```
+
+* Change form permissions:
+
+```python
+request = pyrus.models.requests.ChangePermissionsRequest({1733:'member'})
+changed_permissions = pyrus_client.change_permissions(123, request)
+```
+
 ## Support
 
 If you have any questions or comments please send an email to support@pyrus.com

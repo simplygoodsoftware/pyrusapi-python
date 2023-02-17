@@ -123,7 +123,16 @@ Create an announcement:
             text="Announcement from python client", 
             attachments = [guid])
     >>> announcement = pyrus_client.create_announcement(request).announcement
-	        
+
+Get form permissions:
+
+    >>> permissions = pyrus_client.get_permissions(123)
+
+Change form permissions:
+
+    >>> request = pyrus.models.requests.ChangePermissionsRequest({1733:'member'})
+    >>> changed_permissions = pyrus_client.change_permissions(123, request)
+
 -----------------
 Support
 -----------------

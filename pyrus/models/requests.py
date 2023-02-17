@@ -732,3 +732,17 @@ def _date_to_str(str_date, property_name):
     if not isinstance(str_date, datetime):
         raise TypeError('{} must be a date'.format(property_name))
     return datetime.strftime(str_date, constants.DATE_TIME_FORMAT)
+
+
+class ChangePermissionsRequest(object):
+    """
+    ChangePermissionsRequest
+
+    Args:
+        permissions (:obj:`dict` of :obj:`int` as key and :obj:`string` as value): dictionary of form permissions by person id, where value is one of the permission levels (none, member, manager, administrator)
+    """
+
+    def __init__(self, permissions):
+        if not isinstance(permissions, dict):
+            raise TypeError("permissions must be dict")
+        self.permissions = permissions
