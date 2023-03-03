@@ -46,7 +46,7 @@ class PyrusAPI(object):
     access_token = None
     _protocol = 'https'
     _api_name = 'Pyrus'
-    _user_agent = 'Pyrus API python client v 2.14.0'
+    _user_agent = 'Pyrus API python client v 2.15.0'
     proxy = None
     _download_file_base_url = 'https://files.pyrus.com/services/attachment?Id='
 
@@ -417,6 +417,53 @@ class PyrusAPI(object):
         response = self._perform_post_request(url, sync_catalog_request)
         return resp.SyncCatalogResponse(**response)
         
+    def get_roles(self):
+        """
+        Get all roles from user's organization
+        Returns: 
+            class:`models.responses.RolesResponse` object
+        """
+
+        url = self._create_url('/roles')
+        response = self._perform_get_request(url)
+        return resp.RolesResponse(**response)
+
+    def create_role(self, create_role_request):
+        """
+        Creates a role
+        Args:
+            create_role_request (:obj:`models.requests.CreateRoleRequest`): Role data.
+        Returns: 
+            class:`models.responses.RoleResponse` object
+        """
+
+        url = self._create_url('/roles')
+        if not isinstance(create_role_request, req.CreateRoleRequest):
+            raise TypeError('create_role_request must be an instance '
+                            'of models.requests.CreateRoleRequest')
+
+        response = self._perform_post_request(url, create_role_request)
+        return resp.RoleResponse(**response)
+
+    def update_role(self, role_id, update_role_request):
+        """
+        Updates a role
+        Args:
+            role_id (:obj:`int`): Role id
+            update_role_request (:obj:`models.requests.UpdateRoleRequest`): Role data.
+        Returns: 
+            class:`models.responses.RoleResponse` object
+        """
+
+        url = self._create_url('/roles/{}'.format(role_id))
+        if not isinstance(update_role_request, req.UpdateRoleRequest):
+            raise TypeError('update_role_request must be an instance '
+                            'of models.requests.UpdateRoleRequest')
+
+        response = self._perform_put_request(url, update_role_request)
+        return resp.RoleResponse(**response)
+
+
     def get_profile(self, include_inactive = False):
         """
         Get a profile

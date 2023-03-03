@@ -464,3 +464,55 @@ class PermissionsResponse(BaseResponse):
             for key in kwargs['permissions']:
                 self.permissions[int(key)] = kwargs['permissions'][key]
         super(PermissionsResponse, self).__init__(**kwargs)
+        
+class RoleResponse(BaseResponse):
+    """
+        RoleResponse
+        
+        Attributes:
+            id (:obj:`int`): Role id
+            name (:obj:`str`): Role name
+            external_id(:obj:`str`): Custom external id
+            banned(:obj:`bool`): Is role banned
+            member_ids(:obj:`list` of :obj:`int`) Role member ids
+    """
+    __doc__ += BaseResponse.__doc__
+
+    id = None
+    name = None
+    external_id = None
+    banned = None
+    member_ids = None
+
+    def __init__(self, **kwargs):
+        if 'id' in kwargs:
+            self.id = kwargs['id']
+        if 'name' in kwargs:
+            self.name = kwargs['name']
+        if 'external_id' in kwargs:
+            self.external_id = kwargs['external_id']
+        if 'banned' in kwargs:
+            self.banned = kwargs['banned']
+        if 'member_ids' in kwargs:
+            self.member_ids = []
+            for member_id in kwargs['member_ids']:
+                self.member_ids.append(member_id)
+        super(RoleResponse, self).__init__(**kwargs)
+
+class RolesResponse(BaseResponse):
+    """
+        RoleResponse
+        
+        Attributes:
+            roles (:obj:`list` of :obj:`models.entities.Role`): List of roles in user's organization
+    """
+    __doc__ += BaseResponse.__doc__
+
+    roles = None
+
+    def __init__(self, **kwargs):
+        if 'roles' in kwargs:
+            self.roles = []
+            for role in kwargs['roles']:
+                self.roles.append(entities.Role(**role))
+        super(RolesResponse, self).__init__(**kwargs)
