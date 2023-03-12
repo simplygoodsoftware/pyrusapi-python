@@ -472,15 +472,14 @@ class RoleResponse(BaseResponse):
         Attributes:
             id (:obj:`int`): Role id
             name (:obj:`str`): Role name
-            external_id(:obj:`str`): Custom external id
-            banned(:obj:`bool`): Is role banned
+            banned(:obj:`bool`): Is the role banned
+            fired(:obj:`bool`): Is the role fired
             member_ids(:obj:`list` of :obj:`int`) Role member ids
     """
     __doc__ += BaseResponse.__doc__
 
     id = None
     name = None
-    external_id = None
     banned = None
     member_ids = None
 
@@ -489,10 +488,10 @@ class RoleResponse(BaseResponse):
             self.id = kwargs['id']
         if 'name' in kwargs:
             self.name = kwargs['name']
-        if 'external_id' in kwargs:
-            self.external_id = kwargs['external_id']
         if 'banned' in kwargs:
             self.banned = kwargs['banned']
+        if 'fired' in kwargs:
+            self.fired = kwargs['fired']
         if 'member_ids' in kwargs:
             self.member_ids = []
             for member_id in kwargs['member_ids']:

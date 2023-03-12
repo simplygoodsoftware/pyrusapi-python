@@ -704,16 +704,13 @@ class CreateRoleRequest(object):
         Args:
             name (:obj:`str`): Role name
             members (:obj:`list` of :obj:`int`): List of role member ids
-            external_id (:obj:`str`, optional): Custom role identifier
     """
 
-    def __init__(self, name=None, members=None, external_id=None):
+    def __init__(self, name=None, members=None):
         if name:
             self.name = name
         if members:
             self.member_add = members
-        if external_id:
-            self.external_id = external_id
 
 class UpdateRoleRequest(object):
     """
@@ -722,12 +719,11 @@ class UpdateRoleRequest(object):
         Args:
             name (:obj:`str`, optional): Role name
             added_members (:obj:`list` of :obj:`int`, optional): List of new role members
-            removed_members (:obj:`list` of :obj:`int`, optional): List of remoived role members
+            removed_members (:obj:`list` of :obj:`int`, optional):  List of role members to remove
             banned (:obj:`bool`, optional): should we ban or unban role
-            external_id (:obj:`str`, optional): Custom role identifier
     """
 
-    def __init__(self, name=None, added_members=None, removed_members=None, banned=None, external_id=None):
+    def __init__(self, name=None, added_members=None, removed_members=None, banned=None):
         if name:
             self.name = name
         if added_members:
@@ -736,8 +732,6 @@ class UpdateRoleRequest(object):
             self.memebr_remove = removed_members
         if banned is not None:
             self.banned = banned
-        if external_id:
-            self.external_id = external_id
 
 def _get_catalog_headers(catalog_headers):
     if not isinstance(catalog_headers, list):

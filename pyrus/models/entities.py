@@ -754,15 +754,15 @@ class Role(object):
             id (:obj:`int`): Role id
             name (:obj:`str`): Role name
             member_ids (:obj:`list` of :obj:`int`): List of persons ids in the role
-            external_id(:obj:`str`): Custom role identifier
             banned(:obj:`bool`): Is the role banned
+            fired(:obj:`bool`): Is the role fired
     """
 
     id = None
     name = None
     member_ids = None
-    external_id = None
     banned = None
+    fired = None
 
     def __init__(self, **kwargs):
         if 'id' in kwargs:
@@ -773,10 +773,10 @@ class Role(object):
             self.member_ids = []
             for member_id in kwargs['member_ids']:
                 self.member_ids.append(member_id)
-        if 'external_id' in kwargs:
-            self.external_id = kwargs['external_id']
         if 'banned' in kwargs:
             self.banned = kwargs['banned']
+        if 'fired' in kwargs:
+            self.fired = kwargs['fired']
 
 class CatalogItem(object):
     """
