@@ -177,6 +177,7 @@ class TaskCommentRequest(object):
             subscribers_removed (:obj:`list` of :obj:`models.entities.Person`, optional): List of subscribers to remove from the task
             subscribers_rerequested (:obj:`list` of :obj:`models.entities.Person`, optional): List of subscribers to rerequest for the task
             skip_satisfaction (:obj:`bool`, optional): Flag indicating that user satisfaction poll should be skipped
+            edit_comment_id (:obj:`int`, optional): Existing task comment id to be edited
         Args(Simple task comment):
             participants_added (:obj:`list` of :obj:`models.entities.Person`, optional): List of participants to add to the task
             participants_removed (:obj:`list` of :obj:`models.entities.Person`, optional): List of participants to remove from the task
@@ -204,7 +205,7 @@ class TaskCommentRequest(object):
                  approvals_removed=None, approvals_rerequested=None, subscribers_added=None, subscribers_removed=None,
                  subscribers_rerequested=None, subject=None,
                  participants_removed=None, channel=None, spent_minutes=None,
-                 skip_satisfaction = None):
+                 skip_satisfaction = None, edit_comment_id = None):
         if text:
             self.text = text
         if subject:
@@ -424,6 +425,10 @@ class TaskCommentRequest(object):
             if not isinstance(skip_satisfaction, bool):
                 raise TypeError('skip_satisfaction must be bool')
             self.skip_satisfaction = skip_satisfaction
+        if edit_comment_id:
+            if not isinstance(edit_comment_id, int):
+                raise TypeError('edit_comment_id must be an int')
+            self.edit_comment_id = edit_comment_id
 
 class AnnouncementCommentRequest(object):
     """
