@@ -702,6 +702,41 @@ class CalendarRequest(object):
         self.all_accessed_tasks = all_accessed_tasks
         self.filter_mask = filter_mask
 
+class CreateRoleRequest(object):
+    """
+        CreateRoleRequest
+        
+        Args:
+            name (:obj:`str`): Role name
+            members (:obj:`list` of :obj:`int`): List of role member ids
+    """
+
+    def __init__(self, name=None, members=None):
+        if name:
+            self.name = name
+        if members:
+            self.member_add = members
+
+class UpdateRoleRequest(object):
+    """
+        UpdateRoleRequest
+        
+        Args:
+            name (:obj:`str`, optional): Role name
+            added_members (:obj:`list` of :obj:`int`, optional): List of new role members
+            removed_members (:obj:`list` of :obj:`int`, optional):  List of role members to remove
+            banned (:obj:`bool`, optional): should we ban or unban role
+    """
+
+    def __init__(self, name=None, added_members=None, removed_members=None, banned=None):
+        if name:
+            self.name = name
+        if added_members:
+            self.member_add = added_members
+        if removed_members:
+            self.memebr_remove = removed_members
+        if banned is not None:
+            self.banned = banned
 
 def _get_catalog_headers(catalog_headers):
     if not isinstance(catalog_headers, list):

@@ -464,3 +464,54 @@ class PermissionsResponse(BaseResponse):
             for key in kwargs['permissions']:
                 self.permissions[int(key)] = kwargs['permissions'][key]
         super(PermissionsResponse, self).__init__(**kwargs)
+        
+class RoleResponse(BaseResponse):
+    """
+        RoleResponse
+        
+        Attributes:
+            id (:obj:`int`): Role id
+            name (:obj:`str`): Role name
+            banned(:obj:`bool`): Is the role banned
+            fired(:obj:`bool`): Is the role fired
+            member_ids(:obj:`list` of :obj:`int`) Role member ids
+    """
+    __doc__ += BaseResponse.__doc__
+
+    id = None
+    name = None
+    banned = None
+    member_ids = None
+
+    def __init__(self, **kwargs):
+        if 'id' in kwargs:
+            self.id = kwargs['id']
+        if 'name' in kwargs:
+            self.name = kwargs['name']
+        if 'banned' in kwargs:
+            self.banned = kwargs['banned']
+        if 'fired' in kwargs:
+            self.fired = kwargs['fired']
+        if 'member_ids' in kwargs:
+            self.member_ids = []
+            for member_id in kwargs['member_ids']:
+                self.member_ids.append(member_id)
+        super(RoleResponse, self).__init__(**kwargs)
+
+class RolesResponse(BaseResponse):
+    """
+        RoleResponse
+        
+        Attributes:
+            roles (:obj:`list` of :obj:`models.entities.Role`): List of roles in user's organization
+    """
+    __doc__ += BaseResponse.__doc__
+
+    roles = None
+
+    def __init__(self, **kwargs):
+        if 'roles' in kwargs:
+            self.roles = []
+            for role in kwargs['roles']:
+                self.roles.append(entities.Role(**role))
+        super(RolesResponse, self).__init__(**kwargs)
