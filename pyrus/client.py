@@ -46,7 +46,7 @@ class PyrusAPI(object):
     access_token = None
     _protocol = 'https'
     _api_name = 'Pyrus'
-    _user_agent = 'Pyrus API python client v 2.16.0'
+    _user_agent = 'Pyrus API python client v 2.17.0'
     proxy = None
     _download_file_base_url = 'https://files.pyrus.com/services/attachment?Id='
 
@@ -427,6 +427,19 @@ class PyrusAPI(object):
         url = self._create_url('/roles')
         response = self._perform_get_request(url)
         return resp.RolesResponse(**response)
+
+    def get_role(self, role_id):
+        """
+        Get a role
+        Args:
+            role_id
+        Returns:
+            class:`models.responses.RoleResponse` object
+        """
+
+        url = self._create_url('/roles/{}'.format(role_id))
+        response = self._perform_get_request(url)
+        return resp.RoleResponse(**response)
 
     def create_role(self, create_role_request):
         """
