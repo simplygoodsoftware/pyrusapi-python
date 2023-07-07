@@ -738,6 +738,40 @@ class UpdateRoleRequest(object):
         if banned is not None:
             self.banned = banned
 
+class CreateMemberRequest(entities.Person):
+    """
+        CreateMemberRequest
+        
+        Args:
+            :obj:`models.entities.Person`
+    """
+
+    def __init__(self, **kwargs):
+        super(CreateMemberRequest, self).__init__(**kwargs)
+
+class UpdateMemberRequest(entities.Person):
+    """
+        UpdateMemberRequest
+        
+        Args:
+            :obj:`models.entities.Person`
+    """
+
+    def __init__(self, **kwargs):
+        super(UpdateMemberRequest, self).__init__(**kwargs)
+
+class SetAvatarRequest(object):
+    """
+        SetAvatarRequest
+        
+        Args:
+            guid (:obj:`str`): Uploaded file guid
+    """
+
+    def __init__(self, guid):
+        self.guid = guid
+
+
 def _get_catalog_headers(catalog_headers):
     if not isinstance(catalog_headers, list):
         raise TypeError('catalog_headers must be a list of str')
