@@ -515,3 +515,69 @@ class RolesResponse(BaseResponse):
             for role in kwargs['roles']:
                 self.roles.append(entities.Role(**role))
         super(RolesResponse, self).__init__(**kwargs)
+
+class MemberResponse(BaseResponse):
+    """
+        MemberResponse
+        
+        Attributes:
+            id (:obj:`int`): Person id
+            first_name (:obj:`str`): Person first name
+            last_name (:obj:`str`): Person last name
+            email (:obj:`str`): Person email
+            status (:obj:`str`): Persons status
+            avatar_id (:obj:`int`) Persons avatar ID
+            type (:obj:`str`): Person type (user/bot/role)
+            department_id (:obj:`int`): Person department id
+            department_name (:obj:`str`): Person department
+    """
+    __doc__ += BaseResponse.__doc__
+
+    id = None
+    first_name = None
+    last_name = None
+    email = None
+    status = None
+    avatar_id = None
+    type = None
+    department_id = None
+    department_name = None
+
+    def __init__(self, **kwargs):
+        if 'id' in kwargs:
+            self.id = kwargs['id']
+        if 'first_name' in kwargs:
+            self.first_name = kwargs['first_name']
+        if 'last_name' in kwargs:
+            self.last_name = kwargs['last_name']
+        if 'email' in kwargs:
+            self.email = kwargs['email']
+        if 'status' in kwargs:
+            self.status = kwargs['status']
+        if 'avatar_id' in kwargs:
+            self.avatar_id = kwargs['avatar_id']
+        if 'type' in kwargs:
+            self.type = kwargs['type']
+        if 'department_id' in kwargs:
+            self.department_id = kwargs['department_id']
+        if 'department_name' in kwargs:
+            self.department_name = kwargs['department_name']
+        super(MemberResponse, self).__init__(**kwargs)
+
+class MembersResponse(BaseResponse):
+    """
+        MembersResponse
+        
+        Attributes:
+            members (:obj:`list` of :obj:`models.entities.Person`): List of members in user's organization
+    """
+    __doc__ += BaseResponse.__doc__
+
+    members = None
+
+    def __init__(self, **kwargs):
+        if 'members' in kwargs:
+            self.members = []
+            for member in kwargs['members']:
+                self.members.append(entities.Person(**member))
+        super(MembersResponse, self).__init__(**kwargs)

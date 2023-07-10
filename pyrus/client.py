@@ -46,7 +46,7 @@ class PyrusAPI(object):
     access_token = None
     _protocol = 'https'
     _api_name = 'Pyrus'
-    _user_agent = 'Pyrus API python client v 2.17.0'
+    _user_agent = 'Pyrus API python client v 2.18.0'
     proxy = None
     _download_file_base_url = 'https://files.pyrus.com/services/attachment?Id='
 
@@ -476,6 +476,80 @@ class PyrusAPI(object):
         response = self._perform_put_request(url, update_role_request)
         return resp.RoleResponse(**response)
 
+    def get_members(self):
+        """
+        Get all members from user's organization
+        Returns: 
+            class:`models.responses.MembersResponse` object
+        """
+
+        url = self._create_url('/members')
+        response = self._perform_get_request(url)
+        return resp.MembersResponse(**response)
+
+    def get_member(self, member_id):
+        """
+        Get a member
+        Args:
+            member_id
+        Returns:
+            class:`models.responses.MemberResponse` object
+        """
+
+        url = self._create_url('/members/{}'.format(member_id))
+        response = self._perform_get_request(url)
+        return resp.MemberResponse(**response)
+
+    def create_member(self, create_member_request):
+        """
+        Creates a member
+        Args:
+            create_member_request (:obj:`models.requests.CreateMemberRequest`): Member data.
+        Returns: 
+            class:`models.responses.MemberResponse` object
+        """
+
+        url = self._create_url('/members')
+        if not isinstance(create_member_request, req.CreateMemberRequest):
+            raise TypeError('create_member_request must be an instance '
+                            'of models.requests.CreateMemberRequest')
+
+        response = self._perform_post_request(url, create_member_request)
+        print("~~ create_member: ", response)
+        return resp.MemberResponse(**response)
+
+    def update_member(self, member_id, update_member_request):
+        """
+        Updates a member
+        Args:
+            member_id (:obj:`int`): Member id
+            update_member_request (:obj:`models.requests.UpdateMemberRequest`): Member data.
+        Returns: 
+            class:`models.responses.MemberResponse` object
+        """
+
+        url = self._create_url('/members/{}'.format(member_id))
+        if not isinstance(update_member_request, req.UpdateMemberRequest):
+            raise TypeError('update_member_request must be an instance '
+                            'of models.requests.UpdateMemberRequest')
+
+        response = self._perform_put_request(url, update_member_request)
+        return resp.MemberResponse(**response)
+
+    def set_avatar(self, member_id, file_guid):
+        """
+        Sets a new avatar
+        Args:
+            member_id (:obj:`int`): Member id
+            file_guid (:obj:`str`): A file GUID got from the file upload request.
+        Returns: 
+            class:`models.responses.MemberResponse` object
+        """
+
+        url = self._create_url('/members/{}/avatar'.format(member_id))
+        set_avatar_request = req.SetAvatarRequest(file_guid)
+        response = self._perform_put_request(url, set_avatar_request)
+        return resp.MemberResponse(**response)
 
     def get_profile(self, include_inactive = False):
         """
