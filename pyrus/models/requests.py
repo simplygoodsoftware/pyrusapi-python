@@ -766,10 +766,12 @@ class SetAvatarRequest(object):
         
         Args:
             guid (:obj:`str`): Uploaded file guid
+            cloud_avatar_id (:obj:`int`) Persons cloud avatar ID
     """
 
-    def __init__(self, guid):
+    def __init__(self, guid, cloud_avatar_id=None):
         self.guid = guid
+        self.cloud_avatar_id = cloud_avatar_id
 
 
 def _get_catalog_headers(catalog_headers):

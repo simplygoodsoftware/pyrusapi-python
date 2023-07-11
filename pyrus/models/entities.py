@@ -381,6 +381,7 @@ class Person(object):
             email (:obj:`str`): Person email
             status (:obj:`str`): Persons status
             avatar_id (:obj:`int`) Persons avatar ID
+            cloud_avatar_id (:obj:`int`) Persons cloud avatar ID
             type (:obj:`str`): Person type (user/bot/role)
             department_id (:obj:`int`): Person department id
             department_name (:obj:`str`): Person department
@@ -392,6 +393,7 @@ class Person(object):
     email = None
     status = None
     avatar_id = None
+    cloud_avatar_id = None
     type = None
     department_id = None
     department_name = None
@@ -409,6 +411,8 @@ class Person(object):
             self.status = kwargs['status']
         if 'avatar_id' in kwargs:
             self.avatar_id = kwargs['avatar_id']
+        if 'cloud_avatar_id' in kwargs:
+            self.cloud_avatar_id = kwargs['cloud_avatar_id']
         if 'type' in kwargs:
             self.type = kwargs['type']
         if 'department_id' in kwargs:
