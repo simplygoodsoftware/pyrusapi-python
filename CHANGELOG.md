@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2.19.0] - 2023-07-11
 ### Added
-- members field added: cloud_avatar_id
+- members field added: external_avatar_id
 
 ## [2.18.0] - 2023-07-06
 ### Added
