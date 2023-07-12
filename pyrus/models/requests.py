@@ -766,7 +766,7 @@ class SetAvatarRequest(object):
         
         Args:
             guid (:obj:`str`): Uploaded file guid
-            external_avatar_id (:obj:`int`) Persons cloud avatar ID
+            external_avatar_id (:obj:`int`) Persons external avatar ID
     """
 
     def __init__(self, guid, external_avatar_id=None):

@@ -381,7 +381,7 @@ class Person(object):
             email (:obj:`str`): Person email
             status (:obj:`str`): Persons status
             avatar_id (:obj:`int`) Persons avatar ID
-            external_avatar_id (:obj:`int`) Persons cloud avatar ID
+            external_avatar_id (:obj:`int`) Persons external avatar ID
             type (:obj:`str`): Person type (user/bot/role)
             department_id (:obj:`int`): Person department id
             department_name (:obj:`str`): Person department

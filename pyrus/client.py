@@ -542,7 +542,7 @@ class PyrusAPI(object):
         Args:
             member_id (:obj:`int`): Member id
             file_guid (:obj:`str`): A file GUID got from the file upload request.
-            external_avatar_id (:obj:`int`): External avatar id from the cloud
+            external_avatar_id (:obj:`int`): External avatar id
         Returns: 
             class:`models.responses.MemberResponse` object
         """
