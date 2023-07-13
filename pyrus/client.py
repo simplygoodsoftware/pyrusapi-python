@@ -46,7 +46,7 @@ class PyrusAPI(object):
     access_token = None
     _protocol = 'https'
     _api_name = 'Pyrus'
-    _user_agent = 'Pyrus API python client v 2.18.0'
+    _user_agent = 'Pyrus API python client v 2.19.0'
     proxy = None
     _download_file_base_url = 'https://files.pyrus.com/services/attachment?Id='
 
@@ -536,18 +536,19 @@ class PyrusAPI(object):
         response = self._perform_put_request(url, update_member_request)
         return resp.MemberResponse(**response)
 
-    def set_avatar(self, member_id, file_guid):
+    def set_avatar(self, member_id, file_guid, external_avatar_id=None):
         """
         Sets a new avatar
         Args:
             member_id (:obj:`int`): Member id
             file_guid (:obj:`str`): A file GUID got from the file upload request.
+            external_avatar_id (:obj:`int`): External avatar id
         Returns: 
             class:`models.responses.MemberResponse` object
         """
 
         url = self._create_url('/members/{}/avatar'.format(member_id))
-        set_avatar_request = req.SetAvatarRequest(file_guid)
+        set_avatar_request = req.SetAvatarRequest(file_guid, external_avatar_id)
         response = self._perform_put_request(url, set_avatar_request)
         return resp.MemberResponse(**response)
 
