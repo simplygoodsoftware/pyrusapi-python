@@ -768,6 +768,8 @@ class Role(object):
             member_ids (:obj:`list` of :obj:`int`): List of persons ids in the role
             banned(:obj:`bool`): Is the role banned
             fired(:obj:`bool`): Is the role fired
+            avatar_id (:obj:`int`) Roles avatar ID
+            external_avatar_id (:obj:`int`) Roles external avatar ID
     """
 
     id = None
@@ -775,6 +777,8 @@ class Role(object):
     member_ids = None
     banned = None
     fired = None
+    avatar_id = None
+    external_avatar_id = None
 
     def __init__(self, **kwargs):
         if 'id' in kwargs:
@@ -789,6 +793,10 @@ class Role(object):
             self.banned = kwargs['banned']
         if 'fired' in kwargs:
             self.fired = kwargs['fired']
+        if 'avatar_id' in kwargs:
+            self.avatar_id = kwargs['avatar_id']
+        if 'external_avatar_id' in kwargs:
+            self.external_avatar_id = kwargs['external_avatar_id']
 
 class CatalogItem(object):
     """
