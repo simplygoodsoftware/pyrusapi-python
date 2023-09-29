@@ -226,6 +226,7 @@ class CatalogResponse(BaseResponse):
     items = None
     catalog_id = None
     catalog_headers = None
+    source_type = None
 
     def __init__(self, **kwargs):
         if 'catalog_id' in kwargs:
@@ -238,6 +239,8 @@ class CatalogResponse(BaseResponse):
             self.catalog_headers = []
             for item in kwargs['catalog_headers']:
                 self.catalog_headers.append(entities.CatalogHeader(**item))
+        if 'source_type' in kwargs:
+            self.source_type = kwargs['source_type']
         super(CatalogResponse, self).__init__(**kwargs)
 
 
@@ -362,6 +365,7 @@ class SyncCatalogResponse(BaseResponse):
     deleted = None
     updated = None
     catalog_headers = None
+    source_type = None
 
     def __init__(self, **kwargs):
         if 'apply' in kwargs:
@@ -382,6 +386,8 @@ class SyncCatalogResponse(BaseResponse):
             self.catalog_headers = []
             for header in kwargs['catalog_headers']:
                 self.catalog_headers.append(entities.CatalogHeader(**header))
+        if 'source_type' in kwargs:
+            self.source_type = kwargs['source_type']
         super(SyncCatalogResponse, self).__init__(**kwargs)
 
 class ProfileResponse(BaseResponse):

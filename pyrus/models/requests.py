@@ -638,7 +638,7 @@ class SyncCatalogRequest(object):
             apply (:obj:`bool`, optional): Flag indicates if changes must be applied. By default false
     """
 
-    def __init__(self, apply=None, catalog_headers=None, items=None):
+    def __init__(self, apply=None, catalog_headers=None, items=None, source_type=None):
         if apply:
             if not isinstance(apply, bool):
                 raise TypeError('apply must be a bool')
@@ -647,6 +647,8 @@ class SyncCatalogRequest(object):
             self.catalog_headers = _get_catalog_headers(catalog_headers)
         if items:
             self.items = _get_catalog_items(items)
+        if source_type:
+            self.source_type = source_type
 
 
 class CreateCatalogRequest(object):
@@ -659,7 +661,7 @@ class CreateCatalogRequest(object):
             items (:obj:`list` of :obj:`models.entities.str` or :obj:`models.entities.CatalogHeader`, optional): List of catalog items
     """
 
-    def __init__(self, name=None, catalog_headers=None, items=None):
+    def __init__(self, name=None, catalog_headers=None, items=None, source_type=None):
         if name:
             if not isinstance(name, str):
                 raise TypeError('name must be a str')
@@ -668,6 +670,8 @@ class CreateCatalogRequest(object):
             self.catalog_headers = _get_catalog_headers(catalog_headers)
         if items:
             self.items = _get_catalog_items(items)
+        if source_type:
+            self.source_type = source_type
 
 
 class CalendarRequest(object):
