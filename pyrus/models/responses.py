@@ -72,11 +72,6 @@ class FormResponse(BaseResponse):
     def flat_fields(self):
         return self._get_flat_fields(self.fields)
         
-    @property
-    def named_fields(self):
-        return self._get_named_fields(self.flat_fields)
-        
-
     def __init__(self, **kwargs):
         if 'id' in kwargs:
             self.id = kwargs['id']
@@ -96,15 +91,6 @@ class FormResponse(BaseResponse):
                 self.folder.append(fld)
         super(FormResponse, self).__init__(**kwargs)
 
-    def _get_named_fields(self, flat_fields):
-        res = {}
-        if not flat_fields:
-            return res
-        for field in flat_fields:
-            if field.info.code:
-                res[field.info.code] = field
-        return res
-        
     def _get_flat_fields(self, fields):
         res = []
         if not fields:
