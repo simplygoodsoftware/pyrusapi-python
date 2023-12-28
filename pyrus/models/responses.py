@@ -57,6 +57,7 @@ class FormResponse(BaseResponse):
                 value (:obj:`str`): Step name
             fields (:obj:`list` of :obj:`models.entities.FormField`): List of form fields
             deleted_or_closed (:obj:`bool`): Form state
+            business_owners (:obj:`list` of :obj:`int`): List of business owners
             folder (:obj:`list` of :obj:`str`): Folder of form
     """
     __doc__ += BaseResponse.__doc__
@@ -66,6 +67,7 @@ class FormResponse(BaseResponse):
     steps = None
     fields = None
     deleted_or_closed = None
+    business_owners = None
     folder = None
 
     @property
@@ -90,6 +92,8 @@ class FormResponse(BaseResponse):
                 self.fields.append(entities.FormField(**field))
         if 'deleted_or_closed' in kwargs:
             self.deleted_or_closed = kwargs['deleted_or_closed']
+        if 'business_owners' in kwargs:
+            self.business_owners = kwargs['business_owners']
         if 'folder' in kwargs:
             self.folder = []
             for fld in kwargs['folder']:
