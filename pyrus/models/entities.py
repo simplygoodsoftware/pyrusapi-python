@@ -1120,6 +1120,20 @@ class IsInFilter(FormRegisterFilter):
             __init__(field_id=field_id, operator='is_in', values=formated_values)
 
 
+class IsEmptyFilter(FormRegisterFilter):
+    """
+        Form register is empty filter
+
+        Attributes:
+            field_id (:obj:`int`): Form field id
+    """
+
+    def __init__(self, field_id):
+        _validate_field_id(field_id)
+        super(IsEmptyFilter, self). \
+            __init__(field_id=field_id, operator='is_empty', values=[])
+
+
 class TaskList(object):
     """
         task list

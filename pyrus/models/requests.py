@@ -81,6 +81,8 @@ class FormRegisterRequest(object):
                     setattr(self, 'fld{}'.format(fltr.field_id), 'gt{},lt{}'.format(*fltr.values))
                 if fltr.operator == 'is_in':
                     setattr(self, 'fld{}'.format(fltr.field_id), ",".join(fltr.values))
+                if fltr.operator == 'is_empty':
+                    setattr(self, 'fld{}'.format(fltr.field_id), 'empty')
 
         if field_ids:
             if not isinstance(field_ids, list):
