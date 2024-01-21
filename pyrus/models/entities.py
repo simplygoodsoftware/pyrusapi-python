@@ -881,6 +881,7 @@ class TableRow(object):
     row_id = None
     cells = None
     delete = None
+    deleted = None
 
     def __init__(self, **kwargs):
         if 'row_id' in kwargs:
@@ -896,6 +897,10 @@ class TableRow(object):
             self.delete = kwargs['delete']
             if not isinstance(self.delete, bool):
                 raise TypeError('delete must be a boolean')
+        if 'deleted' in kwargs:
+            self.deleted = kwargs['deleted']
+            if not isinstance(self.deleted, bool):
+                raise TypeError('deleted must be a boolean')
 
 
 class Title(object):
