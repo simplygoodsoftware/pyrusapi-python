@@ -653,7 +653,8 @@ class PyrusAPI(object):
             self._host = url.netloc
             self._base_path = url.path.rstrip('/')
         if files_url:
-            self._files_host = urlparse(files_url).netloc
+            url = urlparse(files_url)
+            self._files_host = (url.netloc + url.path).rstrip('/')
 
     def _create_url(self, url):
         return '{}://{}{}{}'.format(self._protocol, self._host, self._base_path, url)
