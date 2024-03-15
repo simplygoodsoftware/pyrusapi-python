@@ -42,9 +42,14 @@ class PyrusAPI(object):
         POST = "POST"
         PUT = "PUT"
 
-    _host = 'api.pyrus.com'
+    def PYRUS_API_URL():
+        return 'api.pyrus.com'
+    def PYRUS_AUTH_URL():
+        return 'accounts.pyrus.com/api'
+
+    _host = PYRUS_API_URL()
     _files_host = 'files.pyrus.com'
-    _auth_host = 'accounts.pyrus.com/api'
+    _auth_host = PYRUS_AUTH_URL()
     _base_path = '/v4'
     access_token = None
     _protocol = 'https'
@@ -634,7 +639,7 @@ class PyrusAPI(object):
         # pylint: disable=no-member
         if auth_response.status_code == requests.codes.ok:
             response = auth_response.json()
-            self._set_origins(response['api_url'], response['files_url'])
+            self._set_origins(response.get('api_url'), response.get('files_url'))
             self.access_token = response['access_token']
         else:
             response = auth_response.json()
@@ -644,7 +649,9 @@ class PyrusAPI(object):
 
     def _set_origins(self, api_url, files_url):
         if api_url:
-            self._host = urlparse(api_url).netloc
+            url = urlparse(api_url)
+            self._host = url.netloc
+            self._base_path = url.path.rstrip('/')
         if files_url:
             self._files_host = urlparse(files_url).netloc
 
@@ -655,7 +662,10 @@ class PyrusAPI(object):
         return '{}://{}{}'.format(self._protocol, self._files_host, url)
 
     def _create_auth_url(self, url):
-        return '{}://{}{}{}'.format(self._protocol, self._auth_host, self._base_path, url)
+        if self._host == PyrusAPI.PYRUS_API_URL() or self._auth_host != PyrusAPI.PYRUS_AUTH_URL():
+            return '{}://{}{}{}'.format(self._protocol, self._auth_host, self._base_path, url)
+
+        return '{}://{}{}{}'.format(self._protocol, self._host, self._base_path, url)
 
     def _perform_get_request(self, path):
         return self._perform_request_with_retry(path, self.HTTPMethod.GET)
