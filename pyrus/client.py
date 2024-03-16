@@ -16,6 +16,7 @@ Full documentation for PyrusAPI is at https://pyrus.com/en/help/api
 '''
 
 from enum import Enum
+from urllib.parse import urlparse
 import jsonpickle
 import os
 import re
@@ -41,14 +42,20 @@ class PyrusAPI(object):
         POST = "POST"
         PUT = "PUT"
 
-    _host = 'api.pyrus.com'
+    def PYRUS_API_URL():
+        return 'api.pyrus.com'
+    def PYRUS_AUTH_URL():
+        return 'accounts.pyrus.com/api'
+
+    _host = PYRUS_API_URL()
+    _files_host = 'files.pyrus.com'
+    _auth_host = PYRUS_AUTH_URL()
     _base_path = '/v4'
     access_token = None
     _protocol = 'https'
     _api_name = 'Pyrus'
-    _user_agent = 'Pyrus API python client v 2.24.0'
+    _user_agent = 'Pyrus API python client v 2.25.0'
     proxy = None
-    _download_file_base_url = 'https://files.pyrus.com/services/attachment?Id='
 
     def __init__(self, login=None, security_key=None, access_token=None, proxy=None):
         self.security_key = security_key
@@ -82,8 +89,7 @@ class PyrusAPI(object):
         Returns: 
             class:`models.responses.FormsResponse` object
         """
-        url = self._create_url('/forms')
-        response = self._perform_get_request(url)
+        response = self._perform_get_request('/forms')
         return resp.FormsResponse(**response)
 
     def get_registry(self, form_id, form_register_request=None):
@@ -97,14 +103,14 @@ class PyrusAPI(object):
         Returns: 
             class:`models.responses.FormRegisterResponse` object
         """
-        url = self._create_url('/forms/{}/register'.format(form_id))
+        path = '/forms/{}/register'.format(form_id)
         if form_register_request:
             if not isinstance(form_register_request, req.FormRegisterRequest):
                 raise TypeError('form_register_request must be an instance '
                                 'of models.requests.FormRegisterRequest')
-            response = self._perform_post_request(url, form_register_request)
+            response = self._perform_post_request(path, form_register_request)
         else:
-            response = self._perform_get_request(url)
+            response = self._perform_get_request(path)
 
         if form_register_request and getattr(form_register_request, 'format', 'json') == "csv":
             return response
@@ -121,8 +127,7 @@ class PyrusAPI(object):
         Returns: 
             class:`models.responses.ContactsResponse` object
         """
-        url = self._create_url('/contacts?include_inactive={}'.format(include_inactive))
-        response = self._perform_get_request(url)
+        response = self._perform_get_request('/contacts?include_inactive={}'.format(include_inactive))
         return resp.ContactsResponse(**response)
 
     def get_catalog(self, catalog_id):
@@ -138,8 +143,7 @@ class PyrusAPI(object):
         if not isinstance(catalog_id, int):
             raise Exception("catalog_id should be valid int")
 
-        url = self._create_url('/catalogs/{}'.format(catalog_id))
-        response = self._perform_get_request(url)
+        response = self._perform_get_request('/catalogs/{}'.format(catalog_id))
         return resp.CatalogResponse(**response)
 
     def get_form(self, form_id):
@@ -155,8 +159,7 @@ class PyrusAPI(object):
         if not isinstance(form_id, int):
             raise Exception("form_id should be valid int")
 
-        url = self._create_url('/forms/{}'.format(form_id))
-        response = self._perform_get_request(url)
+        response = self._perform_get_request('/forms/{}'.format(form_id))
         return resp.FormResponse(**response)
 
     def get_task(self, task_id):
@@ -171,8 +174,7 @@ class PyrusAPI(object):
         """
         if not isinstance(task_id, int):
             raise Exception("task_id should be valid int")
-        url = self._create_url('/tasks/{}'.format(task_id))
-        response = self._perform_get_request(url)
+        response = self._perform_get_request('/tasks/{}'.format(task_id))
         return resp.TaskResponse(**response)
     
     def get_announcement(self, announcement_id):
@@ -187,8 +189,7 @@ class PyrusAPI(object):
         """
         if not isinstance(announcement_id, int):
             raise Exception("announcement_id should be valid int")
-        url = self._create_url('/announcements/{}'.format(announcement_id))
-        response = self._perform_get_request(url)
+        response = self._perform_get_request('/announcements/{}'.format(announcement_id))
         return resp.AnnouncementResponse(**response)
 
     def comment_task(self, task_id, task_comment_request):
@@ -203,11 +204,10 @@ class PyrusAPI(object):
         """
         if not isinstance(task_id, int):
             raise Exception("task_id should be valid int")
-        url = self._create_url('/tasks/{}/comments'.format(task_id))
         if not isinstance(task_comment_request, req.TaskCommentRequest):
             raise TypeError('form_register_request must be an instance '
                             'of models.requests.TaskCommentRequest')
-        response = self._perform_post_request(url, task_comment_request)
+        response = self._perform_post_request('/tasks/{}/comments'.format(task_id), task_comment_request)
         return resp.TaskResponse(**response)
     
     def comment_announcement(self, announcement_id, announcement_comment_request):
@@ -222,11 +222,10 @@ class PyrusAPI(object):
         """
         if not isinstance(announcement_id, int):
             raise Exception("announcement_id should be valid int")
-        url = self._create_url('/announcements/{}/comments'.format(announcement_id))
         if not isinstance(announcement_comment_request, req.AnnouncementCommentRequest):
             raise TypeError('announcement_comment_request must be an instance '
                             'of models.requests.AnnouncementCommentRequest')
-        response = self._perform_post_request(url, announcement_comment_request)
+        response = self._perform_post_request('/announcements/{}/comments'.format(announcement_id), announcement_comment_request)
         return resp.AnnouncementResponse(**response)
 
     def create_task(self, create_task_request):
@@ -239,11 +238,10 @@ class PyrusAPI(object):
         Returns: 
             class:`models.responses.TaskResponse` object
         """
-        url = self._create_url('/tasks')
         if not isinstance(create_task_request, req.CreateTaskRequest):
             raise TypeError('create_task_request must be an instance '
                             'of models.requests.CreateTaskRequest')
-        response = self._perform_post_request(url, create_task_request)
+        response = self._perform_post_request('/tasks', create_task_request)
         return resp.TaskResponse(**response)
 
     def get_announcements(self):
@@ -254,8 +252,7 @@ class PyrusAPI(object):
         Returns: 
             class:`models.responses.AnnouncementsResponse` object
         """
-        url = self._create_url('/announcements')
-        response = self._perform_get_request(url)
+        response = self._perform_get_request('/announcements')
 
         return resp.AnnouncementsResponse(**response)
     def create_announcement(self, create_announcement_request):
@@ -268,11 +265,10 @@ class PyrusAPI(object):
         Returns: 
             class:`models.responses.AnnouncementResponse` object
         """
-        url = self._create_url('/announcements')
         if not isinstance(create_announcement_request, req.CreateAnnouncementRequest):
             raise TypeError('create_announcement_request must be an instance '
                             'of models.requests.CreateAnnouncementRequest')
-        response = self._perform_post_request(url, create_announcement_request)
+        response = self._perform_post_request('/announcements', create_announcement_request)
         return resp.AnnouncementResponse(**response)
 
     def upload_file(self, file_path):
@@ -285,8 +281,7 @@ class PyrusAPI(object):
         Returns: 
             class:`models.responses.UploadResponse` object
         """
-        url = self._create_url('/files/upload')
-        response = self._perform_request_with_retry(url, self.HTTPMethod.POST, file_path=file_path)
+        response = self._perform_request_with_retry('/files/upload', self.HTTPMethod.POST, file_path=file_path)
         return resp.UploadResponse(**response)
 
     def get_lists(self):
@@ -296,8 +291,7 @@ class PyrusAPI(object):
         Returns: 
             class:`models.responses.ListsResponse` object
         """
-        url = self._create_url('/lists')
-        response = self._perform_get_request(url)
+        response = self._perform_get_request('/lists')
         return resp.ListsResponse(**response)
 
     def get_task_list(self, list_id, item_count=200, include_archived=False):
@@ -319,12 +313,11 @@ class PyrusAPI(object):
         if not isinstance(include_archived, bool):
             raise TypeError('include_archived must be an instance of bool')
 
-        url_suffix = '/lists/{}/tasks?item_count={}'.format(list_id, item_count)
+        path = '/lists/{}/tasks?item_count={}'.format(list_id, item_count)
         if include_archived:
-            url_suffix += '&include_archived=y'
+            path += '&include_archived=y'
 
-        url = self._create_url(url_suffix)
-        response = self._perform_get_request(url)
+        response = self._perform_get_request(path)
         return resp.TaskListResponse(**response)
     
     def get_task_list(self, list_id, task_list_request=None):
@@ -338,14 +331,14 @@ class PyrusAPI(object):
         Returns: 
             class:`models.responses.TaskListResponse` object
         """
-        url = self._create_url('/lists/{}/tasks'.format(list_id))
+        path = '/lists/{}/tasks'.format(list_id)
         if task_list_request:
             if not isinstance(task_list_request, req.TaskListRequest):
                 raise TypeError('task_list_request must be an instance '
                                 'of models.requests.TaskListRequest')
-            response = self._perform_post_request(url, task_list_request)
+            response = self._perform_post_request(path, task_list_request)
         else:
-            response = self._perform_get_request(url)
+            response = self._perform_get_request(path)
 
         return resp.TaskListResponse(**response)
 
@@ -361,8 +354,8 @@ class PyrusAPI(object):
         """
         if not isinstance(file_id, int):
             raise TypeError('file_id must be an instance of int')
-        url = self._download_file_base_url + str(file_id)
-        response = self._perform_get_file_request(url)
+        path = '/services/attachment?Id=' + str(file_id)
+        response = self._perform_get_file_request(path)
         if response.status_code == 200:
             try:
                 _ , params= cgi.parse_header(response.headers['Content-Disposition'])
@@ -388,11 +381,10 @@ class PyrusAPI(object):
         Returns: 
             class:`models.responses.CatalogResponse` object
         """
-        url = self._create_url('/catalogs')
         if not isinstance(create_catalog_request, req.CreateCatalogRequest):
             raise TypeError('create_catalog_request must be an instance '
                             'of models.requests.CreateCatalogRequest')
-        response = self._perform_put_request(url, create_catalog_request)
+        response = self._perform_put_request('/catalogs', create_catalog_request)
         return resp.CatalogResponse(**response)
 
     def sync_catalog(self, catalog_id, sync_catalog_request):
@@ -410,11 +402,10 @@ class PyrusAPI(object):
         """
         if not isinstance(catalog_id, int):
             raise TypeError("catalog_id must be an instance of int")
-        url = self._create_url('/catalogs/{}'.format(catalog_id))
         if not isinstance(sync_catalog_request, req.SyncCatalogRequest):
             raise TypeError('sync_catalog_request must be an instance '
                             'of models.requests.SyncCatalogRequest')
-        response = self._perform_post_request(url, sync_catalog_request)
+        response = self._perform_post_request('/catalogs/{}'.format(catalog_id), sync_catalog_request)
         return resp.SyncCatalogResponse(**response)
         
     def get_roles(self):
@@ -424,8 +415,7 @@ class PyrusAPI(object):
             class:`models.responses.RolesResponse` object
         """
 
-        url = self._create_url('/roles')
-        response = self._perform_get_request(url)
+        response = self._perform_get_request('/roles')
         return resp.RolesResponse(**response)
 
     def get_role(self, role_id):
@@ -437,8 +427,7 @@ class PyrusAPI(object):
             class:`models.responses.RoleResponse` object
         """
 
-        url = self._create_url('/roles/{}'.format(role_id))
-        response = self._perform_get_request(url)
+        response = self._perform_get_request('/roles/{}'.format(role_id))
         return resp.RoleResponse(**response)
 
     def create_role(self, create_role_request):
@@ -450,12 +439,11 @@ class PyrusAPI(object):
             class:`models.responses.RoleResponse` object
         """
 
-        url = self._create_url('/roles')
         if not isinstance(create_role_request, req.CreateRoleRequest):
             raise TypeError('create_role_request must be an instance '
                             'of models.requests.CreateRoleRequest')
 
-        response = self._perform_post_request(url, create_role_request)
+        response = self._perform_post_request('/roles', create_role_request)
         return resp.RoleResponse(**response)
 
     def update_role(self, role_id, update_role_request):
@@ -468,12 +456,11 @@ class PyrusAPI(object):
             class:`models.responses.RoleResponse` object
         """
 
-        url = self._create_url('/roles/{}'.format(role_id))
         if not isinstance(update_role_request, req.UpdateRoleRequest):
             raise TypeError('update_role_request must be an instance '
                             'of models.requests.UpdateRoleRequest')
 
-        response = self._perform_put_request(url, update_role_request)
+        response = self._perform_put_request('/roles/{}'.format(role_id), update_role_request)
         return resp.RoleResponse(**response)
 
     def get_members(self):
@@ -483,8 +470,7 @@ class PyrusAPI(object):
             class:`models.responses.MembersResponse` object
         """
 
-        url = self._create_url('/members')
-        response = self._perform_get_request(url)
+        response = self._perform_get_request('/members')
         return resp.MembersResponse(**response)
 
     def get_member(self, member_id):
@@ -496,8 +482,7 @@ class PyrusAPI(object):
             class:`models.responses.MemberResponse` object
         """
 
-        url = self._create_url('/members/{}'.format(member_id))
-        response = self._perform_get_request(url)
+        response = self._perform_get_request('/members/{}'.format(member_id))
         return resp.MemberResponse(**response)
 
     def create_member(self, create_member_request):
@@ -509,12 +494,11 @@ class PyrusAPI(object):
             class:`models.responses.MemberResponse` object
         """
 
-        url = self._create_url('/members')
         if not isinstance(create_member_request, req.CreateMemberRequest):
             raise TypeError('create_member_request must be an instance '
                             'of models.requests.CreateMemberRequest')
 
-        response = self._perform_post_request(url, create_member_request)
+        response = self._perform_post_request('/members', create_member_request)
         print("~~ create_member: ", response)
         return resp.MemberResponse(**response)
 
@@ -528,12 +512,11 @@ class PyrusAPI(object):
             class:`models.responses.MemberResponse` object
         """
 
-        url = self._create_url('/members/{}'.format(member_id))
         if not isinstance(update_member_request, req.UpdateMemberRequest):
             raise TypeError('update_member_request must be an instance '
                             'of models.requests.UpdateMemberRequest')
 
-        response = self._perform_put_request(url, update_member_request)
+        response = self._perform_put_request('/members/{}'.format(member_id), update_member_request)
         return resp.MemberResponse(**response)
 
     def set_avatar(self, member_id, file_guid, external_avatar_id=None):
@@ -547,9 +530,8 @@ class PyrusAPI(object):
             class:`models.responses.MemberResponse` object
         """
 
-        url = self._create_url('/members/{}/avatar'.format(member_id))
         set_avatar_request = req.SetAvatarRequest(file_guid, external_avatar_id)
-        response = self._perform_put_request(url, set_avatar_request)
+        response = self._perform_put_request('/members/{}/avatar'.format(member_id), set_avatar_request)
         return resp.MemberResponse(**response)
 
     def get_profile(self, include_inactive = False):
@@ -563,8 +545,7 @@ class PyrusAPI(object):
             class:`models.responses.ProfileResponse` object
         """
 
-        url = self._create_url('/profile?withinactive={}'.format(include_inactive))
-        response = self._perform_get_request(url)
+        response = self._perform_get_request('/profile?withinactive={}'.format(include_inactive))
         return resp.ProfileResponse(**response)
 
     def get_inbox(self, tasks_count=50):
@@ -578,8 +559,7 @@ class PyrusAPI(object):
             class:`models.responses.TaskListResponse` object
         """
 
-        url = self._create_url('/inbox?item_count={}'.format(tasks_count))
-        response = self._perform_get_request(url)
+        response = self._perform_get_request('/inbox?item_count={}'.format(tasks_count))
         return resp.TaskListResponse(**response)
 
     def get_calendar_tasks(self, calendar_request):
@@ -608,8 +588,7 @@ class PyrusAPI(object):
             calendar_request.filter_mask
         )
 
-        url = self._create_url(query)
-        response = self._perform_get_request(url)
+        response = self._perform_get_request(query)
         return resp.CalendarResponse(**response)
 
     def serialize_request(self, body):
@@ -626,8 +605,7 @@ class PyrusAPI(object):
             class:`models.responses.PermissionsResponse` object
         """
 
-        url = self._create_url('/forms/{}/permissions'.format(form_id))
-        response = self._perform_get_request(url)
+        response = self._perform_get_request('/forms/{}/permissions'.format(form_id))
         return resp.PermissionsResponse(**response)
 
     def change_form_permissions(self, form_id, request):
@@ -644,12 +622,11 @@ class PyrusAPI(object):
         if not isinstance(request, req.ChangePermissionsRequest):
             raise TypeError('request must be an instance of models.requests.ChangePermissionsRequest')
 
-        url = self._create_url('/forms/{}/permissions'.format(form_id))
-        response = self._perform_post_request(url, request)
+        response = self._perform_post_request('/forms/{}/permissions'.format(form_id), request)
         return resp.PermissionsResponse(**response)
 
     def _auth(self):
-        url = self._create_url('/auth')
+        url = self._create_auth_url('/auth')
         headers = {
             'User-Agent': '{}'.format(self._user_agent),
             'Content-Type': 'application/json'
@@ -662,6 +639,7 @@ class PyrusAPI(object):
         # pylint: disable=no-member
         if auth_response.status_code == requests.codes.ok:
             response = auth_response.json()
+            self._set_origins(response.get('api_url'), response.get('files_url'))
             self.access_token = response['access_token']
         else:
             response = auth_response.json()
@@ -669,22 +647,40 @@ class PyrusAPI(object):
 
         return response
 
+    def _set_origins(self, api_url, files_url):
+        if api_url:
+            url = urlparse(api_url)
+            self._host = url.netloc
+            self._base_path = url.path.rstrip('/')
+        if files_url:
+            url = urlparse(files_url)
+            self._files_host = (url.netloc + url.path).rstrip('/')
+
     def _create_url(self, url):
         return '{}://{}{}{}'.format(self._protocol, self._host, self._base_path, url)
 
-    def _perform_get_request(self, url):
-        return self._perform_request_with_retry(url, self.HTTPMethod.GET)
+    def _create_files_url(self, url):
+        return '{}://{}{}'.format(self._protocol, self._files_host, url)
 
-    def _perform_get_file_request(self, url):
-        return self._perform_request_with_retry(url, self.HTTPMethod.GET, get_file=True)
+    def _create_auth_url(self, url):
+        if self._host == PyrusAPI.PYRUS_API_URL() or self._auth_host != PyrusAPI.PYRUS_AUTH_URL():
+            return '{}://{}{}{}'.format(self._protocol, self._auth_host, self._base_path, url)
 
-    def _perform_post_request(self, url, body=None):
-        return self._perform_request_with_retry(url, self.HTTPMethod.POST, body)
+        return '{}://{}{}{}'.format(self._protocol, self._host, self._base_path, url)
 
-    def _perform_put_request(self, url, body=None):
-        return self._perform_request_with_retry(url, self.HTTPMethod.PUT, body)
+    def _perform_get_request(self, path):
+        return self._perform_request_with_retry(path, self.HTTPMethod.GET)
 
-    def _perform_request_with_retry(self, url, method, body=None, file_path=None, get_file=False):
+    def _perform_get_file_request(self, path):
+        return self._perform_request_with_retry(path, self.HTTPMethod.GET, get_file=True)
+
+    def _perform_post_request(self, path, body=None):
+        return self._perform_request_with_retry(path, self.HTTPMethod.POST, body)
+
+    def _perform_put_request(self, path, body=None):
+        return self._perform_request_with_retry(path, self.HTTPMethod.PUT, body)
+
+    def _perform_request_with_retry(self, path, method, body=None, file_path=None, get_file=False):
         if not isinstance(method, self.HTTPMethod):
             raise TypeError('method must be an instanse of HTTPMethod Enum.')
 
@@ -694,6 +690,7 @@ class PyrusAPI(object):
             if not self.access_token:
                 return response
 
+        url =  self._create_files_url(path) if get_file else self._create_url(path)
         # try to call api method
         response = self._perform_request(url, method, body, file_path, get_file)
         # if 401 try auth and call method again
@@ -703,6 +700,7 @@ class PyrusAPI(object):
             if not self.access_token:
                 return response
 
+            url =  self._create_files_url(path) if get_file else self._create_url(path)
             response = self._perform_request(url, method, body, file_path, get_file)
 
         return self._get_response(response, get_file, body)

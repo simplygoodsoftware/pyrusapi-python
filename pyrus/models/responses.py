@@ -35,10 +35,14 @@ class AuthResponse(BaseResponse):
     __doc__ += BaseResponse.__doc__
 
     access_token = None
+    files_url = None
+    api_url = None
 
     def __init__(self, **kwargs):
         if 'access_token' in kwargs:
             self.access_token = kwargs['access_token']
+            self.files_url = kwargs['files_url']
+            self.api_url = kwargs['api_url']
             self.success = True
         else:
             self.success = False
