@@ -432,6 +432,7 @@ class TaskCommentRequest(object):
                 raise TypeError('edit_comment_id must be an int')
             self.edit_comment_id = edit_comment_id
 
+
 class AnnouncementCommentRequest(object):
     """
         AnnouncementCommentRequest
@@ -447,9 +448,8 @@ class AnnouncementCommentRequest(object):
         if attachments:
             if not isinstance(attachments, list):
                 raise TypeError('attachments must be a list')
-            self.attachments = []
-            for attachment in attachments:
-                self.attachments.append(attachment)
+            self.attachments = [attachment for attachment in attachments]
+
 
 class CreateTaskRequest(object):
     """
@@ -521,9 +521,7 @@ class CreateTaskRequest(object):
         if attachments:
             if not isinstance(attachments, list):
                 raise TypeError('attachments must be a list')
-            self.attachments = []
-            for attachment in attachments:
-                self.attachments.append(attachment)
+            self.attachments = [attachment for attachment in attachments]
         if responsible:
             if isinstance(responsible, entities.Person):
                 self.responsible = responsible
@@ -593,6 +591,7 @@ class CreateTaskRequest(object):
                 raise TypeError("fill_defaults must be a boolean")
             self.fill_defaults = fill_defaults
 
+
 class CreateAnnouncementRequest(object):
     """
         CreateAnnouncementRequest
@@ -609,9 +608,8 @@ class CreateAnnouncementRequest(object):
         if attachments:
             if not isinstance(attachments, list):
                 raise TypeError('attachments must be a list')
-            self.attachments = []
-            for attachment in attachments:
-                self.attachments.append(attachment)
+            self.attachments = [attachment for attachment in attachments]
+
 
 class AuthRequest(object):
     """
@@ -706,6 +704,7 @@ class CalendarRequest(object):
         self.all_accessed_tasks = all_accessed_tasks
         self.filter_mask = filter_mask
 
+
 class CreateRoleRequest(object):
     """
         CreateRoleRequest
@@ -720,6 +719,7 @@ class CreateRoleRequest(object):
             self.name = name
         if members:
             self.member_add = members
+
 
 class UpdateRoleRequest(object):
     """
@@ -742,6 +742,7 @@ class UpdateRoleRequest(object):
         if banned is not None:
             self.banned = banned
 
+
 class CreateMemberRequest(entities.Person):
     """
         CreateMemberRequest
@@ -753,6 +754,7 @@ class CreateMemberRequest(entities.Person):
     def __init__(self, **kwargs):
         super(CreateMemberRequest, self).__init__(**kwargs)
 
+
 class UpdateMemberRequest(entities.Person):
     """
         UpdateMemberRequest
@@ -763,6 +765,7 @@ class UpdateMemberRequest(entities.Person):
 
     def __init__(self, **kwargs):
         super(UpdateMemberRequest, self).__init__(**kwargs)
+
 
 class SetAvatarRequest(object):
     """

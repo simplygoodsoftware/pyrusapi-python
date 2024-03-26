@@ -83,19 +83,13 @@ class FormFieldInfo(object):
         if 'immutable_step' in kwargs:
             self.immutable_step = kwargs['immutable_step']
         if 'options' in kwargs:
-            self.options = []
-            for option in kwargs['options']:
-                self.options.append(ChoiceOption(**option))
+            self.options = [ChoiceOption(**option) for option in kwargs['options']]
         if 'catalog_id' in kwargs:
             self.catalog_id = kwargs['catalog_id']
         if 'columns' in kwargs:
-            self.columns = []
-            for column in kwargs['columns']:
-                self.columns.append(FormField(**column))
+            self.columns = [FormField(**column) for column in kwargs['columns']]
         if 'fields' in kwargs:
-            self.fields = []
-            for field in kwargs['fields']:
-                self.fields.append(FormField(**field))
+            self.fields = [FormField(**field) for field in kwargs['fields']]
         if 'decimal_places' in kwargs:
             self.decimal_places = kwargs['decimal_places']
         if 'multiple_choice' in kwargs:
@@ -123,9 +117,7 @@ class ChoiceOption(object):
         if 'choice_value' in kwargs:
             self.choice_value = kwargs['choice_value']
         if 'fields' in kwargs:
-            self.fields = []
-            for field in kwargs['fields']:
-                self.fields.append(FormField(**field))
+            self.fields = [FormField(**field) for field in kwargs['fields']]
         if 'deleted' in kwargs:
             self.deleted = kwargs['deleted']
         if 'code' in kwargs:
@@ -196,6 +188,7 @@ class Task(TaskHeader):
             scheduled_date (:obj:`datetime`): task scheduled date
             scheduled_datetime_utc (:obj:`datetime`): task scheduled date with utc time
             subscribers (:obj:`list` of :obj:`models.entities.Subscriber`): List of task subscribers
+            steps (:obj:`list` of :obj:`models.entities.TaskStep`): List of task steps
         Attributes(Simple Task):
             text (:obj:`str`): Task text
             responsible (:obj:`models.entities.Person`): Task responsible
@@ -226,6 +219,7 @@ class Task(TaskHeader):
     last_note_id = None
     subject = None
     current_step = None
+    steps = None
 
     @property
     def flat_fields(self):
@@ -248,19 +242,13 @@ class Task(TaskHeader):
         if 'form_id' in kwargs:
             self.form_id = kwargs['form_id']
         if 'attachments' in kwargs:
-            self.attachments = []
-            for attachment in kwargs['attachments']:
-                self.attachments.append(File(**attachment))
+            self.attachments = [File(**attachment) for attachment in kwargs['attachments']]
         if 'parent_task_id' in kwargs:
             self.parent_task_id = kwargs['parent_task_id']
         if 'linked_task_ids' in kwargs:
-            self.linked_task_ids = []
-            for linked_task_id in kwargs['linked_task_ids']:
-                self.linked_task_ids.append(linked_task_id)
+            self.linked_task_ids = [linked_task_id for linked_task_id in kwargs['linked_task_ids']]
         if 'fields' in kwargs:
-            self.fields = []
-            for field in kwargs['fields']:
-                self.fields.append(FormField(**field))
+            self.fields = [FormField(**field) for field in kwargs['fields']]
         if 'approvals' in kwargs:
             self.approvals = []
             for idx, approval in enumerate(kwargs['approvals']):
@@ -270,21 +258,17 @@ class Task(TaskHeader):
                     approval.step = idx
                     self.approvals[idx].append(approval)
         if 'subscribers' in kwargs:
-            self.subscribers = []
-            for subscriber in kwargs['subscribers']:
-                self.subscribers.append(Subscriber(**subscriber))
+            self.subscribers = [Subscriber(**subscriber) for subscriber in kwargs['subscribers']]
         if 'participants' in kwargs:
-            self.participants = []
-            for participant in kwargs['participants']:
-                self.participants.append(Person(**participant))
+            self.participants = [Person(**participant) for participant in kwargs['participants']]
         if 'list_ids' in kwargs:
-            self.list_ids = []
-            for lst in kwargs['list_ids']:
-                self.list_ids.append(lst)
+            self.list_ids = [lst for lst in kwargs['list_ids']]
         if 'last_note_id' in kwargs:
             self.last_note_id = kwargs['last_note_id']
         if 'current_step' in kwargs:
             self.current_step = kwargs['current_step']
+        if 'steps' in kwargs:
+            self.steps = [TaskStep(**step) for step in kwargs['steps']]
         super(Task, self).__init__(**kwargs)
 
 
@@ -330,6 +314,7 @@ class TaskWithComments(Task):
                 self.comments.append(TaskComment(**comment))
         super(TaskWithComments, self).__init__(**kwargs)
 
+
 class AnnouncementWithComments(object):
     """
         Announcement with comments
@@ -358,16 +343,11 @@ class AnnouncementWithComments(object):
         if 'create_date' in kwargs:
             self.create_date = _set_utc_timezone(datetime.strptime(kwargs['create_date'], constants.DATE_TIME_FORMAT))
         if 'attachments' in kwargs:
-            self.attachments = []
-            for attachment in kwargs['attachments']:
-                self.attachments.append(File(**attachment))
+            self.attachments = [File(**attachment) for attachment in kwargs['attachments']]
         if 'author' in kwargs:
             self.author = Person(**kwargs['author'])
         if 'comments' in kwargs:
-            self.comments = []
-            for comment in kwargs['comments']:
-                self.comments.append(AnnouncementComment(**comment))
-
+            self.comments = [AnnouncementComment(**comment) for comment in kwargs['comments']]
 
 
 class Person(object):
@@ -602,9 +582,7 @@ class TaskComment(object):
         if 'reassigned_to' in kwargs:
             self.reassigned_to = Person(**kwargs['reassigned_to'])
         if 'field_updates' in kwargs:
-            self.field_updates = []
-            for field in kwargs['field_updates']:
-                self.field_updates.append(FormField(**field))
+            self.field_updates = [FormField(**field) for field in kwargs['field_updates']]
         if 'approval_choice' in kwargs:
             self.approval_choice = kwargs['approval_choice']
         if 'reset_to_step' in kwargs:
@@ -628,25 +606,15 @@ class TaskComment(object):
                 for curr_step in approval:
                     self.approvals_rerequested[idx].append(Approval(**curr_step))
         if 'subscribers_added' in kwargs:
-            self.subscribers_added = []
-            for subscriber in kwargs['subscribers_added']:
-                self.subscribers_added.append(Person(**subscriber))
+            self.subscribers_added = [Person(**subscriber) for subscriber in kwargs['subscribers_added']]
         if 'subscribers_removed' in kwargs:
-            self.subscribers_removed = []
-            for subscriber in kwargs['subscribers_removed']:
-                self.subscribers_removed.append(Person(**subscriber))
+            self.subscribers_removed = [Person(**subscriber) for subscriber in kwargs['subscribers_removed']]
         if 'subscribers_rerequested' in kwargs:
-            self.subscribers_rerequested = []
-            for subscriber in kwargs['subscribers_rerequested']:
-                self.subscribers_rerequested.append(Person(**subscriber))
+            self.subscribers_rerequested = [Person(**subscriber) for subscriber in kwargs['subscribers_rerequested']]
         if 'participants_added' in kwargs:
-            self.participants_added = []
-            for participant in kwargs['participants_added']:
-                self.participants_added.append(Person(**participant))
+            self.participants_added = [Person(**participant) for participant in kwargs['participants_added']]
         if 'participants_removed' in kwargs:
-            self.participants_removed = []
-            for participant in kwargs['participants_removed']:
-                self.participants_removed.append(Person(**participant))
+            self.participants_removed = [Person(**participant) for participant in kwargs['participants_removed']]
         if 'due_date' in kwargs:
             self.due_date = datetime.strptime(kwargs['due_date'], constants.DATE_FORMAT)
         if 'due' in kwargs:
@@ -654,9 +622,7 @@ class TaskComment(object):
         if 'duration' in kwargs:
             self.duration = kwargs['duration']
         if 'attachments' in kwargs:
-            self.attachments = []
-            for attachment in kwargs['attachments']:
-                self.attachments.append(File(**attachment))
+            self.attachments = [File(**attachment) for attachment in kwargs['attachments']]
         if 'action' in kwargs:
             self.action = kwargs['action']
         if 'scheduled_date' in kwargs:
@@ -667,21 +633,15 @@ class TaskComment(object):
         if 'cancel_schedule' in kwargs:
             self.cancel_schedule = kwargs['cancel_schedule']
         if 'added_list_ids' in kwargs:
-            self.added_list_ids = []
-            for lst in kwargs['added_list_ids']:
-                self.added_list_ids.append(lst)
+            self.added_list_ids = [lst for lst in kwargs['added_list_ids']]
         if 'removed_list_ids' in kwargs:
-            self.removed_list_ids = []
-            for lst in kwargs['removed_list_ids']:
-                self.removed_list_ids.append(lst)
+            self.removed_list_ids = [lst for lst in kwargs['removed_list_ids']]
         if 'approval_step' in kwargs:
             self.approval_step = kwargs['approval_step']
         if 'changed_step' in kwargs:
             self.changed_step = kwargs['changed_step']
         if 'comment_as_roles' in kwargs:
-            self.comment_as_roles = []
-            for role in kwargs['comment_as_roles']:
-                self.comment_as_roles.append(Role(**role))
+            self.comment_as_roles = [Role(**role) for role in kwargs['comment_as_roles']]
         if 'channel' in kwargs:
             self.channel = Channel(**kwargs['channel'])
         if 'spent_minutes' in kwargs:
@@ -690,6 +650,30 @@ class TaskComment(object):
             self.skip_satisfaction = kwargs['skip_satisfaction']
         if 'reply_note_id' in kwargs:
             self.reply_note_id = kwargs['reply_note_id']
+
+
+class TaskStep(object):
+    """
+        Task step
+
+        Attributes:
+            step (:obj:`int`): step number
+            name (:obj:`str`): step name text
+            elapsed_time (:obj:`int`): elapsed time at step in millisecond
+    """
+
+    step = None
+    name = None
+    elapsed_time = None
+
+    def __init__(self, **kwargs):
+        if 'step' in kwargs:
+            self.step = kwargs['step']
+        if 'name' in kwargs:
+            self.name = kwargs['name']
+        if 'elapsed_time' in kwargs:
+            self.elapsed_time = kwargs['elapsed_time']
+
 
 class AnnouncementComment(object):
     """
@@ -719,9 +703,8 @@ class AnnouncementComment(object):
         if 'author' in kwargs:
             self.author = Person(**kwargs['author'])
         if 'attachments' in kwargs:
-            self.attachments = []
-            for attachment in kwargs['attachments']:
-                self.attachments.append(File(**attachment))
+            self.attachments = [File(**attachment) for attachment in kwargs['attachments']]
+
 
 class Organization(object):
     """
@@ -747,13 +730,9 @@ class Organization(object):
         if 'name' in kwargs:
             self.name = kwargs['name']
         if 'persons' in kwargs:
-            self.persons = []
-            for person in kwargs['persons']:
-                self.persons.append(Person(**person))
+            self.persons = [Person(**person) for person in kwargs['persons']]
         if 'roles' in kwargs:
-            self.roles = []
-            for role in kwargs['roles']:
-                self.roles.append(Role(**role))
+            self.roles = [Role(**role) for role in kwargs['roles']]
         if 'department_catalog_id' in kwargs:
             self.department_catalog_id = kwargs['department_catalog_id']
 
@@ -786,9 +765,7 @@ class Role(object):
         if 'name' in kwargs:
             self.name = kwargs['name']
         if 'member_ids' in kwargs:
-            self.member_ids = []
-            for member_id in kwargs['member_ids']:
-                self.member_ids.append(member_id)
+            self.member_ids = [member_id for member_id in kwargs['member_ids']]
         if 'banned' in kwargs:
             self.banned = kwargs['banned']
         if 'fired' in kwargs:
@@ -797,6 +774,7 @@ class Role(object):
             self.avatar_id = kwargs['avatar_id']
         if 'external_avatar_id' in kwargs:
             self.external_avatar_id = kwargs['external_avatar_id']
+
 
 class CatalogItem(object):
     """
@@ -816,14 +794,9 @@ class CatalogItem(object):
 
     def __init__(self, **kwargs):
         if 'headers' in kwargs:
-            self.headers = []
-            for header in kwargs['headers']:
-                self.headers.append(header)
-
+            self.headers = [header for header in kwargs['headers']]
         if 'item_ids' in kwargs:
-            self.item_ids = []
-            for _id in kwargs['item_ids']:
-                self.item_ids.append(_id)
+            self.item_ids = [_id for _id in kwargs['item_ids']]
             if len(self.item_ids) == 1:
                 self.item_id = self.item_ids[0]
         elif 'item_id' in kwargs:
@@ -840,9 +813,7 @@ class CatalogItem(object):
             if len(self.rows) == 1:
                 self.values = self.rows[0].copy()
         elif 'values' in kwargs:
-            self.values = []
-            for value in kwargs['values']:
-                self.values.append(value)
+            self.values = [value for value in kwargs['values']]
             self.rows = [self.values.copy()]
 
     @classmethod
@@ -919,9 +890,7 @@ class Title(object):
         if 'checkmark' in kwargs:
             self.checkmark = kwargs['checkmark']
         if 'fields' in kwargs:
-            self.fields = []
-            for field in kwargs['fields']:
-                self.fields.append(FormField(**field))
+            self.fields = [FormField(**field) for field in kwargs['fields']]
 
 
 class MultipleChoice(object):
@@ -944,17 +913,11 @@ class MultipleChoice(object):
         if 'choice_id' in kwargs:
             self.choice_id = kwargs['choice_id']
         if 'choice_ids' in kwargs:
-            self.choice_ids = []
-            for choice in kwargs['choice_ids']:
-                self.choice_ids.append(choice)
+            self.choice_ids = [choice for choice in kwargs['choice_ids']]
         if 'choice_names' in kwargs:
-            self.choice_names = []
-            for choice in kwargs['choice_names']:
-                self.choice_names.append(choice)
+            self.choice_names = [choice for choice in kwargs['choice_names']]
         if 'fields' in kwargs:
-            self.fields = []
-            for field in kwargs['fields']:
-                self.fields.append(FormField(**field))
+            self.fields = [FormField(**field) for field in kwargs['fields']]
 
 
 class Projects(object):
@@ -969,9 +932,7 @@ class Projects(object):
 
     def __init__(self, **kwargs):
         if 'projects' in kwargs:
-            self.projects = []
-            for project in kwargs['projects']:
-                self.projects.append(Project(**project))
+            self.projects = [Project(**project) for project in kwargs['projects']]
 
 
 class FormLink(object):
@@ -994,9 +955,7 @@ class FormLink(object):
         if 'subject' in kwargs:
             self.subject = kwargs['subject']
         if 'task_ids' in kwargs:
-            self.task_ids = []
-            for task in kwargs['task_ids']:
-                self.task_ids.append(task)
+            self.task_ids = [task for task in kwargs['task_ids']]
 
 
 class Project(object):
@@ -1113,9 +1072,7 @@ class IsInFilter(FormRegisterFilter):
         _validate_field_id(field_id)
         if not isinstance(values, list):
             raise TypeError('values must be a list.')
-        formated_values = []
-        for value in values:
-            formated_values.append(_get_value(value))
+        formated_values = [_get_value(value) for value in values]
         super(IsInFilter, self). \
             __init__(field_id=field_id, operator='is_in', values=formated_values)
 
@@ -1154,9 +1111,7 @@ class TaskList(object):
         if 'name' in kwargs:
             self.name = kwargs['name']
         if 'children' in kwargs:
-            self.children = []
-            for child in kwargs['children']:
-                self.children.append(TaskList(**child))
+            self.children = [TaskList(**child) for child in kwargs['children']]
 
 
 class CatalogHeader(object):
