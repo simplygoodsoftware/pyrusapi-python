@@ -196,6 +196,7 @@ class Task(TaskHeader):
             scheduled_date (:obj:`datetime`): task scheduled date
             scheduled_datetime_utc (:obj:`datetime`): task scheduled date with utc time
             subscribers (:obj:`list` of :obj:`models.entities.Subscriber`): List of task subscribers
+            steps (:obj:`list` of :obj:`models.entities.TaskStep`): List of task steps
         Attributes(Simple Task):
             text (:obj:`str`): Task text
             responsible (:obj:`models.entities.Person`): Task responsible
@@ -226,6 +227,7 @@ class Task(TaskHeader):
     last_note_id = None
     subject = None
     current_step = None
+    steps = None
 
     @property
     def flat_fields(self):
@@ -285,6 +287,8 @@ class Task(TaskHeader):
             self.last_note_id = kwargs['last_note_id']
         if 'current_step' in kwargs:
             self.current_step = kwargs['current_step']
+        if 'steps' in kwargs:
+            self.steps = [TaskStep(**step) for step in kwargs['steps']]
         super(Task, self).__init__(**kwargs)
 
 
@@ -367,7 +371,6 @@ class AnnouncementWithComments(object):
             self.comments = []
             for comment in kwargs['comments']:
                 self.comments.append(AnnouncementComment(**comment))
-
 
 
 class Person(object):
@@ -690,6 +693,30 @@ class TaskComment(object):
             self.skip_satisfaction = kwargs['skip_satisfaction']
         if 'reply_note_id' in kwargs:
             self.reply_note_id = kwargs['reply_note_id']
+
+
+class TaskStep(object):
+    """
+        Task step
+
+        Attributes:
+            step (:obj:`int`): step number
+            name (:obj:`str`): step name text
+            elapsed_time (:obj:`int`): elapsed time at step in millisecond
+    """
+
+    step = None
+    name = None
+    elapsed_time = None
+
+    def __init__(self, **kwargs):
+        if 'step' in kwargs:
+            self.step = kwargs['step']
+        if 'name' in kwargs:
+            self.name = kwargs['name']
+        if 'elapsed_time' in kwargs:
+            self.elapsed_time = kwargs['elapsed_time']
+
 
 class AnnouncementComment(object):
     """
