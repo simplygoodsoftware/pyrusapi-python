@@ -40,7 +40,7 @@ pyrus_client = client.PyrusAPI(login='login@pyrus.com', security_key='sadf2R5Wrd
 
 ```python
 auth_response = pyrus_client.auth()
-if response.success:
+if auth_response.success:
     pass
 ```
 
