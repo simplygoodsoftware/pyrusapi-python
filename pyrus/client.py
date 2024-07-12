@@ -35,7 +35,7 @@ class PyrusAPI(object):
         access_token (:obj:`str`, optional): Users's access token. You can specify it if you already have one. (optional)
         proxy (:obj:`str`, optional): Proxy server url
     """
-    MAX_FILE_SIZE_IN_BYTES = 250 * 1024 * 1024
+    MAX_FILE_SIZE_IN_BYTES = 2 * 1024 * 1024 * 1024 - 1 # 2GB - 1B
 
     class HTTPMethod(Enum):
         GET = "GET"
