@@ -3,7 +3,6 @@
 # pylint: disable=too-many-instance-attributes
 
 from . import entities
-from . import constants
 
 
 class BaseResponse(object):
@@ -91,17 +90,13 @@ class FormResponse(BaseResponse):
         if 'steps' in kwargs:
             self.steps = kwargs['steps']
         if 'fields' in kwargs:
-            self.fields = []
-            for field in kwargs['fields']:
-                self.fields.append(entities.FormField(**field))
+            self.fields = [entities.FormField(**field) for field in kwargs['fields']]
         if 'deleted_or_closed' in kwargs:
             self.deleted_or_closed = kwargs['deleted_or_closed']
         if 'business_owners' in kwargs:
             self.business_owners = kwargs['business_owners']
         if 'folder' in kwargs:
-            self.folder = []
-            for fld in kwargs['folder']:
-                self.folder.append(fld)
+            self.folder = [fld for fld in kwargs['folder']]
         super(FormResponse, self).__init__(**kwargs)
 
     def _get_named_fields(self, flat_fields):
@@ -145,9 +140,7 @@ class FormsResponse(BaseResponse):
 
     def __init__(self, **kwargs):
         if 'forms' in kwargs:
-            self.forms = []
-            for form in kwargs['forms']:
-                self.forms.append(FormResponse(**form))
+            self.forms = [FormResponse(**form) for form in kwargs['forms']]
         super(FormsResponse, self).__init__(**kwargs)
 
 
@@ -196,9 +189,7 @@ class AnnouncementsResponse(BaseResponse):
     announcements = None
     def __init__(self, **kwargs):
         if 'announcements' in kwargs:
-            self.announcements = []
-            for announcement in kwargs['announcements']:
-                self.announcements.append(AnnouncementsResponse(**announcement))
+            self.announcements = [AnnouncementsResponse(**announcement) for announcement in kwargs['announcements']]
         super(AnnouncementsResponse, self).__init__(**kwargs)
 
 class ContactsResponse(BaseResponse):
@@ -214,9 +205,7 @@ class ContactsResponse(BaseResponse):
 
     def __init__(self, **kwargs):
         if 'organizations' in kwargs:
-            self.organizations = []
-            for organization in kwargs['organizations']:
-                self.organizations.append(entities.Organization(**organization))
+            self.organizations = [entities.Organization(**organization) for organization in kwargs['organizations']]
         super(ContactsResponse, self).__init__(**kwargs)
 
 
@@ -240,13 +229,9 @@ class CatalogResponse(BaseResponse):
         if 'catalog_id' in kwargs:
             self.catalog_id = kwargs['catalog_id']
         if 'items' in kwargs:
-            self.items = []
-            for item in kwargs['items']:
-                self.items.append(entities.CatalogItem(**item))
+            self.items = [entities.CatalogItem(**item) for item in kwargs['items']]
         if 'catalog_headers' in kwargs:
-            self.catalog_headers = []
-            for item in kwargs['catalog_headers']:
-                self.catalog_headers.append(entities.CatalogHeader(**item))
+            self.catalog_headers = [entities.CatalogHeader(**item) for item in kwargs['catalog_headers']]
         if 'source_type' in kwargs:
             self.source_type = kwargs['source_type']
         super(CatalogResponse, self).__init__(**kwargs)
@@ -267,9 +252,7 @@ class FormRegisterResponse(BaseResponse):
 
     def __init__(self, **kwargs):
         if 'tasks' in kwargs:
-            self.tasks = []
-            for task in kwargs['tasks']:
-                self.tasks.append(entities.Task(**task))
+            self.tasks = [entities.Task(**task) for task in kwargs['tasks']]
         super(FormRegisterResponse, self).__init__(**kwargs)
 
 
@@ -307,9 +290,7 @@ class ListsResponse(BaseResponse):
 
     def __init__(self, **kwargs):
         if 'lists' in kwargs:
-            self.lists = []
-            for lst in kwargs['lists']:
-                self.lists.append(entities.TaskList(**lst))
+            self.lists = [entities.TaskList(**lst) for lst in kwargs['lists']]
         super(ListsResponse, self).__init__(**kwargs)
 
 
@@ -330,9 +311,7 @@ class TaskListResponse(BaseResponse):
         if 'has_more' in kwargs:
             self.has_more = kwargs['has_more']
         if 'tasks' in kwargs:
-            self.tasks = []
-            for task in kwargs['tasks']:
-                self.tasks.append(entities.TaskHeader(**task))
+            self.tasks = [entities.TaskHeader(**task) for task in kwargs['tasks']]
         super(TaskListResponse, self).__init__(**kwargs)
 
 
@@ -379,21 +358,13 @@ class SyncCatalogResponse(BaseResponse):
         if 'apply' in kwargs:
             self.apply = kwargs['apply']
         if 'added' in kwargs:
-            self.added = []
-            for added_item in kwargs['added']:
-                self.added.append(entities.CatalogItem(**added_item))
+            self.added = [entities.CatalogItem(**added_item) for added_item in kwargs['added']]
         if 'updated' in kwargs:
-            self.updated = []
-            for updated_item in kwargs['updated']:
-                self.updated.append(entities.CatalogItem(**updated_item))
+            self.updated = [entities.CatalogItem(**updated_item) for updated_item in kwargs['updated']]
         if 'deleted' in kwargs:
-            self.deleted = []
-            for deleted_item in kwargs['deleted']:
-                self.deleted.append(entities.CatalogItem(**deleted_item))
+            self.deleted = [entities.CatalogItem(**deleted_item) for deleted_item in kwargs['deleted']]
         if 'catalog_headers' in kwargs:
-            self.catalog_headers = []
-            for header in kwargs['catalog_headers']:
-                self.catalog_headers.append(entities.CatalogHeader(**header))
+            self.catalog_headers = [entities.CatalogHeader(**header) for header in kwargs['catalog_headers']]
         if 'source_type' in kwargs:
             self.source_type = kwargs['source_type']
         super(SyncCatalogResponse, self).__init__(**kwargs)
@@ -456,9 +427,7 @@ class CalendarResponse(BaseResponse):
         if 'has_more' in kwargs:
             self.has_more = kwargs['has_more']
         if 'tasks' in kwargs:
-            self.tasks = []
-            for task in kwargs['tasks']:
-                self.tasks.append(entities.TaskWithComments(**task))
+            self.tasks = [entities.TaskWithComments(**task) for task in kwargs['tasks']]
         super(CalendarResponse, self).__init__(**kwargs)
 
 class PermissionsResponse(BaseResponse):
@@ -515,9 +484,7 @@ class RoleResponse(BaseResponse):
         if 'fired' in kwargs:
             self.fired = kwargs['fired']
         if 'member_ids' in kwargs:
-            self.member_ids = []
-            for member_id in kwargs['member_ids']:
-                self.member_ids.append(member_id)
+            self.member_ids = [member_id for member_id in kwargs['member_ids']]
         super(RoleResponse, self).__init__(**kwargs)
 
 class RolesResponse(BaseResponse):
@@ -533,9 +500,7 @@ class RolesResponse(BaseResponse):
 
     def __init__(self, **kwargs):
         if 'roles' in kwargs:
-            self.roles = []
-            for role in kwargs['roles']:
-                self.roles.append(entities.Role(**role))
+            self.roles = [entities.Role(**role) for role in kwargs['roles']]
         super(RolesResponse, self).__init__(**kwargs)
 
 class MemberResponse(BaseResponse):
@@ -602,7 +567,5 @@ class MembersResponse(BaseResponse):
 
     def __init__(self, **kwargs):
         if 'members' in kwargs:
-            self.members = []
-            for member in kwargs['members']:
-                self.members.append(entities.Person(**member))
+            self.members = [entities.Person(**member) for member in kwargs['members']]
         super(MembersResponse, self).__init__(**kwargs)

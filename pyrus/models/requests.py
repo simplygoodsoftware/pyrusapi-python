@@ -231,9 +231,7 @@ class TaskCommentRequest(object):
         if attachments:
             if not isinstance(attachments, list):
                 raise TypeError('attachments must be a list')
-            self.attachments = []
-            for attachment in attachments:
-                self.attachments.append(attachment)
+            self.attachments = [attachment for attachment in attachments]
         if approvals_added:
             if not isinstance(approvals_added, list):
                 raise TypeError('approvals_added must be a list')
@@ -447,9 +445,7 @@ class AnnouncementCommentRequest(object):
         if attachments:
             if not isinstance(attachments, list):
                 raise TypeError('attachments must be a list')
-            self.attachments = []
-            for attachment in attachments:
-                self.attachments.append(attachment)
+            self.attachments = [attachment for attachment in attachments]
 
 class CreateTaskRequest(object):
     """
@@ -521,9 +517,7 @@ class CreateTaskRequest(object):
         if attachments:
             if not isinstance(attachments, list):
                 raise TypeError('attachments must be a list')
-            self.attachments = []
-            for attachment in attachments:
-                self.attachments.append(attachment)
+            self.attachments = [attachment for attachment in attachments]
         if responsible:
             if isinstance(responsible, entities.Person):
                 self.responsible = responsible
@@ -609,9 +603,7 @@ class CreateAnnouncementRequest(object):
         if attachments:
             if not isinstance(attachments, list):
                 raise TypeError('attachments must be a list')
-            self.attachments = []
-            for attachment in attachments:
-                self.attachments.append(attachment)
+            self.attachments = [attachment for attachment in attachments]
 
 class AuthRequest(object):
     """
