@@ -42,11 +42,8 @@ class PyrusAPI(object):
         POST = "POST"
         PUT = "PUT"
 
-    @staticmethod
     def PYRUS_API_URL():
         return 'api.pyrus.com'
-    
-    @staticmethod
     def PYRUS_AUTH_URL():
         return 'accounts.pyrus.com/api'
 
