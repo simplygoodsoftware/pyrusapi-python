@@ -107,7 +107,7 @@ class FormResponse(BaseResponse):
             if field.info.code:
                 res[field.info.code] = field
         return res
-        
+
     def _get_flat_fields(self, fields):
         res = []
         if not fields:
@@ -177,6 +177,7 @@ class AnnouncementResponse(BaseResponse):
             self.announcement = entities.AnnouncementWithComments(**kwargs['announcement'])
         super(AnnouncementResponse, self).__init__(**kwargs)
 
+
 class AnnouncementsResponse(BaseResponse):
     """
         AnnouncementResponse
@@ -187,10 +188,12 @@ class AnnouncementsResponse(BaseResponse):
     __doc__ += BaseResponse.__doc__
 
     announcements = None
+
     def __init__(self, **kwargs):
         if 'announcements' in kwargs:
             self.announcements = [AnnouncementsResponse(**announcement) for announcement in kwargs['announcements']]
         super(AnnouncementsResponse, self).__init__(**kwargs)
+
 
 class ContactsResponse(BaseResponse):
     """
@@ -369,6 +372,7 @@ class SyncCatalogResponse(BaseResponse):
             self.source_type = kwargs['source_type']
         super(SyncCatalogResponse, self).__init__(**kwargs)
 
+
 class ProfileResponse(BaseResponse):
     """
         ProfileResponse
@@ -430,6 +434,7 @@ class CalendarResponse(BaseResponse):
             self.tasks = [entities.TaskWithComments(**task) for task in kwargs['tasks']]
         super(CalendarResponse, self).__init__(**kwargs)
 
+
 class PermissionsResponse(BaseResponse):
     """
             PermissionsResponse
@@ -447,7 +452,7 @@ class PermissionsResponse(BaseResponse):
             for key in kwargs['permissions']:
                 self.permissions[int(key)] = kwargs['permissions'][key]
         super(PermissionsResponse, self).__init__(**kwargs)
-        
+
 class RoleResponse(BaseResponse):
     """
         RoleResponse
@@ -487,6 +492,7 @@ class RoleResponse(BaseResponse):
             self.member_ids = [member_id for member_id in kwargs['member_ids']]
         super(RoleResponse, self).__init__(**kwargs)
 
+
 class RolesResponse(BaseResponse):
     """
         RoleResponse
@@ -502,6 +508,7 @@ class RolesResponse(BaseResponse):
         if 'roles' in kwargs:
             self.roles = [entities.Role(**role) for role in kwargs['roles']]
         super(RolesResponse, self).__init__(**kwargs)
+
 
 class MemberResponse(BaseResponse):
     """
@@ -553,6 +560,7 @@ class MemberResponse(BaseResponse):
         if 'department_name' in kwargs:
             self.department_name = kwargs['department_name']
         super(MemberResponse, self).__init__(**kwargs)
+
 
 class MembersResponse(BaseResponse):
     """
