@@ -3,7 +3,6 @@
 # pylint: disable=too-many-instance-attributes
 
 from . import entities
-from . import constants
 
 
 class BaseResponse(object):
@@ -209,9 +208,7 @@ class ContactsResponse(BaseResponse):
 
     def __init__(self, **kwargs):
         if 'organizations' in kwargs:
-            self.organizations = []
-            for organization in kwargs['organizations']:
-                self.organizations.append(entities.Organization(**organization))
+            self.organizations = [entities.Organization(**organization) for organization in kwargs['organizations']]
         super(ContactsResponse, self).__init__(**kwargs)
 
 
@@ -456,7 +453,6 @@ class PermissionsResponse(BaseResponse):
                 self.permissions[int(key)] = kwargs['permissions'][key]
         super(PermissionsResponse, self).__init__(**kwargs)
 
-
 class RoleResponse(BaseResponse):
     """
         RoleResponse
@@ -579,7 +575,5 @@ class MembersResponse(BaseResponse):
 
     def __init__(self, **kwargs):
         if 'members' in kwargs:
-            self.members = []
-            for member in kwargs['members']:
-                self.members.append(entities.Person(**member))
+            self.members = [entities.Person(**member) for member in kwargs['members']]
         super(MembersResponse, self).__init__(**kwargs)

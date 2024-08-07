@@ -188,7 +188,6 @@ class Task(TaskHeader):
             scheduled_date (:obj:`datetime`): task scheduled date
             scheduled_datetime_utc (:obj:`datetime`): task scheduled date with utc time
             subscribers (:obj:`list` of :obj:`models.entities.Subscriber`): List of task subscribers
-            steps (:obj:`list` of :obj:`models.entities.TaskStep`): List of task steps
         Attributes(Simple Task):
             text (:obj:`str`): Task text
             responsible (:obj:`models.entities.Person`): Task responsible
@@ -219,7 +218,6 @@ class Task(TaskHeader):
     last_note_id = None
     subject = None
     current_step = None
-    steps = None
 
     @property
     def flat_fields(self):
@@ -309,11 +307,8 @@ class TaskWithComments(Task):
 
     def __init__(self, **kwargs):
         if 'comments' in kwargs:
-            self.comments = []
-            for comment in kwargs['comments']:
-                self.comments.append(TaskComment(**comment))
+            self.comments = [TaskComment(**comment) for comment in kwargs['comments']]
         super(TaskWithComments, self).__init__(**kwargs)
-
 
 class AnnouncementWithComments(object):
     """
@@ -348,6 +343,7 @@ class AnnouncementWithComments(object):
             self.author = Person(**kwargs['author'])
         if 'comments' in kwargs:
             self.comments = [AnnouncementComment(**comment) for comment in kwargs['comments']]
+
 
 
 class Person(object):
@@ -651,7 +647,6 @@ class TaskComment(object):
         if 'reply_note_id' in kwargs:
             self.reply_note_id = kwargs['reply_note_id']
 
-
 class TaskStep(object):
     """
         Task step
@@ -673,7 +668,6 @@ class TaskStep(object):
             self.name = kwargs['name']
         if 'elapsed_time' in kwargs:
             self.elapsed_time = kwargs['elapsed_time']
-
 
 class AnnouncementComment(object):
     """
@@ -704,7 +698,6 @@ class AnnouncementComment(object):
             self.author = Person(**kwargs['author'])
         if 'attachments' in kwargs:
             self.attachments = [File(**attachment) for attachment in kwargs['attachments']]
-
 
 class Organization(object):
     """
@@ -775,7 +768,6 @@ class Role(object):
         if 'external_avatar_id' in kwargs:
             self.external_avatar_id = kwargs['external_avatar_id']
 
-
 class CatalogItem(object):
     """
         Value of FormField catalog
@@ -795,6 +787,7 @@ class CatalogItem(object):
     def __init__(self, **kwargs):
         if 'headers' in kwargs:
             self.headers = [header for header in kwargs['headers']]
+
         if 'item_ids' in kwargs:
             self.item_ids = [_id for _id in kwargs['item_ids']]
             if len(self.item_ids) == 1:
@@ -835,8 +828,7 @@ class Table(list):
 
     def __init__(self, *args):
         list.__init__(self)
-        for value in args:
-            self.append(TableRow(**value))
+        self = [TableRow(**value) for value in args]
 
 
 class TableRow(object):
@@ -1052,9 +1044,7 @@ class RangeFilter(FormRegisterFilter):
             raise TypeError('values must be a list.')
         if len(values) != 2:
             raise TypeError('values length must be equal 2.')
-        formated_values = []
-        for value in values:
-            formated_values.append(_get_value(value))
+        formated_values = [_get_value(value) for value in values]
         super(RangeFilter, self). \
             __init__(field_id=field_id, operator='range', values=formated_values)
 
@@ -1163,10 +1153,7 @@ def _create_field_value(field_type, value):
     if field_type == 'catalog':
         return CatalogItem(**value)
     if field_type == 'file':
-        res = []
-        for file in value:
-            res.append(File(**file))
-        return res
+        return [File(**file) for file in value]
     if field_type in ['person', 'author']:
         return Person(**value)
     if field_type == 'table':

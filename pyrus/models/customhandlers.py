@@ -2,7 +2,6 @@ import jsonpickle
 from datetime import datetime
 from datetime import time
 from . import constants
-from . import entities
 
 class FormFieldHandler(jsonpickle.handlers.BaseHandler):
     

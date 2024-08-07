@@ -54,7 +54,7 @@ class PyrusAPI(object):
     access_token = None
     _protocol = 'https'
     _api_name = 'Pyrus'
-    _user_agent = 'Pyrus API python client v 2.26.0'
+    _user_agent = 'Pyrus API python client v 2.27.0'
     proxy = None
 
     def __init__(self, login=None, security_key=None, access_token=None, proxy=None):
@@ -208,7 +208,7 @@ class PyrusAPI(object):
         if not isinstance(task_id, int):
             raise Exception("task_id should be valid int")
         if not isinstance(task_comment_request, req.TaskCommentRequest):
-            raise TypeError('form_register_request must be an instance '
+            raise TypeError('task_comment_request must be an instance '
                             'of models.requests.TaskCommentRequest')
         response = self._perform_post_request('/tasks/{}/comments'.format(task_id), task_comment_request)
         return resp.TaskResponse(**response)
@@ -296,32 +296,6 @@ class PyrusAPI(object):
         """
         response = self._perform_get_request('/lists')
         return resp.ListsResponse(**response)
-
-    def get_task_list(self, list_id, item_count=200, include_archived=False):
-        """
-        Get all tasks in the list.
-
-        Args:
-            list_id (:obj:`int`): List id
-            item_count (:obj:`int`, optional): The maximum number of tasks in the response, the default is 200
-            include_archived (:obj:`bool`, optional): Should archived tasks be included to the response, the default is False
-
-        Returns: 
-            class:`models.responses.TaskListResponse` object
-        """
-        if not isinstance(list_id, int):
-            raise TypeError('list_id must be an instance of int')
-        if not isinstance(item_count, int):
-            raise TypeError('item_count must be an instance of int')
-        if not isinstance(include_archived, bool):
-            raise TypeError('include_archived must be an instance of bool')
-
-        path = '/lists/{}/tasks?item_count={}'.format(list_id, item_count)
-        if include_archived:
-            path += '&include_archived=y'
-
-        response = self._perform_get_request(path)
-        return resp.TaskListResponse(**response)
     
     def get_task_list(self, list_id, task_list_request=None):
         """
