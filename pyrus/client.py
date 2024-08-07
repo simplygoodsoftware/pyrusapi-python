@@ -62,7 +62,10 @@ class PyrusAPI(object):
         self.access_token = access_token
         self.login = login
         if proxy:
-            self.proxy = {'http': proxy}
+            self.proxy = {
+                'http': proxy,
+                'https': proxy,
+            }
 
     def auth(self, login=None, security_key=None):
         """
@@ -635,7 +638,7 @@ class PyrusAPI(object):
 
         data = self.serialize_request(auth_request)
 
-        auth_response = requests.post(url, headers=headers, data=data)
+        auth_response = requests.post(url, headers=headers, data=data, proxies=self.proxy)
         # pylint: disable=no-member
         if auth_response.status_code == requests.codes.ok:
             response = auth_response.json()
