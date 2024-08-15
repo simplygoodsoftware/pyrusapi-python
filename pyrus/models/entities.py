@@ -188,6 +188,7 @@ class Task(TaskHeader):
             scheduled_date (:obj:`datetime`): task scheduled date
             scheduled_datetime_utc (:obj:`datetime`): task scheduled date with utc time
             subscribers (:obj:`list` of :obj:`models.entities.Subscriber`): List of task subscribers
+            steps (:obj:`list` of :obj:`models.entities.TaskStep`): List of task steps
         Attributes(Simple Task):
             text (:obj:`str`): Task text
             responsible (:obj:`models.entities.Person`): Task responsible
@@ -828,7 +829,8 @@ class Table(list):
 
     def __init__(self, *args):
         list.__init__(self)
-        self = [TableRow(**value) for value in args]
+        for value in args:
+            self.append(TableRow(**value))
 
 
 class TableRow(object):
