@@ -507,6 +507,7 @@ class TaskComment:
             subscribers_removed (:obj:`list` of :obj:`models.entities.Person`) List of subscribers removed from the task
             subscribers_rerequested (:obj:`list` of :obj:`models.entities.Person`) List of subscribers rerequested for the task
             skip_satisfaction (:obj:`bool`, optional): Flag indicating that user satisfaction poll should be skipped
+            skip_notification (:obj:`bool`, optional): Flag indicating that users notification should be skipped
             reply_note_id (:obj:`int`, optional): Id of the comment that was replied to
         Attributes(Simple Task comment):
             reassign_to (:obj:`models.entities.Person`): Person to whom the task was reassigned
@@ -562,6 +563,7 @@ class TaskComment:
     spent_minutes = None
     skip_satisfaction = None
     reply_note_id = None
+    skip_notification = None
 
     @property
     def flat_field_updates(self):
@@ -651,6 +653,8 @@ class TaskComment:
             self.skip_satisfaction = kwargs['skip_satisfaction']
         if 'reply_note_id' in kwargs:
             self.reply_note_id = kwargs['reply_note_id']
+        if 'skip_notification' in kwargs:
+            self.skip_notification = kwargs['skip_notification']
 
 class TaskStep:
     """
