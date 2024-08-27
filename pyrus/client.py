@@ -43,18 +43,18 @@ class PyrusAPI:
         PUT = "PUT"
 
     def PYRUS_API_URL():
-        return 'api.pyrus.com'
+        return 'api.pyrus.test'
     def PYRUS_AUTH_URL():
-        return 'accounts.pyrus.com/api'
+        return 'accounts.pyrus.test/api'
 
     _host = PYRUS_API_URL()
     _files_host = 'files.pyrus.com'
     _auth_host = PYRUS_AUTH_URL()
     _base_path = '/v4'
     access_token = None
-    _protocol = 'https'
+    _protocol = 'http'
     _api_name = 'Pyrus'
-    _user_agent = 'Pyrus API python client v 2.27.1'
+    _user_agent = 'Pyrus API python client v 2.28.0'
     proxy = None
 
     def __init__(self, login=None, security_key=None, access_token=None, proxy=None):
