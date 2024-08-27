@@ -3,7 +3,7 @@ from . import entities
 from . import constants
 
 
-class FormRegisterRequest(object):
+class FormRegisterRequest:
     """
         FormRegisterRequest
         
@@ -130,7 +130,7 @@ class FormRegisterRequest(object):
                 self.due_filter = due_settings
 
 
-class TaskListRequest(object):
+class TaskListRequest:
     """
         TaskListRequest
         
@@ -161,7 +161,7 @@ class TaskListRequest(object):
             self.item_count = item_count
 
 
-class TaskCommentRequest(object):
+class TaskCommentRequest:
     """
         TaskCommentRequest
         
@@ -430,7 +430,7 @@ class TaskCommentRequest(object):
                 raise TypeError('edit_comment_id must be an int')
             self.edit_comment_id = edit_comment_id
 
-class AnnouncementCommentRequest(object):
+class AnnouncementCommentRequest:
     """
         AnnouncementCommentRequest
         
@@ -447,7 +447,7 @@ class AnnouncementCommentRequest(object):
                 raise TypeError('attachments must be a list')
             self.attachments = [attachment for attachment in attachments]
 
-class CreateTaskRequest(object):
+class CreateTaskRequest:
     """
         CreateTaskRequest
         
@@ -587,7 +587,7 @@ class CreateTaskRequest(object):
                 raise TypeError("fill_defaults must be a boolean")
             self.fill_defaults = fill_defaults
 
-class CreateAnnouncementRequest(object):
+class CreateAnnouncementRequest:
     """
         CreateAnnouncementRequest
         
@@ -605,7 +605,7 @@ class CreateAnnouncementRequest(object):
                 raise TypeError('attachments must be a list')
             self.attachments = [attachment for attachment in attachments]
 
-class AuthRequest(object):
+class AuthRequest:
     """
         AuthRequest
 
@@ -622,7 +622,7 @@ class AuthRequest(object):
             self.security_key = security_key
 
 
-class SyncCatalogRequest(object):
+class SyncCatalogRequest:
     """
         SyncCatalogRequest
         
@@ -643,7 +643,7 @@ class SyncCatalogRequest(object):
             self.items = _get_catalog_items(items)
 
 
-class CreateCatalogRequest(object):
+class CreateCatalogRequest:
     """
         CreateCatalogRequest
         
@@ -666,7 +666,7 @@ class CreateCatalogRequest(object):
             self.source_type = source_type
 
 
-class CalendarRequest(object):
+class CalendarRequest:
     """
     CalendarRequest
 
@@ -698,7 +698,7 @@ class CalendarRequest(object):
         self.all_accessed_tasks = all_accessed_tasks
         self.filter_mask = filter_mask
 
-class CreateRoleRequest(object):
+class CreateRoleRequest:
     """
         CreateRoleRequest
         
@@ -713,7 +713,7 @@ class CreateRoleRequest(object):
         if members:
             self.member_add = members
 
-class UpdateRoleRequest(object):
+class UpdateRoleRequest:
     """
         UpdateRoleRequest
         
@@ -756,7 +756,7 @@ class UpdateMemberRequest(entities.Person):
     def __init__(self, **kwargs):
         super(UpdateMemberRequest, self).__init__(**kwargs)
 
-class SetAvatarRequest(object):
+class SetAvatarRequest:
     """
         SetAvatarRequest
         
@@ -806,7 +806,7 @@ def _date_to_str(str_date, property_name):
     return datetime.strftime(str_date, constants.DATE_TIME_FORMAT)
 
 
-class ChangePermissionsRequest(object):
+class ChangePermissionsRequest:
     """
     ChangePermissionsRequest
 

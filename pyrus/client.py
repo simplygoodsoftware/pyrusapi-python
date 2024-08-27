@@ -21,11 +21,11 @@ import jsonpickle
 import os
 import re
 import requests
-from .models import responses as resp, requests as req, entities as ent
+from .models import responses as resp, requests as req
 import cgi
 
 
-class PyrusAPI(object):
+class PyrusAPI:
     """
     PyrusApi client
 
