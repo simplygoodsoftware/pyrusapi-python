@@ -9,7 +9,7 @@ from . import constants
 
 
 @customhandlers.FormFieldHandler.handles
-class FormField(object):
+class FormField:
     """
         Form field
 
@@ -21,6 +21,7 @@ class FormField(object):
             value (:obj:`object`, optional): Field value
             parent_id (:obj:`int`, optional) Parent field id (returned if field has parent)
             row_id (:obj:`int`, optional) Table row id (returned if field is in table)
+            code (:obj:`str`): Code of the field
     """
 
     id = None
@@ -30,6 +31,7 @@ class FormField(object):
     value = None
     parent_id = None
     row_id = None
+    code = None
 
     def __init__(self, **kwargs):
         if 'id' in kwargs:
@@ -49,9 +51,11 @@ class FormField(object):
             self.parent_id = kwargs['parent_id']
         if 'row_id' in kwargs:
             self.row_id = kwargs['row_id']
+        if 'code' in kwargs:
+            self.code = kwargs['code']
 
 
-class FormFieldInfo(object):
+class FormFieldInfo:
     """
         Additional form field information
 
@@ -96,7 +100,7 @@ class FormFieldInfo(object):
             self.multiple_choice = kwargs['multiple_choice']
 
 
-class ChoiceOption(object):
+class ChoiceOption:
     """
         multiple_choice options description
 
@@ -124,7 +128,7 @@ class ChoiceOption(object):
             self.code = kwargs['code']
 
 
-class TaskHeader(object):
+class TaskHeader:
     """
         Task header
 
@@ -311,7 +315,7 @@ class TaskWithComments(Task):
             self.comments = [TaskComment(**comment) for comment in kwargs['comments']]
         super(TaskWithComments, self).__init__(**kwargs)
 
-class AnnouncementWithComments(object):
+class AnnouncementWithComments:
     """
         Announcement with comments
 
@@ -347,7 +351,7 @@ class AnnouncementWithComments(object):
 
 
 
-class Person(object):
+class Person:
     """
         Person
 
@@ -398,7 +402,7 @@ class Person(object):
             self.department_name = kwargs['department_name']
 
 
-class File(object):
+class File:
     """
         File
 
@@ -437,7 +441,7 @@ class File(object):
             self.root_id = kwargs['root_id']
 
 
-class Approval(object):
+class Approval:
     """
         Approval
 
@@ -460,7 +464,7 @@ class Approval(object):
             self.step = kwargs['step']
 
 
-class Subscriber(object):
+class Subscriber:
     """
         Subscriber
 
@@ -479,7 +483,7 @@ class Subscriber(object):
             self.approval_choice = kwargs['approval_choice']
 
 
-class TaskComment(object):
+class TaskComment:
     """
         Task comment
 
@@ -503,6 +507,7 @@ class TaskComment(object):
             subscribers_removed (:obj:`list` of :obj:`models.entities.Person`) List of subscribers removed from the task
             subscribers_rerequested (:obj:`list` of :obj:`models.entities.Person`) List of subscribers rerequested for the task
             skip_satisfaction (:obj:`bool`, optional): Flag indicating that user satisfaction poll should be skipped
+            skip_notification (:obj:`bool`, optional): Flag indicating that users notification should be skipped
             reply_note_id (:obj:`int`, optional): Id of the comment that was replied to
         Attributes(Simple Task comment):
             reassign_to (:obj:`models.entities.Person`): Person to whom the task was reassigned
@@ -558,6 +563,7 @@ class TaskComment(object):
     spent_minutes = None
     skip_satisfaction = None
     reply_note_id = None
+    skip_notification = None
 
     @property
     def flat_field_updates(self):
@@ -647,8 +653,10 @@ class TaskComment(object):
             self.skip_satisfaction = kwargs['skip_satisfaction']
         if 'reply_note_id' in kwargs:
             self.reply_note_id = kwargs['reply_note_id']
+        if 'skip_notification' in kwargs:
+            self.skip_notification = kwargs['skip_notification']
 
-class TaskStep(object):
+class TaskStep:
     """
         Task step
 
@@ -670,7 +678,7 @@ class TaskStep(object):
         if 'elapsed_time' in kwargs:
             self.elapsed_time = kwargs['elapsed_time']
 
-class AnnouncementComment(object):
+class AnnouncementComment:
     """
         Announcement comment
 
@@ -700,7 +708,7 @@ class AnnouncementComment(object):
         if 'attachments' in kwargs:
             self.attachments = [File(**attachment) for attachment in kwargs['attachments']]
 
-class Organization(object):
+class Organization:
     """
         Organization
 
@@ -731,7 +739,7 @@ class Organization(object):
             self.department_catalog_id = kwargs['department_catalog_id']
 
 
-class Role(object):
+class Role:
     """
         Role
 
@@ -769,7 +777,7 @@ class Role(object):
         if 'external_avatar_id' in kwargs:
             self.external_avatar_id = kwargs['external_avatar_id']
 
-class CatalogItem(object):
+class CatalogItem:
     """
         Value of FormField catalog
 
@@ -833,7 +841,7 @@ class Table(list):
             self.append(TableRow(**value))
 
 
-class TableRow(object):
+class TableRow:
     """
         Table Row
 
@@ -868,7 +876,7 @@ class TableRow(object):
                 raise TypeError('deleted must be a boolean')
 
 
-class Title(object):
+class Title:
     """
         Value of FormField title
 
@@ -887,7 +895,7 @@ class Title(object):
             self.fields = [FormField(**field) for field in kwargs['fields']]
 
 
-class MultipleChoice(object):
+class MultipleChoice:
     """
         Value of FormField multiple_choice
 
@@ -914,7 +922,7 @@ class MultipleChoice(object):
             self.fields = [FormField(**field) for field in kwargs['fields']]
 
 
-class Projects(object):
+class Projects:
     """
         Value of FormField project
 
@@ -929,7 +937,7 @@ class Projects(object):
             self.projects = [Project(**project) for project in kwargs['projects']]
 
 
-class FormLink(object):
+class FormLink:
     """
         Value of FormField form_link
 
@@ -952,7 +960,7 @@ class FormLink(object):
             self.task_ids = [task for task in kwargs['task_ids']]
 
 
-class Project(object):
+class Project:
     """
         Project
 
@@ -975,7 +983,7 @@ class Project(object):
             self.parent = Project(**kwargs['parent'])
 
 
-class FormRegisterFilter(object):
+class FormRegisterFilter:
     """
         Base form register filter. Should never be created explictly
     """
@@ -1083,7 +1091,7 @@ class IsEmptyFilter(FormRegisterFilter):
             __init__(field_id=field_id, operator='is_empty', values=[])
 
 
-class TaskList(object):
+class TaskList:
     """
         task list
 
@@ -1106,7 +1114,7 @@ class TaskList(object):
             self.children = [TaskList(**child) for child in kwargs['children']]
 
 
-class CatalogHeader(object):
+class CatalogHeader:
     """
         catalog header
 
@@ -1225,7 +1233,7 @@ class NewFile:
 
 
 @customhandlers.ChannelHandler.handles
-class Channel(object):
+class Channel:
     """
         Channel
 
@@ -1252,7 +1260,7 @@ class Channel(object):
             self.phone = kwargs['phone']
 
 
-class CatalogValue(object):
+class CatalogValue:
     """
         Catalog field value
 

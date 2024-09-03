@@ -5,7 +5,7 @@
 from . import entities
 
 
-class BaseResponse(object):
+class BaseResponse:
     """
         error_code (:obj:`str`): Error code
         error (:obj:`str`): Human readable string describing the error

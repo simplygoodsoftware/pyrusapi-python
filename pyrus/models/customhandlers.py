@@ -10,6 +10,8 @@ class FormFieldHandler(jsonpickle.handlers.BaseHandler):
             data['id'] = obj.id
         if obj.name:
             data['name'] = obj.name
+        if obj.code:
+            data['code'] = obj.code
 
         #ignore readonly fields
         if obj.type in ['step', 'status', 'note', 'author', 'project', 'creation_date']:
