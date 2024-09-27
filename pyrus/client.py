@@ -54,7 +54,7 @@ class PyrusAPI:
     access_token = None
     _protocol = 'https'
     _api_name = 'Pyrus'
-    _user_agent = 'Pyrus API python client v 2.28.0'
+    _user_agent = 'Pyrus API python client v 2.29.0'
     proxy = None
 
     def __init__(self, login=None, security_key=None, access_token=None, proxy=None):
@@ -385,6 +385,22 @@ class PyrusAPI:
         response = self._perform_post_request('/catalogs/{}'.format(catalog_id), sync_catalog_request)
         return resp.SyncCatalogResponse(**response)
         
+    def change_catalog_items(self, catalog_id, change_catalog_items_request):
+        """
+        Change catalog items. This method returns a list of items that have been added, modified, or deleted
+
+        Args:
+            change_catalog_items_request (:obj:`models.requests.ChangeCatalogItemsRequest`): Catalog data.
+
+        Returns: 
+            class:`models.responses.CatalogResponse` object
+        """
+        if not isinstance(change_catalog_items_request, req.ChangeCatalogItemsRequest):
+            raise TypeError('change_catalog_items_request must be an instance '
+                            'of models.requests.ChangeCatalogItemsRequest')
+        response = self._perform_post_request('/catalogs/{}/diff'.format(catalog_id), change_catalog_items_request)
+        return resp.SyncCatalogResponse(**response)
+
     def get_roles(self):
         """
         Get all roles from user's organization
