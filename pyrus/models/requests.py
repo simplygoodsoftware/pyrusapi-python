@@ -669,9 +669,9 @@ class CreateCatalogRequest:
         if source_type:
             self.source_type = source_type
 
-class ChangeCatalogItemsRequest:
+class ChangeCatalogRequest:
     """
-        ChangeCatalogItemsRequest
+        ChangeCatalogRequest
         
         Args:
             upsert (:obj:`list` of :obj:`models.entities.CatalogItem`, optional): List of catalog items
