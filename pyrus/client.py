@@ -385,20 +385,20 @@ class PyrusAPI:
         response = self._perform_post_request('/catalogs/{}'.format(catalog_id), sync_catalog_request)
         return resp.SyncCatalogResponse(**response)
         
-    def change_catalog(self, catalog_id, change_catalog_request):
+    def update_catalog_items(self, catalog_id, update_catalog_items_request):
         """
-        Change catalog items. This method returns a list of items that have been added, modified, or deleted
+        Update catalog items. This method returns a list of items that have been added, modified, or deleted
 
         Args:
-            change_catalog_request (:obj:`models.requests.ChangeCatalogRequest`): Catalog data.
+            update_catalog_items_request (:obj:`models.requests.UpdateCatalogItemsRequest`): Catalog data.
 
         Returns: 
-            class:`models.responses.CatalogResponse` object
+            class:`models.responses.SyncCatalogResponse` object
         """
-        if not isinstance(change_catalog_request, req.ChangeCatalogRequest):
-            raise TypeError('change_catalog_request must be an instance '
-                            'of models.requests.ChangeCatalogRequest')
-        response = self._perform_post_request('/catalogs/{}/diff'.format(catalog_id), change_catalog_request)
+        if not isinstance(update_catalog_items_request, req.UpdateCatalogItemsRequest):
+            raise TypeError('update_catalog_items_request must be an instance '
+                            'of models.requests.UpdateCatalogItemsRequest')
+        response = self._perform_post_request('/catalogs/{}/diff'.format(catalog_id), update_catalog_items_request)
         return resp.SyncCatalogResponse(**response)
 
     def get_roles(self):

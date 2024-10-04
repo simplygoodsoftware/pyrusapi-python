@@ -146,14 +146,14 @@ new_headers = response.catalog_headers
 
 ```python
 catalog_id = 7825
-request = pyrus.models.requests.ChangeCatalogRequest(
+request = pyrus.models.requests.UpdateCatalogItemsRequest(
         upsert = [
             ["A1", "A5", "A6"],
             ["E1", "E2", "E3"]
         ],
         delete = ["B1"]
     )
-response = pyrus_client.change_catalog(catalog_id, request)
+response = pyrus_client.update_catalog_items(catalog_id, request)
 deleted = response.deleted
 updated = response.updated
 added = response.added

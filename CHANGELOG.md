@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2.29.0] - 2024-09-27
 ### Added
-- ChangeCatalogItems method
+- UpdateCatalogItems method
 
 ## [2.28.0] - 2024-08-28
 ### Added
