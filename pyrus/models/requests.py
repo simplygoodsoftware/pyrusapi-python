@@ -669,6 +669,26 @@ class CreateCatalogRequest:
         if source_type:
             self.source_type = source_type
 
+class UpdateCatalogItemsRequest:
+    """
+        UpdateCatalogItemsRequest
+        
+        Args:
+            upsert (:obj:`list` of :obj:`models.entities.CatalogItem`, optional): List of catalog items
+            delete (:obj:`list` of :obj:`str`, optional): List of catalog item keys
+    """
+
+    def __init__(self, upsert=None, delete=None):
+        if upsert:
+            self.upsert = _get_catalog_items(upsert)
+        if delete:
+            if not isinstance(delete, list):
+                raise TypeError('delete must be a list of str')
+            for item in delete:
+                if not isinstance(item, str):
+                    raise TypeError('delete must be a list of str')
+            self.delete = delete
+
 
 class CalendarRequest:
     """

@@ -136,10 +136,27 @@ request = pyrus.models.requests.SyncCatalogRequest(
         ]
     )
 response = pyrus_client.sync_catalog(catalog_id, request)
-delted = response.deleted
+deleted = response.deleted
 updated = response.updated
 added = response.added
 new_headers = response.catalog_headers
+```
+
+* Update catalog items (All unspecified items will be left intact)
+
+```python
+catalog_id = 7825
+request = pyrus.models.requests.UpdateCatalogItemsRequest(
+        upsert = [
+            ["A1", "A5", "A6"],
+            ["E1", "E2", "E3"]
+        ],
+        delete = ["B1"]
+    )
+response = pyrus_client.update_catalog_items(catalog_id, request)
+deleted = response.deleted
+updated = response.updated
+added = response.added
 ```
 
 ## Contacts
