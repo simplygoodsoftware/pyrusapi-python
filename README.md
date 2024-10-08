@@ -142,7 +142,7 @@ added = response.added
 new_headers = response.catalog_headers
 ```
 
-* Change catalog items
+* Update catalog items (All unspecified items will be left intact)
 
 ```python
 catalog_id = 7825
