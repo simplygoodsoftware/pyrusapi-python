@@ -41,6 +41,7 @@ class PyrusAPI:
         GET = "GET"
         POST = "POST"
         PUT = "PUT"
+        DELETE = "DELETE"
 
     def PYRUS_API_URL():
         return 'api.pyrus.com'
@@ -54,7 +55,7 @@ class PyrusAPI:
     access_token = None
     _protocol = 'https'
     _api_name = 'Pyrus'
-    _user_agent = 'Pyrus API python client v 2.29.0'
+    _user_agent = 'Pyrus API python client v 2.30.0'
     proxy = None
 
     def __init__(self, login=None, security_key=None, access_token=None, proxy=None):
@@ -455,6 +456,19 @@ class PyrusAPI:
 
         response = self._perform_put_request('/roles/{}'.format(role_id), update_role_request)
         return resp.RoleResponse(**response)
+    
+    def delete_role(self, role_id, delete_role_request):
+        """
+        Delete the role
+        Args:
+            role_id (:obj:`int`): Role id
+            delete_role_request (:obj:`models.requests.DeleteRoleRequest`): Task receiver id.
+        Returns: 
+            class:`models.responses.RoleResponse` object
+        """
+
+        response = self._perform_delete_request('/roles/{}'.format(role_id), delete_role_request)
+        return resp.RoleResponse(**response)
 
     def get_members(self):
         """
@@ -672,6 +686,9 @@ class PyrusAPI:
 
     def _perform_put_request(self, path, body=None):
         return self._perform_request_with_retry(path, self.HTTPMethod.PUT, body)
+    
+    def _perform_delete_request(self, path, body=None):
+        return self._perform_request_with_retry(path, self.HTTPMethod.DELETE, body)
 
     def _perform_request_with_retry(self, path, method, body=None, file_path=None, get_file=False):
         if not isinstance(method, self.HTTPMethod):
@@ -705,6 +722,8 @@ class PyrusAPI:
             return self._post_request(url, body)
         if method == self.HTTPMethod.PUT:
             return self._put_request(url, body)
+        if method == self.HTTPMethod.DELETE:
+            return self._delete_request(url, body)
         if get_file:
             return self._get_file_request(url)
         return self._get_request(url)
@@ -728,6 +747,12 @@ class PyrusAPI:
         if body:
             data = self.serialize_request(body)
         return requests.put(url, headers=headers, data=data, proxies=self.proxy)
+    
+    def _delete_request(self, url, body):
+        headers = self._create_default_headers()
+        if body:
+            data = self.serialize_request(body)
+        return requests.delete(url, headers=headers, data=data, proxies=self.proxy)
 
     def _post_file_request(self, url, file_path):
         headers = self._create_default_headers()

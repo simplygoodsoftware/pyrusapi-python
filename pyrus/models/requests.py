@@ -737,6 +737,18 @@ class CreateRoleRequest:
         if members:
             self.member_add = members
 
+class DeleteRoleRequest:
+    """
+        DeleteRoleRequest
+        
+        Args:
+            task_receiver_id (:obj:`int`): Task receiver id
+    """
+
+    def __init__(self, task_receiver_id=None):
+        if task_receiver_id:
+            self.task_receiver_id = task_receiver_id
+
 class UpdateRoleRequest:
     """
         UpdateRoleRequest
