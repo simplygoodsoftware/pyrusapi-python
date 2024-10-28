@@ -193,12 +193,12 @@ class Task(TaskHeader):
             scheduled_datetime_utc (:obj:`datetime`): task scheduled date with utc time
             subscribers (:obj:`list` of :obj:`models.entities.Subscriber`): List of task subscribers
             steps (:obj:`list` of :obj:`models.entities.TaskStep`): List of task steps
-        Attributes(Simple Task):
-            text (:obj:`str`): Task text
-            responsible (:obj:`models.entities.Person`): Task responsible
             due_date (:obj:`datetime`): Task due date
             due (:obj:`datetime`): Task due date with time
             duration (:obj:`int`): Task duration in minutes
+        Attributes(Simple Task):
+            text (:obj:`str`): Task text
+            responsible (:obj:`models.entities.Person`): Task responsible
             participants (:obj:`list` of :obj:`models.entities.Person`): List of task participants
         Attributes(Form Task):
             form_id (:obj:`int`): Form template id
@@ -296,11 +296,11 @@ class TaskWithComments(Task):
             scheduled_datetime_utc (:obj:`datetime`): task scheduled date with utc time
             subscribers (:obj:`list` of :obj:`models.entities.Subscriber`): List of task subscribers
             responsible (:obj:`models.entities.Person`): Task responsible
-        Attributes(Simple Task):
-            text (:obj:`str`): Task text
             due_date (:obj:`datetime`): Task due date
             due (:obj:`datetime`): Task due date with time
             duration (:obj:`int`): Task duration in minutes
+        Attributes(Simple Task):
+            text (:obj:`str`): Task text
             participants (:obj:`list` of :obj:`models.entities.Person`): List of task participants
         Attributes(Form Task):
             form_id (:obj:`int`): Form template id
@@ -509,13 +509,13 @@ class TaskComment:
             skip_satisfaction (:obj:`bool`, optional): Flag indicating that user satisfaction poll should be skipped
             skip_notification (:obj:`bool`, optional): Flag indicating that users notification should be skipped
             reply_note_id (:obj:`int`, optional): Id of the comment that was replied to
+            due_date (:obj:`datetime`): Task due date
+            due (:obj:`datetime`): Task due date with time
+            duration (:obj:`int`): Task duration in minutes
         Attributes(Simple Task comment):
             reassign_to (:obj:`models.entities.Person`): Person to whom the task was reassigned
             participants_added (:obj:`list` of :obj:`models.entities.Person`): List of participants added to the task
             participants_removed (:obj:`list` of :obj:`models.entities.Person`): List of participants removed from the task
-            due_date (:obj:`datetime`): Task due date
-            due (:obj:`datetime`): Task due date with time
-            duration (:obj:`int`): Task duration in minutes
         Attributes(Form Task comment):
             field_updates (:obj:`list` of obj`models.entities.FormField`): List of updated field values
             approval_choice (:obj:`str`): Approval choice (approved/rejected/acknowledged)
