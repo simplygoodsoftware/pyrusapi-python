@@ -22,7 +22,7 @@ import os
 import re
 import requests
 from .models import responses as resp, requests as req
-import cgi
+from email.message import Message
 
 
 class PyrusAPI:
@@ -31,8 +31,8 @@ class PyrusAPI:
 
     Args:
         login (:obj:`str`): User's login (email)
-        security_key (:obj:`str`): User's Secret key
-        access_token (:obj:`str`, optional): Users's access token. You can specify it if you already have one. (optional)
+        security_key (:obj:`str`): User's secret key
+        access_token (:obj:`str`, optional): User's access token. You can specify it if you already have one. (optional)
         proxy (:obj:`str`, optional): Proxy server url
     """
     MAX_FILE_SIZE_IN_BYTES = 2 * 1024 * 1024 * 1024 - 1 # 2GB - 1B
@@ -55,7 +55,7 @@ class PyrusAPI:
     access_token = None
     _protocol = 'https'
     _api_name = 'Pyrus'
-    _user_agent = 'Pyrus API python client v 2.31.0'
+    _user_agent = 'Pyrus API python client v 2.31.1'
     proxy = None
 
     def __init__(self, login=None, security_key=None, access_token=None, proxy=None):
@@ -74,7 +74,7 @@ class PyrusAPI:
 
         Args:
             login (:obj:`str`): User's login (email)
-            security_key (:obj:`str`): User's Secret key
+            security_key (:obj:`str`): User's secret key
 
         Returns: 
             class:`models.responses.AuthResponse` object
@@ -336,8 +336,9 @@ class PyrusAPI:
         response = self._perform_get_file_request(path)
         if response.status_code == 200:
             try:
-                _ , params= cgi.parse_header(response.headers['Content-Disposition'])
-                filename = params['filename']
+                m = Message()
+                m['Content-Disposition'] = response.headers['Content-Disposition']
+                filename = m.get_filename()
             except:
                 filename = re.findall('filename=(.+)', response.headers['Content-Disposition'])
             return resp.DownloadResponse(filename, response.content)
