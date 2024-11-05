@@ -55,7 +55,7 @@ class PyrusAPI:
     access_token = None
     _protocol = 'https'
     _api_name = 'Pyrus'
-    _user_agent = 'Pyrus API python client v 2.31.1'
+    _user_agent = 'Pyrus API python client v 2.32.0'
     proxy = None
 
     def __init__(self, login=None, security_key=None, access_token=None, proxy=None):
@@ -248,17 +248,26 @@ class PyrusAPI:
         response = self._perform_post_request('/tasks', create_task_request)
         return resp.TaskResponse(**response)
 
-    def get_announcements(self):
+    def get_announcements(self, item_count=100):
         """
         Get all announcements.
 
-
+        Args:
+            item_count (:obj:`int`, optional): The maximum number of announcements in the response, the default is 100, should be between 0 and 10000
         Returns: 
             class:`models.responses.AnnouncementsResponse` object
         """
-        response = self._perform_get_request('/announcements')
+
+        if not isinstance(item_count, int):
+            raise ValueError("item_count should be valid int")
+        
+        if item_count < 1 or item_count > 10000:
+            raise ValueError("item_count should be between 0 and 10000")
+        
+        response = self._perform_get_request('/announcements?item_count={}'.format(item_count))
 
         return resp.AnnouncementsResponse(**response)
+    
     def create_announcement(self, create_announcement_request):
         """
         Create announcement. This method returns the created announcement.
