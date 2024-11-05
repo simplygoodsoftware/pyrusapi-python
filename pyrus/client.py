@@ -36,6 +36,7 @@ class PyrusAPI:
         proxy (:obj:`str`, optional): Proxy server url
     """
     MAX_FILE_SIZE_IN_BYTES = 2 * 1024 * 1024 * 1024 - 1 # 2GB - 1B
+    MAX_ANNOUNCEMENT_COUNT  = 10000
 
     class HTTPMethod(Enum):
         GET = "GET"
@@ -259,10 +260,10 @@ class PyrusAPI:
         """
 
         if not isinstance(item_count, int):
-            raise ValueError("item_count should be valid int")
+            raise ValueError('item_count should be valid int')
         
-        if item_count < 1 or item_count > 10000:
-            raise ValueError("item_count should be between 0 and 10000")
+        if item_count < 1 or item_count > self.MAX_ANNOUNCEMENT_COUNT:
+            raise ValueError('item_count should be between 0 and {}'.format(self.MAX_ANNOUNCEMENT_COUNT))
         
         response = self._perform_get_request('/announcements?item_count={}'.format(item_count))
 
