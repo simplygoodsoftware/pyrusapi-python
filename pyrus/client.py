@@ -57,7 +57,7 @@ class PyrusAPI:
     access_token = None
     _protocol = 'https'
     _api_name = 'Pyrus'
-    _user_agent = f'Pyrus API python client v {version.VERSION}' 
+    _user_agent = 'Pyrus API python client v {}'.format(version.VERSION)
     proxy = None
 
     def __init__(self, login=None, security_key=None, access_token=None, proxy=None):
