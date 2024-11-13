@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2.33.0] - 2024-11-12
 ### Changed
-- Replace setup.py to pyproject.toml
+- Use pyproject.toml instead setup.py
 
 ## [2.32.0] - 2024-11-05
 ### Changed
