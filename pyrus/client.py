@@ -23,6 +23,7 @@ import re
 import requests
 from .models import responses as resp, requests as req
 from email.message import Message
+from . import version
 
 
 class PyrusAPI:
@@ -56,7 +57,7 @@ class PyrusAPI:
     access_token = None
     _protocol = 'https'
     _api_name = 'Pyrus'
-    _user_agent = 'Pyrus API python client v 2.32.0'
+    _user_agent = 'Pyrus API python client v {}'.format(version.VERSION)
     proxy = None
 
     def __init__(self, login=None, security_key=None, access_token=None, proxy=None):

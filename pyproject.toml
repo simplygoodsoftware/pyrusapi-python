@@ -1,0 +1,36 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.version]
+path = "pyrus/version.py"
+
+[project]
+name = "pyrus-api"
+dynamic = ["version"]
+dependencies = [
+  "requests",
+  "jsonpickle",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["pyrus-api/pyrus"]
+
+requires-python = ">=3.4"
+authors = [
+  {name = "Pyrus", email = "contact@pyrus.com"},
+]
+maintainers = [
+  {name = "Pyrus", email = "contact@pyrus.com"}
+]
+description = "Python Pyrus API client"
+readme = {file = "README.md", content-type = "text/markdown"}
+license = {file = "LICENSE.txt"}
+keywords = ["pyrus api"]
+classifiers = [
+  "Programming Language :: Python"
+]
+
+[project.urls]
+Repository = "https://github.com/simplygoodsoftware/pyrusapi-python"
+Changelog = "https://github.com/simplygoodsoftware/pyrusapi-python/blob/master/CHANGELOG.md"
