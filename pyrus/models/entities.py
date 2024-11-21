@@ -356,16 +356,19 @@ class Person:
         Person
 
         Attributes:
-            id (:obj:`int`): Person id
-            first_name (:obj:`str`): Person first name
-            last_name (:obj:`str`): Person last name
-            email (:obj:`str`): Person email
-            status (:obj:`str`): Persons status
-            avatar_id (:obj:`int`) Persons avatar ID
+            id (:obj:`int`): Person's id
+            first_name (:obj:`str`): Person's first name
+            last_name (:obj:`str`): Person's last name
+            email (:obj:`str`): Person's email
+            status (:obj:`str`): Person's status
+            avatar_id (:obj:`int`) Person's avatar ID
             external_avatar_id (:obj:`int`) Persons external avatar ID
-            type (:obj:`str`): Person type (user/bot/role)
-            department_id (:obj:`int`): Person department id
-            department_name (:obj:`str`): Person department
+            type (:obj:`str`): Person's type (user/bot/role)
+            department_id (:obj:`int`): Person's department id
+            department_name (:obj:`str`): Person's department
+            phone (:obj:`str`): Person`s phone
+            mobile_phone (:obj:`str`): Person`s mobile_phone
+            position (:obj:`str`): Person`s position
     """
 
     id = None
@@ -378,6 +381,9 @@ class Person:
     type = None
     department_id = None
     department_name = None
+    phone = None
+    mobile_phone = None
+    position = None
 
     def __init__(self, **kwargs):
         if 'id' in kwargs:
@@ -400,6 +406,12 @@ class Person:
             self.department_id = kwargs['department_id']
         if 'department_name' in kwargs:
             self.department_name = kwargs['department_name']
+        if 'phone' in kwargs:
+            self.phone = kwargs['phone']
+        if 'mobile_phone' in kwargs:
+            self.mobile_phone = kwargs['mobile_phone']
+        if 'position' in kwargs:
+            self.position = kwargs['position']
 
 
 class File:
