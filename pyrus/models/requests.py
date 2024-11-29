@@ -616,14 +616,17 @@ class AuthRequest:
         Args:
             login (:obj:`str`): User's login (email)
             security_key (:obj:`str`): User's secret key
+            person_id (:obj:`int`, optional): User's person Id
     """
 
-    def __init__(self, login, security_key):
+    def __init__(self, login, security_key, person_id=None):
 
         if login:
             self.login = login
         if security_key:
             self.security_key = security_key
+        if person_id:
+            self.person_id = person_id
 
 
 class SyncCatalogRequest:
