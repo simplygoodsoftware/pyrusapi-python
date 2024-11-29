@@ -7,7 +7,7 @@ usage:
     >>> from pyrus import client
     >>> import pyrus.models
     >>> pyrus_client = client.PyrusAPI()
-    >>> auth_response = pyrus_client.auth("login", "security_key")
+    >>> auth_response = pyrus_client.auth("login", "security_key", "person_id")
     >>> if auth_response.success:
            forms_response = pyrus_client.get_forms()
            forms = forms_response.forms
@@ -35,6 +35,7 @@ class PyrusAPI:
         security_key (:obj:`str`): User's secret key
         access_token (:obj:`str`, optional): User's access token. You can specify it if you already have one. (optional)
         proxy (:obj:`str`, optional): Proxy server url
+        person_id (:obj:`int`,optional): User's person id
     """
     MAX_FILE_SIZE_IN_BYTES = 2 * 1024 * 1024 * 1024 - 1 # 2GB - 1B
     MAX_ANNOUNCEMENT_COUNT  = 10000
@@ -60,7 +61,7 @@ class PyrusAPI:
     _user_agent = 'Pyrus API python client v {}'.format(version.VERSION)
     proxy = None
 
-    def __init__(self, login=None, security_key=None, access_token=None, proxy=None):
+    def __init__(self, login=None, security_key=None, access_token=None, proxy=None, person_id=None):
         self.security_key = security_key
         self.access_token = access_token
         self.login = login
@@ -69,14 +70,16 @@ class PyrusAPI:
                 'http': proxy,
                 'https': proxy,
             }
+        self.person_id = person_id
 
-    def auth(self, login=None, security_key=None):
+    def auth(self, login=None, security_key=None, person_id=None):
         """
         Get access_token for user
 
         Args:
             login (:obj:`str`): User's login (email)
             security_key (:obj:`str`): User's secret key
+            person_id (:obj:`int`, optional): User's person Id
 
         Returns: 
             class:`models.responses.AuthResponse` object
@@ -85,6 +88,8 @@ class PyrusAPI:
             self.login = login
         if security_key:
             self.security_key = security_key
+        if person_id:
+            self.person_id = person_id
         response = self._auth()
         return resp.AuthResponse(**response)
 
@@ -650,7 +655,7 @@ class PyrusAPI:
             'User-Agent': '{}'.format(self._user_agent),
             'Content-Type': 'application/json'
         }
-        auth_request = req.AuthRequest(login=self.login, security_key=self.security_key)
+        auth_request = req.AuthRequest(login=self.login, security_key=self.security_key, person_id=self.person_id)
 
         data = self.serialize_request(auth_request)
 
