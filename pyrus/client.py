@@ -7,7 +7,7 @@ usage:
     >>> from pyrus import client
     >>> import pyrus.models
     >>> pyrus_client = client.PyrusAPI()
-    >>> auth_response = pyrus_client.auth("login", "security_key","person_id")
+    >>> auth_response = pyrus_client.auth("login", "security_key", "person_id")
     >>> if auth_response.success:
            forms_response = pyrus_client.get_forms()
            forms = forms_response.forms
