@@ -1292,3 +1292,74 @@ class CatalogValue:
             self.item_ids = item_ids
         if item_names:
             self.item_names = item_names
+
+class MeetingJoinParameters:
+    """
+        Meeting join parameters
+    
+        Attributes:
+            url (:obj:`str`): Meeting join URL
+            external_id (:obj:`str`): Meeting join id
+            password (:obj:`str`): Meeting join password
+    """
+
+    url = None
+    external_id = None
+    password = None
+
+    def __init__(self, **kwargs):
+        if 'url' in kwargs:
+            self.url = kwargs['url']
+        if 'external_id' in kwargs:
+            self.external_id = kwargs['external_id']
+        if 'password' in kwargs:
+            self.password = kwargs['password']
+
+class Meeting:
+    """
+        Meeting
+
+        Attributes:
+            id (:obj:`int`): Meeting id
+            type (:obj:`str`): Meeting type
+            start_time (:obj:`datetime`): Meeting start time
+            duration (:obj:`int`): Meeting duration in minutes
+            join_parameters (:obj:`models.entities.MeetingJoinParameters`): Meeting join parameters
+            creator_id (:obj:`int`): Meeting creator person id
+            task_id (:obj:`int`): Task id
+            shared_calendar_event_id (:obj:`str`): Unique identifier for external users
+            shared_to_email (:obj:`bool`): Flag indication that a notification has been sent regarding the latest meeting change
+            deleted (:obj:`bool`): Is meeting deleted
+    """
+
+    id = None
+    type = None
+    start_time = None
+    duration = None
+    creator_id = None
+    task_id = None
+    shared_calendar_event_id = None
+    shared_to_email = None
+    deleted = None
+
+    def __init__(self, **kwargs):
+        if 'id' in kwargs:
+            self.id = kwargs['id']
+        if 'type' in kwargs:
+            self.type = kwargs['type']
+        if 'start_time' in kwargs:
+            self.start_time = _set_utc_timezone(datetime.strptime(kwargs['start_time'], constants.DATE_TIME_FORMAT))
+        if 'duration' in kwargs:
+            self.duration = kwargs['duration']
+        if 'join_parameters' in kwargs:
+            self.join_parameters = MeetingJoinParameters(**kwargs['join_parameters'])
+        if 'creator_id' in kwargs:
+            self.creator_id = kwargs['creator_id']
+        if 'task_id' in kwargs:
+            self.task_id = kwargs['task_id']
+        if 'shared_calendar_event_id' in kwargs:
+            self.shared_calendar_event_id = kwargs['shared_calendar_event_id']
+        if 'shared_to_email' in kwargs:
+            self.shared_to_email = kwargs['shared_to_email']
+        if 'deleted' in kwargs:
+            self.deleted = kwargs['deleted']
