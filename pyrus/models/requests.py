@@ -703,9 +703,10 @@ class CalendarRequest:
         item_count (:obj:`int`): Max count of tasks (<= 100), default 50
         all_accessed_tasks (:obj:`bool`):  Return all accessed to user tasks (from all accessed forms)
         filter_mask (:obj:`int`): Bit mask (filter by). 0b1000 with reminded, 0b0100 with DueForCurrentStep, 0b0010 with DueDate, 0b0001 with Due. (default: 0b0111)
+        include_meetings (:obj:`bool`): Include meetings
     """
 
-    def __init__(self, start_date_utc, end_date_utc, item_count=50, all_accessed_tasks=False, filter_mask=0b0111):
+    def __init__(self, start_date_utc, end_date_utc, item_count=50, all_accessed_tasks=False, filter_mask=0b0111, include_meetings=False):
         if not isinstance(start_date_utc, datetime):
             raise TypeError("start_date_utc must be datetime")
         if not isinstance(end_date_utc, datetime):
@@ -716,6 +717,8 @@ class CalendarRequest:
             raise TypeError("all_accessed_tasks must be bool")
         if not isinstance(filter_mask, int):
             raise TypeError("filter_mask must be int")
+        if not isinstance(include_meetings, bool):
+            raise TypeError("include_meetings must be bool")
 
         self.start_date_utc = start_date_utc
         self.end_date_utc = end_date_utc
@@ -724,6 +727,7 @@ class CalendarRequest:
         self.item_count = item_count
         self.all_accessed_tasks = all_accessed_tasks
         self.filter_mask = filter_mask
+        self.include_meetings = include_meetings
 
 class CreateRoleRequest:
     """

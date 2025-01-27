@@ -424,17 +424,21 @@ class CalendarResponse(BaseResponse):
             Attributes:
                 tasks (:obj:`list` of :obj:`models.entities.TaskWithComments`): List of the task with only last comment in the specified list
                 has_more (:obj:`bool`): True if not all tasks from the list were returned. False otherwise
+                meetings (:obj:`list`) of :obj:`models.entites.Meeting`): List of mettings
         """
     __doc__ += BaseResponse.__doc__
 
     tasks = None
     has_more = None
+    meetings = None
 
     def __init__(self, **kwargs):
         if 'has_more' in kwargs:
             self.has_more = kwargs['has_more']
         if 'tasks' in kwargs:
             self.tasks = [entities.TaskWithComments(**task) for task in kwargs['tasks']]
+        if 'meetings' in kwargs:
+            self.meetings = [entities.Meeting(**meeting) for meeting in kwargs['meetings']]
         super(CalendarResponse, self).__init__(**kwargs)
 
 

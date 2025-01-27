@@ -605,11 +605,14 @@ class PyrusAPI:
                  '&end_date_utc={}'
                  '&item_count={}'
                  '&all_accessed_tasks={}'
-                 '&filter_mask={}').format(
+                 '&filter_mask={}'
+                 '&include_meetings={}').format(
             calendar_request.start_date_utc_str,
             calendar_request.end_date_utc_str,
-            calendar_request.item_count, calendar_request.all_accessed_tasks,
-            calendar_request.filter_mask
+            calendar_request.item_count,
+            calendar_request.all_accessed_tasks,
+            calendar_request.filter_mask,
+            calendar_request.include_meetings
         )
 
         response = self._perform_get_request(query)
