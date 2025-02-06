@@ -19,6 +19,7 @@ class FormField:
             name (:obj:`str`): Field name
             info (:obj:`models.entities.FormFieldInfo`): Additional field information
             value (:obj:`object`, optional): Field value
+            duration (:obj:`int`, optional): Duration (returned if field type is 'due_date' or 'due_date_time')
             parent_id (:obj:`int`, optional) Parent field id (returned if field has parent)
             row_id (:obj:`int`, optional) Table row id (returned if field is in table)
             code (:obj:`str`): Code of the field
@@ -29,6 +30,7 @@ class FormField:
     name = None
     info = None
     value = None
+    duration = None
     parent_id = None
     row_id = None
     code = None
@@ -47,6 +49,8 @@ class FormField:
                 self.value = _create_field_value(self.type, kwargs['value'])
             else:
                 self.value = kwargs['value']
+        if 'duration' in kwargs and self.type in ['due_date', 'due_date_time']:
+            self.duration = kwargs['duration']
         if 'parent_id' in kwargs:
             self.parent_id = kwargs['parent_id']
         if 'row_id' in kwargs:
