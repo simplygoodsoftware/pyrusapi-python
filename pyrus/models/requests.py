@@ -138,10 +138,18 @@ class TaskListRequest:
             include_archived (:obj:`bool`, optional): Flag indicating if we need to include archived tasks to the response. False by default
             modified_before (:obj:`datetime`, optional): Include only tasks that were modified before specified date
             modified_after (:obj:`datetime`, optional): Include only tasks that were modified after specified date
+            closed_before (:obj:`datetime`, optional): Include only tasks that were closed before specified date
+            closed_after (:obj:`datetime`, optional): Include only tasks that were closed after specified date
+            created_before (:obj:`datetime`, optional): Include only tasks that were created before specified date
+            created_after (:obj:`datetime`, optional): Include only tasks that were created after specified date
             item_count (:obj:`int`, optional): Max count of tasks
     """
 
-    def __init__(self, include_archived=None, modified_before=None, modified_after=None, item_count=200):
+    def __init__(self, include_archived=None,
+                modified_before=None, modified_after=None,
+                closed_before=None, closed_after=None,
+                created_before=None, created_after=None,
+                item_count=200):
      
         if include_archived:
             if not isinstance(include_archived, bool):
@@ -155,6 +163,22 @@ class TaskListRequest:
             if not isinstance(modified_after, datetime):
                 raise TypeError("modified_after must be datetime")
             self.modified_after = _date_to_str(modified_after, 'modified_after')
+        if closed_before:
+            if not isinstance(closed_before, datetime):
+                raise TypeError("closed_before must be datetime")
+            self.closed_before = _date_to_str(closed_before, 'closed_before')
+        if closed_after:
+            if not isinstance(closed_after, datetime):
+                raise TypeError("closed_after must be datetime")
+            self.closed_after = _date_to_str(closed_after, 'closed_after')
+        if created_before:
+            if not isinstance(created_before, datetime):
+                raise TypeError("created_before must be datetime")
+            self.created_before = _date_to_str(created_before, 'created_before')
+        if created_after:
+            if not isinstance(created_after, datetime):
+                raise TypeError("created_after must be datetime")
+            self.created_after = _date_to_str(created_after, 'created_after')
         if item_count:
             if not isinstance(item_count, int):
                 raise TypeError("item_count must be int")
