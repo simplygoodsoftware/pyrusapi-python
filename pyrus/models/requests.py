@@ -204,6 +204,7 @@ class TaskCommentRequest:
             subscribers_rerequested (:obj:`list` of :obj:`models.entities.Person`, optional): List of subscribers to rerequest for the task
             skip_satisfaction (:obj:`bool`, optional): Flag indicating that user satisfaction poll should be skipped
             skip_notification (:obj:`bool`, optional): Flag indicating that users notification should be skipped
+            skip_auto_reopen (:obj:`bool`, optional): Flag indicating that task reopening should be skipped (only affects closed tasks)
             edit_comment_id (:obj:`int`, optional): Existing task comment id to be edited
         Args(Simple task comment):
             participants_added (:obj:`list` of :obj:`models.entities.Person`, optional): List of participants to add to the task
@@ -232,7 +233,8 @@ class TaskCommentRequest:
                  approvals_removed=None, approvals_rerequested=None, subscribers_added=None, subscribers_removed=None,
                  subscribers_rerequested=None, subject=None,
                  participants_removed=None, channel=None, spent_minutes=None,
-                 skip_satisfaction = None, edit_comment_id = None, skip_notification = None):
+                 skip_satisfaction = None, edit_comment_id = None, skip_notification = None,
+                 skip_auto_reopen = None):
         if text:
             self.text = text
         if subject:
@@ -457,6 +459,10 @@ class TaskCommentRequest:
             if not isinstance(edit_comment_id, int):
                 raise TypeError('edit_comment_id must be an int')
             self.edit_comment_id = edit_comment_id
+        if skip_auto_reopen:
+            if not isinstance(skip_auto_reopen, bool):
+                raise TypeError('skip_auto_reopen must be bool')
+            self.skip_auto_reopen = skip_auto_reopen
 
 class AnnouncementCommentRequest:
     """

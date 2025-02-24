@@ -524,6 +524,7 @@ class TaskComment:
             subscribers_rerequested (:obj:`list` of :obj:`models.entities.Person`) List of subscribers rerequested for the task
             skip_satisfaction (:obj:`bool`, optional): Flag indicating that user satisfaction poll should be skipped
             skip_notification (:obj:`bool`, optional): Flag indicating that users notification should be skipped
+            skip_auto_reopen (:obj:`bool`, optional): Flag indicating that task reopening should be skipped (only affects closed tasks)
             reply_note_id (:obj:`int`, optional): Id of the comment that was replied to
             due_date (:obj:`datetime`): Task due date
             due (:obj:`datetime`): Task due date with time
@@ -580,6 +581,7 @@ class TaskComment:
     skip_satisfaction = None
     reply_note_id = None
     skip_notification = None
+    skip_auto_reopen = None
 
     @property
     def flat_field_updates(self):
@@ -671,6 +673,8 @@ class TaskComment:
             self.reply_note_id = kwargs['reply_note_id']
         if 'skip_notification' in kwargs:
             self.skip_notification = kwargs['skip_notification']
+        if 'skip_auto_reopen' in kwargs:
+            self.skip_auto_reopen = kwargs['skip_auto_reopen']
 
 class TaskStep:
     """
