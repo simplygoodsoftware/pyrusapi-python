@@ -451,6 +451,7 @@ class TaskCommentRequest:
         if skip_satisfaction:
             if not isinstance(skip_satisfaction, bool):
                 raise TypeError('skip_satisfaction must be bool')
+            self.skip_satisfaction = skip_satisfaction
         if skip_notification:
             if not isinstance(skip_notification, bool):
                 raise TypeError('skip_notification must be bool')
