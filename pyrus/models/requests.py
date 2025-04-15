@@ -25,11 +25,13 @@ class FormRegisterRequest:
             task_ids (:obj:`list` of :obj:`int`, optional): Include only tasks from task_ids list
             item_count (:obj:`int`, optional): Max count of tasks (item_count > 0 & item_count <= 20000)
             due_filter (:obj:`str` or :obj:`list` of :obj:`int`, optional): Task due filter. (overdue/overdue_on_step/past_due/list of overdue_steps)
+            sort (:obj:`models.entities.FormRegisterSort`, optional): Sort, currently only works by task Ids.
     """
 
     def __init__(self, steps=None, include_archived=None, filters=None, modified_before=None, modified_after=None,
                  field_ids=None, format=None, delimiter=None, simple_format=None, encoding=None,
-                 closed_before=None, closed_after=None, created_before=None, created_after=None, task_ids = None, item_count = None, due_filter=None):
+                 closed_before=None, closed_after=None, created_before=None, created_after=None, task_ids = None, item_count = None, due_filter=None,
+                 sort=None):
 
         if steps:
             if not isinstance(steps, list):
@@ -67,22 +69,35 @@ class FormRegisterRequest:
 
         if filters:
             if not isinstance(filters, list):
-                raise TypeError('filters must be a list of entities.FormRegisterFilter')
+                raise TypeError('filters must be a list of entities.BaseFilter')
             for fltr in filters:
-                if not isinstance(fltr, entities.FormRegisterFilter):
-                    raise TypeError('filters must be a list of entities.FormRegisterFilter')
-                if fltr.operator == 'equals':
-                    setattr(self, 'fld{}'.format(fltr.field_id), fltr.values)
-                if fltr.operator == 'greater_than':
-                    setattr(self, 'fld{}'.format(fltr.field_id), 'gt{}'.format(fltr.values))
-                if fltr.operator == 'less_than':
-                    setattr(self, 'fld{}'.format(fltr.field_id), 'lt{}'.format(fltr.values))
-                if fltr.operator == 'range':
-                    setattr(self, 'fld{}'.format(fltr.field_id), 'gt{},lt{}'.format(*fltr.values))
-                if fltr.operator == 'is_in':
-                    setattr(self, 'fld{}'.format(fltr.field_id), ",".join(fltr.values))
-                if fltr.operator == 'is_empty':
-                    setattr(self, 'fld{}'.format(fltr.field_id), 'empty')
+                if not isinstance(fltr, entities.BaseFilter):
+                    raise TypeError('filters must be a list of entities.BaseFilter')
+                if isinstance(fltr, entities.FormRegisterFilter):
+                    if fltr.operator == 'equals':
+                        setattr(self, 'fld{}'.format(fltr.field_id), fltr.values)
+                    if fltr.operator == 'greater_than':
+                        setattr(self, 'fld{}'.format(fltr.field_id), 'gt{}'.format(fltr.values))
+                    if fltr.operator == 'less_than':
+                        setattr(self, 'fld{}'.format(fltr.field_id), 'lt{}'.format(fltr.values))
+                    if fltr.operator == 'range':
+                        setattr(self, 'fld{}'.format(fltr.field_id), 'gt{},lt{}'.format(*fltr.values))
+                    if fltr.operator == 'is_in':
+                        setattr(self, 'fld{}'.format(fltr.field_id), ",".join(str(x) for x in fltr.values))
+                    if fltr.operator == 'is_empty':
+                        setattr(self, 'fld{}'.format(fltr.field_id), 'empty')
+                if isinstance(fltr, entities.FormRegisterTaskIdFilter):
+                    if fltr.operator == 'equals':
+                        setattr(self, 'tsk', fltr.values)
+                    if fltr.operator == 'greater_than':
+                        setattr(self, 'tsk', 'gt{}'.format(fltr.values))
+                    if fltr.operator == 'less_than':
+                        setattr(self, 'tsk', 'lt{}'.format(fltr.values))
+                    if fltr.operator == 'range':
+                        setattr(self, 'tsk', 'gt{},lt{}'.format(*fltr.values))
+                    if fltr.operator == 'is_in':
+                        setattr(self, 'tsk', ",".join(str(x) for x in fltr.values))
+
 
         if field_ids:
             if not isinstance(field_ids, list):
@@ -128,6 +143,15 @@ class FormRegisterRequest:
             elif isinstance(due_filter, list):
                 due_settings = { 'overdue_steps': due_filter }
                 self.due_filter = due_settings
+        
+        if sort:
+            if not isinstance(sort, entities.FormRegisterSort):
+                raise TypeError("sort must be entities.FormRegisterSort")
+            if sort.type != 'tsk':
+                raise TypeError('only sorting by task id is supported')
+            setattr(self, 'sort', sort.type)
+            if sort.desc is True:
+                setattr(self, 'desc', True)
 
 
 class TaskListRequest:
