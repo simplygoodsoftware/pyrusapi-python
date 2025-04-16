@@ -150,9 +150,6 @@ class FormRegisterRequest:
             if sort.type != 'tsk':
                 raise TypeError('only sorting by task id is supported')
             setattr(self, 'sort', sort.type)
-            if sort.desc is True:
-                setattr(self, 'desc', True)
-
 
 class TaskListRequest:
     """

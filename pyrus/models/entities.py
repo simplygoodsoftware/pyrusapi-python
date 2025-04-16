@@ -1007,12 +1007,10 @@ class FormRegisterSort:
     """
         Form register sort (currently only works by task Ids)
         Attributes:
-            desc (:obj:`bool`): Descending sort order
             by_task_id (:obj:`bool`): Is sort order by task Id
     """
 
-    def __init__(self, desc = False, by_task_id = True):
-        self.desc = desc
+    def __init__(self, by_task_id = True):
         self.type = by_task_id and 'tsk' or None
 
 
