@@ -1003,15 +1003,44 @@ class Project:
             self.parent = Project(**kwargs['parent'])
 
 
-class FormRegisterFilter:
+class FormRegisterSort:
+    """
+        Form register sort (currently only works by task Ids)
+        Attributes:
+            by_task_id (:obj:`bool`): Is sort order by task Id
+    """
+
+    def __init__(self, by_task_id = True):
+        self.type = by_task_id and 'id' or None
+
+
+class BaseFilter:
+    """
+        Base filter. Should never be created explictly
+    """
+
+    def __init__(self, **kwargs):
+        self.operator = kwargs['operator']
+        self.values = kwargs['values']
+
+class FormRegisterTaskIdFilter(BaseFilter):
+    """
+        Base form register task id filter. Should never be created explictly
+    """
+
+    def __init__(self, **kwargs):
+        super(FormRegisterTaskIdFilter, self).__init__(**kwargs)
+
+
+
+class FormRegisterFilter(BaseFilter):
     """
         Base form register filter. Should never be created explictly
     """
 
     def __init__(self, **kwargs):
+        super(FormRegisterFilter, self).__init__(**kwargs)
         self.field_id = kwargs['field_id']
-        self.operator = kwargs['operator']
-        self.values = kwargs['values']
 
 
 class EqualsFilter(FormRegisterFilter):
@@ -1028,6 +1057,18 @@ class EqualsFilter(FormRegisterFilter):
         super(EqualsFilter, self). \
             __init__(field_id=field_id, operator='equals', values=_get_value(value))
 
+class EqualsTaskIdFilter(FormRegisterTaskIdFilter):
+    """
+        Form register task id equals filter
+
+        Attributes:
+            value (:obj:`str`): Form field value
+    """
+
+    def __init__(self, value):
+        super(EqualsTaskIdFilter, self). \
+            __init__(operator='equals', values=_get_value(value))
+
 
 class GreaterThanFilter(FormRegisterFilter):
     """
@@ -1043,6 +1084,18 @@ class GreaterThanFilter(FormRegisterFilter):
         super(GreaterThanFilter, self). \
             __init__(field_id=field_id, operator='greater_than', values=_get_value(value))
 
+class GreaterThanTaskIdFilter(FormRegisterTaskIdFilter):
+    """
+        Form register greater than task id filter
+
+        Attributes:
+            value (:obj:`str`): Form field value
+    """
+
+    def __init__(self, value):
+        super(GreaterThanTaskIdFilter, self). \
+            __init__(operator='greater_than', values=_get_value(value))
+
 
 class LessThanFilter(FormRegisterFilter):
     """
@@ -1057,6 +1110,19 @@ class LessThanFilter(FormRegisterFilter):
         _validate_field_id(field_id)
         super(LessThanFilter, self). \
             __init__(field_id=field_id, operator='less_than', values=_get_value(value))
+
+
+class LessThanTaskIdFilter(FormRegisterTaskIdFilter):
+    """
+        Form register task id less than filter
+
+        Attributes:
+            value (:obj:`str`): Form field value
+    """
+
+    def __init__(self, value):
+        super(LessThanTaskIdFilter, self). \
+            __init__(operator='less_than', values=_get_value(value))
 
 
 class RangeFilter(FormRegisterFilter):
@@ -1078,6 +1144,23 @@ class RangeFilter(FormRegisterFilter):
         super(RangeFilter, self). \
             __init__(field_id=field_id, operator='range', values=formated_values)
 
+class RangeTaskIdFilter(FormRegisterTaskIdFilter):
+    """
+        Form register range task id filter
+
+        Attributes:
+            value (:obj:`str`): Form field value
+    """
+
+    def __init__(self, values):
+        if not isinstance(values, list):
+            raise TypeError('values must be a list.')
+        if len(values) != 2:
+            raise TypeError('values length must be equal 2.')
+        formated_values = [_get_value(value) for value in values]
+        super(RangeTaskIdFilter, self). \
+            __init__(operator='range', values=formated_values)
+
 
 class IsInFilter(FormRegisterFilter):
     """
@@ -1095,6 +1178,21 @@ class IsInFilter(FormRegisterFilter):
         formated_values = [_get_value(value) for value in values]
         super(IsInFilter, self). \
             __init__(field_id=field_id, operator='is_in', values=formated_values)
+
+class IsInTaskIdFilter(FormRegisterTaskIdFilter):
+    """
+        Form register is in task id filter
+
+        Attributes:s
+            value (:obj:`str`): Form field value
+    """
+
+    def __init__(self, values):
+        if not isinstance(values, list):
+            raise TypeError('values must be a list.')
+        formated_values = [_get_value(value) for value in values]
+        super(IsInTaskIdFilter, self). \
+            __init__(operator='is_in', values=formated_values)
 
 
 class IsEmptyFilter(FormRegisterFilter):
