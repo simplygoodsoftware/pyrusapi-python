@@ -1011,7 +1011,7 @@ class FormRegisterSort:
     """
 
     def __init__(self, by_task_id = True):
-        self.type = by_task_id and 'tsk' or None
+        self.type = by_task_id and 'id' or None
 
 
 class BaseFilter:

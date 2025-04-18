@@ -88,15 +88,15 @@ class FormRegisterRequest:
                         setattr(self, 'fld{}'.format(fltr.field_id), 'empty')
                 if isinstance(fltr, entities.FormRegisterTaskIdFilter):
                     if fltr.operator == 'equals':
-                        setattr(self, 'tsk', fltr.values)
+                        setattr(self, 'id', fltr.values)
                     if fltr.operator == 'greater_than':
-                        setattr(self, 'tsk', 'gt{}'.format(fltr.values))
+                        setattr(self, 'id', 'gt{}'.format(fltr.values))
                     if fltr.operator == 'less_than':
-                        setattr(self, 'tsk', 'lt{}'.format(fltr.values))
+                        setattr(self, 'id', 'lt{}'.format(fltr.values))
                     if fltr.operator == 'range':
-                        setattr(self, 'tsk', 'gt{},lt{}'.format(*fltr.values))
+                        setattr(self, 'id', 'gt{},lt{}'.format(*fltr.values))
                     if fltr.operator == 'is_in':
-                        setattr(self, 'tsk', ",".join(str(x) for x in fltr.values))
+                        setattr(self, 'id', ",".join(str(x) for x in fltr.values))
 
 
         if field_ids:
