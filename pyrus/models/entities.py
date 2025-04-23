@@ -1374,9 +1374,28 @@ class Channel:
             self.to = kwargs['to']
         if 'from' in kwargs:
             self.sender = kwargs['from']
+        if 'sender' in kwargs:
+            self.sender = kwargs['sender']
         if 'phone' in kwargs:
             self.phone = kwargs['phone']
 
+class ChannelUser:
+    """
+        Channel user
+
+        Attributes:
+            email (:obj:`str`): channel user's email
+            name (:obj:`str`): channel user's name
+    """
+
+    email = None
+    name = None
+
+    def __init__(self, **kwargs):
+        if 'email' in kwargs:
+            self.email = kwargs['email']
+        if 'name' in kwargs:
+            self.name = kwargs['name']
 
 class CatalogValue:
     """
