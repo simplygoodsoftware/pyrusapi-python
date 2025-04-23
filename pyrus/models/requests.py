@@ -460,11 +460,15 @@ class TaskCommentRequest:
         if due and due_date:
             raise ValueError("either due_date or due can be set")
         if channel:
-            if not isinstance(channel, str):
-                raise TypeError('channel must be an instance of str')
-            if channel not in ['email', 'telegram', 'facebook', 'vk', 'viber', 'instagram', 'private_channel', 'whats_app', 'mobile_app', 'web_widget', 'sms', 'custom']:
-                raise TypeError('channel must be correct')
-            self.channel = entities.Channel(type=channel)
+            if isinstance(channel, str):
+                if channel not in ['email', 'telegram', 'facebook', 'vk', 'viber', 'instagram', 'private_channel', 'whats_app', 'mobile_app', 'web_widget', 'sms', 'custom']:
+                    raise TypeError('channel must be correct')
+                self.channel = entities.Channel(type=channel)
+            elif isinstance(channel, entities.Channel):
+                self.channel = channel
+            else:
+                raise TypeError('channel must be str or Channel obj')
+            
         if spent_minutes:
             if not isinstance(spent_minutes, int):
                 raise TypeError('spent_minutes must be an int')
