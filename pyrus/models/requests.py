@@ -403,7 +403,7 @@ class TaskCommentRequest:
                 raise TypeError('due must be a date')
             self.due = datetime.strftime(due, constants.DATE_TIME_FORMAT)
         if duration:
-            if not isinstance(due, int):
+            if not isinstance(duration, int):
                 raise TypeError('duration must be an int')
             if not due:
                 raise ValueError("duration can only be used with due")
