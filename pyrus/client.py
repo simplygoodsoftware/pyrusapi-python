@@ -141,12 +141,13 @@ class PyrusAPI:
         response = self._perform_get_request('/contacts?include_inactive={}'.format(include_inactive))
         return resp.ContactsResponse(**response)
 
-    def get_catalog(self, catalog_id):
+    def get_catalog(self, catalog_id, filters = None):
         """
         Get a catalog
 
         Args:
             catalog_id (:obj:`int`): Catalog id
+            filters (:class:`models.catalogItem_filters.CatalogItemFilters`, optional): Catalog item filters. Defaults to None
 
         Returns: 
             class:`models.responses.CatalogResponse` object
@@ -154,7 +155,10 @@ class PyrusAPI:
         if not isinstance(catalog_id, int):
             raise Exception("catalog_id should be valid int")
 
-        response = self._perform_get_request('/catalogs/{}'.format(catalog_id))
+        url = '/catalogs/{}'.format(catalog_id)
+        if filters:
+            url += '?{}'.format(str(filters))
+        response = self._perform_get_request(url)
         return resp.CatalogResponse(**response)
 
     def get_form(self, form_id):
