@@ -896,7 +896,7 @@ class TableRow:
             self.deleted = kwargs['deleted']
             if not isinstance(self.deleted, bool):
                 raise TypeError('deleted must be a boolean')
-         if 'position' in kwargs:
+        if 'position' in kwargs:
             self.position = kwargs['position']
 
 
