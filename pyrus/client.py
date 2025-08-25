@@ -576,7 +576,7 @@ class PyrusAPI:
         response = self._perform_get_request('/profile?withinactive={}'.format(include_inactive))
         return resp.ProfileResponse(**response)
 
-    def get_inbox(self, tasks_count=50):
+    def get_inbox(self, tasks_count = 50, group_tasks_count = 50):
         """
         Get inbox tasks
 
@@ -587,8 +587,8 @@ class PyrusAPI:
             class:`models.responses.TaskListResponse` object
         """
 
-        response = self._perform_get_request('/inbox?item_count={}'.format(tasks_count))
-        return resp.TaskListResponse(**response)
+        response = self._perform_get_request('/inbox?item_count={}&=group_item_count={}'.format(tasks_count, group_tasks_count))
+        return resp.InboxResponse(**response)
 
     def get_calendar_tasks(self, calendar_request):
         """

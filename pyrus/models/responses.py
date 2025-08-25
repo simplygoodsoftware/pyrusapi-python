@@ -321,6 +321,23 @@ class TaskListResponse(BaseResponse):
         super(TaskListResponse, self).__init__(**kwargs)
 
 
+class InboxResponse(TaskListResponse):
+    """
+        InboxResponse
+        
+        Attributes:
+            task_groups: (:obj:`list` of :obj:`models.entities.TaskGroup`): List of the inbox task groups
+    """
+    __doc__ += TaskListResponse.__doc__
+
+    task_groups = None
+
+    def __init__(self, **kwargs):
+        if 'task_groups' in kwargs:
+            self.task_groups = [entities.TaskGroup(**group) for group in kwargs['task_groups']]
+        super(InboxResponse, self).__init__(**kwargs)
+
+
 class DownloadResponse(BaseResponse):
     """
         DownloadResponse
