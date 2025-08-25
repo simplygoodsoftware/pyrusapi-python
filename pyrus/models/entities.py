@@ -1488,3 +1488,29 @@ class Meeting:
             self.shared_to_email = kwargs['shared_to_email']
         if 'deleted' in kwargs:
             self.deleted = kwargs['deleted']
+
+
+class TaskGroup:
+    """
+        Task group
+
+        Attributes:
+            id (:obj:`int`): Task group id
+            name (:obj:`str`): Task group name
+            has_more (:obj:`bool`): True if not all the tasks from the group were returned. False otherwise
+            tasks (:obj:`list` of :obj:`models.entities.TaskHeader`): List of tasks in the group
+    """
+    id = None
+    name = None
+    has_more = None
+    tasks = None
+
+    def __init__(self, **kwargs):
+        if 'id' in kwargs:
+            self.id = kwargs['id']
+        if 'name' in kwargs:
+            self.name = kwargs['name']
+        if 'has_more' in kwargs:
+            self.has_more = kwargs['has_more']
+        if 'tasks' in kwargs:
+            self.tasks = [TaskHeader(**task) for task in kwargs['tasks']]
