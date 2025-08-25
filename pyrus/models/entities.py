@@ -869,12 +869,14 @@ class TableRow:
             row_id (:obj:`int`): Table row id
             cells (:obj:`list` of :obj:`models.entities.FormField`): List of row cells
             delete (:obj:`bool`): Flag indicating if table row should be deleted
+            position (:obj:`int`, optional): Table row position number
     """
 
     row_id = None
     cells = None
     delete = None
     deleted = None
+    position = None
 
     def __init__(self, **kwargs):
         if 'row_id' in kwargs:
@@ -894,6 +896,8 @@ class TableRow:
             self.deleted = kwargs['deleted']
             if not isinstance(self.deleted, bool):
                 raise TypeError('deleted must be a boolean')
+         if 'position' in kwargs:
+            self.position = kwargs['position']
 
 
 class Title:
