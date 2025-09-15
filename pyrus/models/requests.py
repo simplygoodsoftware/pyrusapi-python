@@ -86,6 +86,8 @@ class FormRegisterRequest:
                         setattr(self, 'fld{}'.format(fltr.field_id), ",".join(str(x) for x in fltr.values))
                     if fltr.operator == 'is_empty':
                         setattr(self, 'fld{}'.format(fltr.field_id), 'empty')
+                    if fltr.operator == 'exists':
+                        setattr(self, 'fld{}'.format(fltr.field_id), '*')
                 if isinstance(fltr, entities.FormRegisterTaskIdFilter):
                     if fltr.operator == 'equals':
                         setattr(self, 'id', fltr.values)
