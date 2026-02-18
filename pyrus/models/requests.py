@@ -245,7 +245,7 @@ class TaskCommentRequest:
             approvals_added (:obj:`list` of :obj:`list` of :obj:`models.entities.Person`, optional) List of approval steps to add to the task
             approvals_removed (:obj:`list` of :obj:`list` of :obj:`models.entities.Person`, optional) List of approval steps to remove from the task
             approvals_rerequested (:obj:`list` of :obj:`list` of :obj:`models.entities.Person`, optional) List of approval steps to rerequest for the task
-            channel (:obj:`str`) External channel to send notification (email, telegram, facebook, vk, viber, mobile_app, web_widget, instagram, private_channel, whats_app, sms, custom)
+            channel (:obj:`str`) External channel to send notification (email, telegram, facebook, vk, viber, mobile_app, web_widget, instagram, private_channel, whats_app, sms, custom, max_messenger)
     """
 
     def __init__(self, text=None, approval_choice=None, approval_steps=None, action=None,
@@ -463,7 +463,7 @@ class TaskCommentRequest:
             raise ValueError("either due_date or due can be set")
         if channel:
             if isinstance(channel, str):
-                if channel not in ['email', 'telegram', 'facebook', 'vk', 'viber', 'instagram', 'private_channel', 'whats_app', 'mobile_app', 'web_widget', 'sms', 'custom']:
+                if channel not in ['email', 'telegram', 'facebook', 'vk', 'viber', 'instagram', 'private_channel', 'whats_app', 'mobile_app', 'web_widget', 'sms', 'custom', 'max_messenger']:
                     raise TypeError('channel must be correct')
                 self.channel = entities.Channel(type=channel)
             elif isinstance(channel, entities.Channel):
