@@ -601,3 +601,98 @@ class MembersResponse(BaseResponse):
         if 'members' in kwargs:
             self.members = [entities.Person(**member) for member in kwargs['members']]
         super(MembersResponse, self).__init__(**kwargs)
+
+
+class KnowledgeBaseEntityResponse(BaseResponse):
+    __doc__ = BaseResponse.__doc__
+
+    id = None
+    title = None
+    type = None
+    body = None
+    parent_topic_id = None
+    author = None
+    created_at = None
+    updated_at = None
+    last_edited_by = None
+    version = None
+    access_right = None
+    is_open_for_organization = None
+    is_public = None
+
+    def __init__(self, **kwargs):
+        if 'id' in kwargs:
+            self.id = kwargs['id']
+        if 'title' in kwargs:
+            self.title = kwargs['title']
+        if 'type' in kwargs:
+            self.type = kwargs['type']
+        if 'body' in kwargs:
+            self.body = kwargs['body']
+        if 'parent_topic_id' in kwargs:
+            self.parent_topic_id = kwargs['parent_topic_id']
+        if 'author' in kwargs:
+            self.author = entities.KnowledgeBasePersonInfo(**kwargs['author'])
+        if 'created_at' in kwargs:
+            self.created_at = kwargs['created_at']
+        if 'updated_at' in kwargs:
+            self.updated_at = kwargs['updated_at']
+        if 'last_edited_by' in kwargs:
+            self.last_edited_by = entities.KnowledgeBasePersonInfo(**kwargs['last_edited_by'])
+        if 'version' in kwargs:
+            self.version = kwargs['version']
+        if 'access_right' in kwargs:
+            self.access_right = kwargs['access_right']
+        if 'is_open_for_organization' in kwargs:
+            self.is_open_for_organization = kwargs['is_open_for_organization']
+        if 'is_public' in kwargs:
+            self.is_public = kwargs['is_public']
+        super(KnowledgeBaseEntityResponse, self).__init__(**kwargs)
+
+
+class KnowledgeBaseDeleteResponse(BaseResponse):
+    __doc__ = BaseResponse.__doc__
+
+    deleted = None
+
+    def __init__(self, **kwargs):
+        if 'deleted' in kwargs:
+            self.deleted = kwargs['deleted']
+        super(KnowledgeBaseDeleteResponse, self).__init__(**kwargs)
+
+
+class KnowledgeBaseStructureResponse(BaseResponse):
+    __doc__ = BaseResponse.__doc__
+
+    parent_topic_id = None
+    depth = None
+    items = None
+
+    def __init__(self, **kwargs):
+        if 'parent_topic_id' in kwargs:
+            self.parent_topic_id = kwargs['parent_topic_id']
+        if 'depth' in kwargs:
+            self.depth = kwargs['depth']
+        if 'items' in kwargs:
+            self.items = [entities.KnowledgeBaseStructureItem(**item) for item in kwargs['items']]
+        super(KnowledgeBaseStructureResponse, self).__init__(**kwargs)
+
+
+class KnowledgeBasePermissionsResponse(BaseResponse):
+    __doc__ = BaseResponse.__doc__
+
+    global_permission = None
+    inherit = None
+    readers = None
+    editors = None
+
+    def __init__(self, **kwargs):
+        if 'global_permission' in kwargs:
+            self.global_permission = kwargs['global_permission']
+        if 'inherit' in kwargs:
+            self.inherit = kwargs['inherit']
+        if 'readers' in kwargs:
+            self.readers = [entities.KnowledgeBasePersonInfo(**r) for r in kwargs['readers']]
+        if 'editors' in kwargs:
+            self.editors = [entities.KnowledgeBasePersonInfo(**e) for e in kwargs['editors']]
+        super(KnowledgeBasePermissionsResponse, self).__init__(**kwargs)

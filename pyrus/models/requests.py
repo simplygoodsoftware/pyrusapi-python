@@ -919,3 +919,26 @@ class ChangePermissionsRequest:
         if not isinstance(permissions, dict):
             raise TypeError("permissions must be dict")
         self.permissions = permissions
+
+
+class CreateKnowledgeBaseEntityRequest:
+    def __init__(self, type, title, body=None, parent_topic_id=None):
+        self.type = type
+        self.title = title
+        self.body = body
+        self.parent_topic_id = parent_topic_id
+
+
+class UpdateKnowledgeBaseEntityRequest:
+    def __init__(self, title=None, body=None, parent_topic_id=None, parent_topic_id_changed=None):
+        self.title = title
+        self.body = body
+        self.parent_topic_id = parent_topic_id
+        self.parent_topic_id_changed = parent_topic_id_changed
+
+
+class UpdateKnowledgeBasePermissionsRequest:
+    def __init__(self, inherit=None, readers=None, editors=None):
+        self.inherit = inherit
+        self.readers = readers
+        self.editors = editors
