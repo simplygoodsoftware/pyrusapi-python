@@ -7,8 +7,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [2.47.0] - 2026-03-11
 ### Added
 - Knowledge base API: get/create/update/delete entities, get structure, get/update permissions
-### Fixed
-- Fix `_delete_request` call without body
 
 ## [2.46.0] - 2026-02-17
 ## Added
