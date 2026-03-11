@@ -1535,6 +1535,17 @@ class TaskGroup:
 
 
 class KnowledgeBasePersonInfo:
+    """
+        Knowledge base person info
+
+        Attributes:
+            id (:obj:`int`): Person id
+            first_name (:obj:`str`): Person first name
+            last_name (:obj:`str`): Person last name
+            email (:obj:`str`): Person email
+            type (:obj:`str`): Person type
+    """
+
     id = None
     first_name = None
     last_name = None
@@ -1555,6 +1566,21 @@ class KnowledgeBasePersonInfo:
 
 
 class KnowledgeBaseStructureItem:
+    """
+        Knowledge base structure item
+
+        Attributes:
+            id (:obj:`str`): Entity id
+            title (:obj:`str`): Entity title
+            type (:obj:`str`): Entity type ('article' or 'topic')
+            parent_topic_id (:obj:`str`): Parent topic id
+            created_at (:obj:`str`): Creation date
+            updated_at (:obj:`str`): Last update date
+            access_right (:obj:`str`): Access right level ('none', 'read', 'write')
+            is_open_for_organization (:obj:`bool`): Whether entity is open for the organization
+            children (:obj:`list` of :obj:`models.entities.KnowledgeBaseStructureItem`): Child items
+    """
+
     id = None
     title = None
     type = None

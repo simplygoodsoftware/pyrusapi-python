@@ -604,7 +604,25 @@ class MembersResponse(BaseResponse):
 
 
 class KnowledgeBaseEntityResponse(BaseResponse):
-    __doc__ = BaseResponse.__doc__
+    """
+        KnowledgeBaseEntityResponse
+
+        Attributes:
+            id (:obj:`str`): Entity id
+            title (:obj:`str`): Entity title
+            type (:obj:`str`): Entity type ('article' or 'topic')
+            body (:obj:`str`): Entity body in markdown format
+            parent_topic_id (:obj:`str`): Parent topic id
+            author (:obj:`models.entities.KnowledgeBasePersonInfo`): Entity author
+            created_at (:obj:`str`): Creation date
+            updated_at (:obj:`str`): Last update date
+            last_edited_by (:obj:`models.entities.KnowledgeBasePersonInfo`): Last editor
+            version (:obj:`int`): Entity version
+            access_right (:obj:`str`): Access right level ('none', 'read', 'write')
+            is_open_for_organization (:obj:`bool`): Whether entity is open for the organization
+            is_public (:obj:`bool`): Whether entity is public
+    """
+    __doc__ += BaseResponse.__doc__
 
     id = None
     title = None
@@ -651,7 +669,13 @@ class KnowledgeBaseEntityResponse(BaseResponse):
 
 
 class KnowledgeBaseDeleteResponse(BaseResponse):
-    __doc__ = BaseResponse.__doc__
+    """
+        KnowledgeBaseDeleteResponse
+
+        Attributes:
+            deleted (:obj:`bool`): Whether the entity was deleted
+    """
+    __doc__ += BaseResponse.__doc__
 
     deleted = None
 
@@ -662,7 +686,15 @@ class KnowledgeBaseDeleteResponse(BaseResponse):
 
 
 class KnowledgeBaseStructureResponse(BaseResponse):
-    __doc__ = BaseResponse.__doc__
+    """
+        KnowledgeBaseStructureResponse
+
+        Attributes:
+            parent_topic_id (:obj:`str`): Parent topic id
+            depth (:obj:`int`): Depth of the structure tree
+            items (:obj:`list` of :obj:`models.entities.KnowledgeBaseStructureItem`): List of structure items
+    """
+    __doc__ += BaseResponse.__doc__
 
     parent_topic_id = None
     depth = None
@@ -679,7 +711,16 @@ class KnowledgeBaseStructureResponse(BaseResponse):
 
 
 class KnowledgeBasePermissionsResponse(BaseResponse):
-    __doc__ = BaseResponse.__doc__
+    """
+        KnowledgeBasePermissionsResponse
+
+        Attributes:
+            global_permission (:obj:`str`): Global permission level ('none', 'read', 'write')
+            inherit (:obj:`bool`): Whether permissions are inherited from parent
+            readers (:obj:`list` of :obj:`models.entities.KnowledgeBasePersonInfo`): List of persons with read access
+            editors (:obj:`list` of :obj:`models.entities.KnowledgeBasePersonInfo`): List of persons with write access
+    """
+    __doc__ += BaseResponse.__doc__
 
     global_permission = None
     inherit = None

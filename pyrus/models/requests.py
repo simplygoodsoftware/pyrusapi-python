@@ -922,6 +922,16 @@ class ChangePermissionsRequest:
 
 
 class CreateKnowledgeBaseEntityRequest:
+    """
+    CreateKnowledgeBaseEntityRequest
+
+    Args:
+        type (:obj:`str`): Entity type ('article' or 'topic')
+        title (:obj:`str`): Entity title
+        body (:obj:`str`, optional): Entity body in markdown format (required for articles)
+        parent_topic_id (:obj:`str`, optional): Parent topic id
+    """
+
     def __init__(self, type, title, body=None, parent_topic_id=None):
         self.type = type
         self.title = title
@@ -930,6 +940,16 @@ class CreateKnowledgeBaseEntityRequest:
 
 
 class UpdateKnowledgeBaseEntityRequest:
+    """
+    UpdateKnowledgeBaseEntityRequest
+
+    Args:
+        title (:obj:`str`, optional): New entity title
+        body (:obj:`str`, optional): New entity body in markdown format
+        parent_topic_id (:obj:`str`, optional): New parent topic id
+        parent_topic_id_changed (:obj:`bool`, optional): Set to True if parent_topic_id is being changed
+    """
+
     def __init__(self, title=None, body=None, parent_topic_id=None, parent_topic_id_changed=None):
         self.title = title
         self.body = body
@@ -938,6 +958,15 @@ class UpdateKnowledgeBaseEntityRequest:
 
 
 class UpdateKnowledgeBasePermissionsRequest:
+    """
+    UpdateKnowledgeBasePermissionsRequest
+
+    Args:
+        inherit (:obj:`bool`, optional): Whether to inherit permissions from parent
+        readers (:obj:`list` of :obj:`int`, optional): List of person ids with read access
+        editors (:obj:`list` of :obj:`int`, optional): List of person ids with write access
+    """
+
     def __init__(self, inherit=None, readers=None, editors=None):
         self.inherit = inherit
         self.readers = readers

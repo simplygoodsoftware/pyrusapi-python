@@ -825,14 +825,12 @@ class PyrusAPI:
 
     def _post_request(self, url, body):
         headers = self._create_default_headers()
-        if body:
-            data = self.serialize_request(body)
+        data = self.serialize_request(body) if body else None
         return requests.post(url, headers=headers, data=data, proxies=self.proxy)
 
     def _put_request(self, url, body):
         headers = self._create_default_headers()
-        if body:
-            data = self.serialize_request(body)
+        data = self.serialize_request(body) if body else None
         return requests.put(url, headers=headers, data=data, proxies=self.proxy)
     
     def _delete_request(self, url, body):
