@@ -1532,3 +1532,81 @@ class TaskGroup:
             self.has_more = kwargs['has_more']
         if 'tasks' in kwargs:
             self.tasks = [TaskHeader(**task) for task in kwargs['tasks']]
+
+
+class KnowledgeBasePersonInfo:
+    """
+        Knowledge base person info
+
+        Attributes:
+            id (:obj:`int`): Person id
+            first_name (:obj:`str`): Person first name
+            last_name (:obj:`str`): Person last name
+            email (:obj:`str`): Person email
+            type (:obj:`str`): Person type
+    """
+
+    id = None
+    first_name = None
+    last_name = None
+    email = None
+    type = None
+
+    def __init__(self, **kwargs):
+        if 'id' in kwargs:
+            self.id = kwargs['id']
+        if 'first_name' in kwargs:
+            self.first_name = kwargs['first_name']
+        if 'last_name' in kwargs:
+            self.last_name = kwargs['last_name']
+        if 'email' in kwargs:
+            self.email = kwargs['email']
+        if 'type' in kwargs:
+            self.type = kwargs['type']
+
+
+class KnowledgeBaseStructureItem:
+    """
+        Knowledge base structure item
+
+        Attributes:
+            id (:obj:`str`): Entity id
+            title (:obj:`str`): Entity title
+            type (:obj:`str`): Entity type ('article' or 'topic')
+            parent_topic_id (:obj:`str`): Parent topic id
+            created_at (:obj:`str`): Creation date
+            updated_at (:obj:`str`): Last update date
+            access_right (:obj:`str`): Access right level ('none', 'read', 'write')
+            is_open_for_organization (:obj:`bool`): Whether entity is open for the organization
+            children (:obj:`list` of :obj:`models.entities.KnowledgeBaseStructureItem`): Child items
+    """
+
+    id = None
+    title = None
+    type = None
+    parent_topic_id = None
+    created_at = None
+    updated_at = None
+    access_right = None
+    is_open_for_organization = None
+    children = None
+
+    def __init__(self, **kwargs):
+        if 'id' in kwargs:
+            self.id = kwargs['id']
+        if 'title' in kwargs:
+            self.title = kwargs['title']
+        if 'type' in kwargs:
+            self.type = kwargs['type']
+        if 'parent_topic_id' in kwargs:
+            self.parent_topic_id = kwargs['parent_topic_id']
+        if 'created_at' in kwargs:
+            self.created_at = kwargs['created_at']
+        if 'updated_at' in kwargs:
+            self.updated_at = kwargs['updated_at']
+        if 'access_right' in kwargs:
+            self.access_right = kwargs['access_right']
+        if 'is_open_for_organization' in kwargs:
+            self.is_open_for_organization = kwargs['is_open_for_organization']
+        if 'children' in kwargs:
+            self.children = [KnowledgeBaseStructureItem(**child) for child in kwargs['children']]

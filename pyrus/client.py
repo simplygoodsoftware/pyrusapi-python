@@ -656,6 +656,69 @@ class PyrusAPI:
         response = self._perform_post_request('/forms/{}/permissions'.format(form_id), request)
         return resp.PermissionsResponse(**response)
 
+    def get_knowledge_base_entity(self, entity_id):
+        if not isinstance(entity_id, str):
+            raise TypeError('entity_id must be an instance of str')
+
+        response = self._perform_get_request('/knowledgebase/{}'.format(entity_id))
+        return resp.KnowledgeBaseEntityResponse(**response)
+
+    def create_knowledge_base_entity(self, request):
+        if not isinstance(request, req.CreateKnowledgeBaseEntityRequest):
+            raise TypeError('request must be an instance of models.requests.CreateKnowledgeBaseEntityRequest')
+
+        response = self._perform_post_request('/knowledgebase', request)
+        return resp.KnowledgeBaseEntityResponse(**response)
+
+    def update_knowledge_base_entity(self, entity_id, request):
+        if not isinstance(entity_id, str):
+            raise TypeError('entity_id must be an instance of str')
+
+        if not isinstance(request, req.UpdateKnowledgeBaseEntityRequest):
+            raise TypeError('request must be an instance of models.requests.UpdateKnowledgeBaseEntityRequest')
+
+        response = self._perform_put_request('/knowledgebase/{}'.format(entity_id), request)
+        return resp.KnowledgeBaseEntityResponse(**response)
+
+    def delete_knowledge_base_entity(self, entity_id, delete_with_children=False):
+        if not isinstance(entity_id, str):
+            raise TypeError('entity_id must be an instance of str')
+
+        response = self._perform_delete_request(
+            '/knowledgebase/{}?delete_with_children={}'.format(entity_id, str(delete_with_children).lower()))
+        return resp.KnowledgeBaseDeleteResponse(**response)
+
+    def get_knowledge_base_structure(self, parent_topic_id=None, depth=None):
+        url = '/knowledgebase/structure'
+        params = []
+        if parent_topic_id is not None:
+            params.append('parent_topic_id={}'.format(parent_topic_id))
+        if depth is not None:
+            params.append('depth={}'.format(depth))
+
+        if params:
+            url += '?' + '&'.join(params)
+
+        response = self._perform_get_request(url)
+        return resp.KnowledgeBaseStructureResponse(**response)
+
+    def get_knowledge_base_permissions(self, entity_id):
+        if not isinstance(entity_id, str):
+            raise TypeError('entity_id must be an instance of str')
+
+        response = self._perform_get_request('/knowledgebase/{}/permissions'.format(entity_id))
+        return resp.KnowledgeBasePermissionsResponse(**response)
+
+    def update_knowledge_base_permissions(self, entity_id, request):
+        if not isinstance(entity_id, str):
+            raise TypeError('entity_id must be an instance of str')
+
+        if not isinstance(request, req.UpdateKnowledgeBasePermissionsRequest):
+            raise TypeError('request must be an instance of models.requests.UpdateKnowledgeBasePermissionsRequest')
+
+        response = self._perform_put_request('/knowledgebase/{}/permissions'.format(entity_id), request)
+        return resp.KnowledgeBasePermissionsResponse(**response)
+
     def _auth(self):
         url = self._create_auth_url('/auth')
         headers = {
@@ -762,20 +825,17 @@ class PyrusAPI:
 
     def _post_request(self, url, body):
         headers = self._create_default_headers()
-        if body:
-            data = self.serialize_request(body)
+        data = self.serialize_request(body) if body else None
         return requests.post(url, headers=headers, data=data, proxies=self.proxy)
 
     def _put_request(self, url, body):
         headers = self._create_default_headers()
-        if body:
-            data = self.serialize_request(body)
+        data = self.serialize_request(body) if body else None
         return requests.put(url, headers=headers, data=data, proxies=self.proxy)
     
     def _delete_request(self, url, body):
         headers = self._create_default_headers()
-        if body:
-            data = self.serialize_request(body)
+        data = self.serialize_request(body) if body else None
         return requests.delete(url, headers=headers, data=data, proxies=self.proxy)
 
     def _post_file_request(self, url, file_path):

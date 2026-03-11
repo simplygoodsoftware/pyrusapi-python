@@ -293,6 +293,72 @@ request = pyrus.models.requests.ChangePermissionsRequest({1733:'member'})
 changed_permissions = pyrus_client.change_permissions(123, request)
 ```
 
+## Knowledge Base
+
+* Get a knowledge base entity (article or topic):
+
+```python
+response = pyrus_client.get_knowledge_base_entity("LMcleQRnRqB")
+```
+
+* Create an article:
+
+```python
+request = pyrus.models.requests.CreateKnowledgeBaseEntityRequest(
+        type="article",
+        title="My Article",
+        body="Article content in MD format",
+        parent_topic_id="KoSjtyL9EWm")
+response = pyrus_client.create_knowledge_base_entity(request)
+```
+
+* Create a topic:
+
+```python
+request = pyrus.models.requests.CreateKnowledgeBaseEntityRequest(
+        type="topic",
+        title="My Topic")
+response = pyrus_client.create_knowledge_base_entity(request)
+```
+
+* Update a knowledge base entity:
+
+```python
+request = pyrus.models.requests.UpdateKnowledgeBaseEntityRequest(
+        title="Updated Title",
+        body="Updated content in MD format")
+response = pyrus_client.update_knowledge_base_entity("LMcleQRnRqB", request)
+```
+
+* Delete a knowledge base entity:
+
+```python
+response = pyrus_client.delete_knowledge_base_entity("LMcleQRnRqB", delete_with_children=True)
+```
+
+* Get knowledge base structure:
+
+```python
+response = pyrus_client.get_knowledge_base_structure(parent_topic_id="KoSjtyL9EWm", depth=2)
+items = response.items
+```
+
+* Get knowledge base entity permissions:
+
+```python
+response = pyrus_client.get_knowledge_base_permissions("KoSjtyL9EWm")
+```
+
+* Update knowledge base entity permissions:
+
+```python
+request = pyrus.models.requests.UpdateKnowledgeBasePermissionsRequest(
+        inherit=False,
+        readers=[1732, 4368],
+        editors=[2434])
+response = pyrus_client.update_knowledge_base_permissions("KoSjtyL9EWm", request)
+```
+
 ## Support
 
 If you have any questions or comments please send an email to support@pyrus.com
