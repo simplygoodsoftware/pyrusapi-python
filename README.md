@@ -7,8 +7,8 @@ The full documentation for API can be found [here](https://pyrus.com/en/help/api
 
 ## Getting Started
 
-* instal pyrus-api library:
-    * [pip](https://pypi.python.org/pypi/pip) (preffered)
+* install pyrus-api library:
+    * [pip](https://pypi.python.org/pypi/pip) (preferred)
 
         ````
         $ pip install --upgrade pyrus-api
@@ -213,11 +213,11 @@ role_response = pyrus_client.create_role(create_role_request)
 * Update role:
     
 ```python
-Update_role_request = UpdateRoleRequest(
+update_role_request = UpdateRoleRequest(
             name='InternalTechSupport',
             added_members=[2766],
             removed_members=[1233])
-role_response = pyrus_client.update_role(create_role_request)
+role_response = pyrus_client.update_role(role_id, update_role_request)
 ```
 
 ## Profile
@@ -283,14 +283,14 @@ announcement = pyrus_client.create_announcement(request).announcement
 * Get form permissions:
 
 ```python
-permissions = pyrus_client.get_permissions(123)
+permissions = pyrus_client.get_form_permissions(123)
 ```
 
 * Change form permissions:
 
 ```python
 request = pyrus.models.requests.ChangePermissionsRequest({1733:'member'})
-changed_permissions = pyrus_client.change_permissions(123, request)
+changed_permissions = pyrus_client.change_form_permissions(123, request)
 ```
 
 ## Knowledge Base

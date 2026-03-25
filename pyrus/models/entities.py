@@ -66,12 +66,12 @@ class FormFieldInfo:
         Attributes:
             required_step (:obj:`int`): Indicates the step number where the field becomes required for filling
             immutable_step (:obj:`int`): indicates the step number from which the user can't change the field value
-            options (:obj:`list` of :obj:`models.entitites.ChoiceOption`): Choice options for multiple_choice field
+            options (:obj:`list` of :obj:`models.entities.ChoiceOption`): Choice options for multiple_choice field
             catalog_id (:obj:`int`): Catalog id for catalog field
-            columns (:obj:`list` of :obj:`models.entitites.FormField`): Columns description for table field
-            fields (:obj:`list` of :obj:`models.entitites.FormField`): Child fields description for title field
+            columns (:obj:`list` of :obj:`models.entities.FormField`): Columns description for table field
+            fields (:obj:`list` of :obj:`models.entities.FormField`): Child fields description for title field
             decimal_places(:obj:`int`): Number of decimal places for number field
-            multiple_choice (:obj:`bool`, optional): Flag indicating that mutliple values can be selected in Catalog field
+            multiple_choice (:obj:`bool`, optional): Flag indicating that multiple values can be selected in Catalog field
             code (:obj:`str`): Code of the field
     """
 
@@ -111,7 +111,7 @@ class ChoiceOption:
         Attributes:
             choice_id (:obj:`int`): Choice id
             choice_value (:obj:`str`): Choice name
-            fields (:obj:`list` of :obj:`models.entitites.FormField`): Child fields for the specified choice_id
+            fields (:obj:`list` of :obj:`models.entities.FormField`): Child fields for the specified choice_id
             deleted (:obj:`bool`): Is choice deleted
     """
     choice_id = None
@@ -206,7 +206,7 @@ class Task(TaskHeader):
             participants (:obj:`list` of :obj:`models.entities.Person`): List of task participants
         Attributes(Form Task):
             form_id (:obj:`int`): Form template id
-            fields (:obj:`list` of obj`models.entities.FormField`): List of field values
+            fields (:obj:`list` of :obj:`models.entities.FormField`): List of field values
             approvals (:obj:`list` of :obj:`list` of :obj:`models.entities.Person`) List of approval steps.
     """
 
@@ -308,7 +308,7 @@ class TaskWithComments(Task):
             participants (:obj:`list` of :obj:`models.entities.Person`): List of task participants
         Attributes(Form Task):
             form_id (:obj:`int`): Form template id
-            fields (:obj:`list` of obj`models.entities.FormField`): List of field values
+            fields (:obj:`list` of :obj:`models.entities.FormField`): List of field values
             approvals (:obj:`list` of :obj:`list` of :obj:`models.entities.Person`) List of approval steps.
     """
 
@@ -370,9 +370,9 @@ class Person:
             type (:obj:`str`): Person's type (user/bot/role)
             department_id (:obj:`int`): Person's department id
             department_name (:obj:`str`): Person's department
-            phone (:obj:`str`): Person`s phone
-            mobile_phone (:obj:`str`): Person`s mobile_phone
-            position (:obj:`str`): Person`s position
+            phone (:obj:`str`): Person's phone
+            mobile_phone (:obj:`str`): Person's mobile_phone
+            position (:obj:`str`): Person's position
     """
 
     id = None
@@ -513,7 +513,7 @@ class TaskComment:
             action (:obj:`str`): Activity action (finished/reopened)
             added_list_ids (:obj:`list` of :obj:`int`): List of list identifiers to which the task was added
             removed_list_ids (:obj:`list` of :obj:`int`): List of list identifiers from the task was removed
-            comment_as_roles (:obj:`list` of :obj:`models.entites.Role`) List of roles on behalf of which the task was commented
+            comment_as_roles (:obj:`list` of :obj:`models.entities.Role`) List of roles on behalf of which the task was commented
             subject (:obj:`str`): Updated task subject
             scheduled_date (:obj:`datetime`): task scheduled date
             scheduled_datetime_utc (:obj:`datetime`): task scheduled date with utc time
@@ -534,7 +534,7 @@ class TaskComment:
             participants_added (:obj:`list` of :obj:`models.entities.Person`): List of participants added to the task
             participants_removed (:obj:`list` of :obj:`models.entities.Person`): List of participants removed from the task
         Attributes(Form Task comment):
-            field_updates (:obj:`list` of obj`models.entities.FormField`): List of updated field values
+            field_updates (:obj:`list` of :obj:`models.entities.FormField`): List of updated field values
             approval_choice (:obj:`str`): Approval choice (approved/rejected/acknowledged)
             approval_step (:obj:`int`): Step number on which the task was approved
             reset_to_step (:obj:`int`) Step number on which the task was reseted
@@ -805,7 +805,7 @@ class CatalogItem:
             item_id (:obj:`int`, deprecated): Catalog item id
             values (:obj:`list` of :obj:`str`, deprecated): List of catalog values
             headers (:obj:`list` of :obj:`str`): List of catalog headers
-            item_ids (:obj:`list` of :obj:`int`m): List of catalog item ids
+            item_ids (:obj:`list` of :obj:`int`): List of catalog item ids
             rows (:obj:`list` of :obj:`list` of :obj:`str`): List of catalog rows
     """
 
@@ -841,10 +841,10 @@ class CatalogItem:
     @classmethod
     def fromliststr(cls, values):
         if not isinstance(values, list):
-            raise TypeError('lst must be a list of str')
+            raise TypeError('values must be a list of str')
         for item in values:
             if not isinstance(item, str):
-                raise TypeError('lst must be a list of str')
+                raise TypeError('values must be a list of str')
         values = {'values': values}
         return cls(**values)
 
@@ -1020,7 +1020,7 @@ class FormRegisterSort:
 
 class BaseFilter:
     """
-        Base filter. Should never be created explictly
+        Base filter. Should never be created explicitly
     """
 
     def __init__(self, **kwargs):
@@ -1029,7 +1029,7 @@ class BaseFilter:
 
 class FormRegisterTaskIdFilter(BaseFilter):
     """
-        Base form register task id filter. Should never be created explictly
+        Base form register task id filter. Should never be created explicitly
     """
 
     def __init__(self, **kwargs):
@@ -1039,7 +1039,7 @@ class FormRegisterTaskIdFilter(BaseFilter):
 
 class FormRegisterFilter(BaseFilter):
     """
-        Base form register filter. Should never be created explictly
+        Base form register filter. Should never be created explicitly
     """
 
     def __init__(self, **kwargs):
@@ -1144,9 +1144,9 @@ class RangeFilter(FormRegisterFilter):
             raise TypeError('values must be a list.')
         if len(values) != 2:
             raise TypeError('values length must be equal 2.')
-        formated_values = [_get_value(value) for value in values]
+        formatted_values = [_get_value(value) for value in values]
         super(RangeFilter, self). \
-            __init__(field_id=field_id, operator='range', values=formated_values)
+            __init__(field_id=field_id, operator='range', values=formatted_values)
 
 class RangeTaskIdFilter(FormRegisterTaskIdFilter):
     """
@@ -1161,9 +1161,9 @@ class RangeTaskIdFilter(FormRegisterTaskIdFilter):
             raise TypeError('values must be a list.')
         if len(values) != 2:
             raise TypeError('values length must be equal 2.')
-        formated_values = [_get_value(value) for value in values]
+        formatted_values = [_get_value(value) for value in values]
         super(RangeTaskIdFilter, self). \
-            __init__(operator='range', values=formated_values)
+            __init__(operator='range', values=formatted_values)
 
 
 class IsInFilter(FormRegisterFilter):
@@ -1179,24 +1179,24 @@ class IsInFilter(FormRegisterFilter):
         _validate_field_id(field_id)
         if not isinstance(values, list):
             raise TypeError('values must be a list.')
-        formated_values = [_get_value(value) for value in values]
+        formatted_values = [_get_value(value) for value in values]
         super(IsInFilter, self). \
-            __init__(field_id=field_id, operator='is_in', values=formated_values)
+            __init__(field_id=field_id, operator='is_in', values=formatted_values)
 
 class IsInTaskIdFilter(FormRegisterTaskIdFilter):
     """
         Form register is in task id filter
 
-        Attributes:s
+        Attributes:
             value (:obj:`str`): Form field value
     """
 
     def __init__(self, values):
         if not isinstance(values, list):
             raise TypeError('values must be a list.')
-        formated_values = [_get_value(value) for value in values]
+        formatted_values = [_get_value(value) for value in values]
         super(IsInTaskIdFilter, self). \
-            __init__(operator='is_in', values=formated_values)
+            __init__(operator='is_in', values=formatted_values)
 
 
 class IsEmptyFilter(FormRegisterFilter):
