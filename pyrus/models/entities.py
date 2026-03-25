@@ -1610,3 +1610,30 @@ class KnowledgeBaseStructureItem:
             self.is_open_for_organization = kwargs['is_open_for_organization']
         if 'children' in kwargs:
             self.children = [KnowledgeBaseStructureItem(**child) for child in kwargs['children']]
+
+
+class KnowledgeBaseAttachmentInfo:
+    """
+        Knowledge base attachment info
+
+        Attributes:
+            id (:obj:`str`): Attachment unique identifier
+            name (:obj:`str`): Attachment file name
+            size (:obj:`int`): Attachment file size in bytes
+            url (:obj:`str`): Attachment download URL
+    """
+
+    id = None
+    name = None
+    size = None
+    url = None
+
+    def __init__(self, **kwargs):
+        if 'id' in kwargs:
+            self.id = kwargs['id']
+        if 'name' in kwargs:
+            self.name = kwargs['name']
+        if 'size' in kwargs:
+            self.size = kwargs['size']
+        if 'url' in kwargs:
+            self.url = kwargs['url']

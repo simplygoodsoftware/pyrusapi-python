@@ -623,6 +623,7 @@ class KnowledgeBaseEntityResponse(BaseResponse):
             access_right (:obj:`str`): Access right level ('none', 'read', 'write')
             is_open_for_organization (:obj:`bool`): Whether entity is open for the organization
             is_public (:obj:`bool`): Whether entity is public
+            attachments (:obj:`list` of :obj:`models.entities.KnowledgeBaseAttachmentInfo`): Entity attachments
     """
     __doc__ += BaseResponse.__doc__
 
@@ -639,6 +640,7 @@ class KnowledgeBaseEntityResponse(BaseResponse):
     access_right = None
     is_open_for_organization = None
     is_public = None
+    attachments = None
 
     def __init__(self, **kwargs):
         if 'id' in kwargs:
@@ -667,6 +669,8 @@ class KnowledgeBaseEntityResponse(BaseResponse):
             self.is_open_for_organization = kwargs['is_open_for_organization']
         if 'is_public' in kwargs:
             self.is_public = kwargs['is_public']
+        if 'attachments' in kwargs:
+            self.attachments = [entities.KnowledgeBaseAttachmentInfo(**a) for a in kwargs['attachments']]
         super(KnowledgeBaseEntityResponse, self).__init__(**kwargs)
 
 
