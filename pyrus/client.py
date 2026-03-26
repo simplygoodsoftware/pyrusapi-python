@@ -248,9 +248,9 @@ class PyrusAPI:
         Create task. This method returns a created task with a comment.
 
         Args:
-            task_comment_request (:obj:`models.requests.CreateTaskRequest`)
+            create_task_request (:obj:`models.requests.CreateTaskRequest`)
 
-        Returns: 
+        Returns:
             class:`models.responses.TaskResponse` object
         """
         if not isinstance(create_task_request, req.CreateTaskRequest):
@@ -284,7 +284,7 @@ class PyrusAPI:
         Create announcement. This method returns the created announcement.
 
         Args:
-            task_announcement_request (:obj:`models.requests.CreateAnnouncementRequest`)
+            create_announcement_request (:obj:`models.requests.CreateAnnouncementRequest`)
 
         Returns: 
             class:`models.responses.AnnouncementResponse` object
@@ -527,7 +527,6 @@ class PyrusAPI:
                             'of models.requests.CreateMemberRequest')
 
         response = self._perform_post_request('/members', create_member_request)
-        print("~~ create_member: ", response)
         return resp.MemberResponse(**response)
 
     def update_member(self, member_id, update_member_request):
@@ -587,7 +586,7 @@ class PyrusAPI:
             class:`models.responses.TaskListResponse` object
         """
 
-        response = self._perform_get_request('/inbox?item_count={}&=group_item_count={}'.format(tasks_count, group_tasks_count))
+        response = self._perform_get_request('/inbox?item_count={}&group_item_count={}'.format(tasks_count, group_tasks_count))
         return resp.InboxResponse(**response)
 
     def get_calendar_tasks(self, calendar_request):
@@ -779,7 +778,7 @@ class PyrusAPI:
 
     def _perform_request_with_retry(self, path, method, body=None, file_path=None, get_file=False):
         if not isinstance(method, self.HTTPMethod):
-            raise TypeError('method must be an instanse of HTTPMethod Enum.')
+            raise TypeError('method must be an instance of HTTPMethod Enum.')
 
         # try auth if no access token
         if not self.access_token:

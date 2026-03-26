@@ -183,8 +183,8 @@ class AnnouncementResponse(BaseResponse):
 
 class AnnouncementsResponse(BaseResponse):
     """
-        AnnouncementResponse
-        
+        AnnouncementsResponse
+
         Attributes:
             announcements (:obj:`list` of :obj:`models.entities.AnnouncementWithComments`): List of announcements
     """
@@ -194,7 +194,7 @@ class AnnouncementsResponse(BaseResponse):
 
     def __init__(self, **kwargs):
         if 'announcements' in kwargs:
-            self.announcements = [AnnouncementsResponse(**announcement) for announcement in kwargs['announcements']]
+            self.announcements = [entities.AnnouncementWithComments(**announcement) for announcement in kwargs['announcements']]
         super(AnnouncementsResponse, self).__init__(**kwargs)
 
 
@@ -363,10 +363,10 @@ class SyncCatalogResponse(BaseResponse):
         
         Attributes:
             apply (:obj:`bool`): Indicates if changes were applied
-            added (:obj:`list` of obj`models.entities.CatalogItem`): Added catalog items
-            deleted (:obj:`list` of obj`models.entities.CatalogItem`): Deleted catalog items
-            updated (:obj:`list` of obj`models.entities.CatalogItem`): Updated catalog items
-            catalog_headers (:obj:`list` of obj`models.entities.CatalogHeader`): List of catalog headers
+            added (:obj:`list` of :obj:`models.entities.CatalogItem`): Added catalog items
+            deleted (:obj:`list` of :obj:`models.entities.CatalogItem`): Deleted catalog items
+            updated (:obj:`list` of :obj:`models.entities.CatalogItem`): Updated catalog items
+            catalog_headers (:obj:`list` of :obj:`models.entities.CatalogHeader`): List of catalog headers
     """
     __doc__ += BaseResponse.__doc__
 
@@ -404,7 +404,7 @@ class ProfileResponse(BaseResponse):
             email(:obj:`str`): Person email
             locale(:obj:`str`): Person locale (ru-RU/en-US/en-GB)
             organization_id(:obj:`int`) Person organization id
-            organization(:obj:`obj`models.entities.Organization) Person organization
+            organization(:obj:`models.entities.Organization`) Person organization
     """
     __doc__ += BaseResponse.__doc__
 
@@ -441,7 +441,7 @@ class CalendarResponse(BaseResponse):
             Attributes:
                 tasks (:obj:`list` of :obj:`models.entities.TaskWithComments`): List of the task with only last comment in the specified list
                 has_more (:obj:`bool`): True if not all tasks from the list were returned. False otherwise
-                meetings (:obj:`list`) of :obj:`models.entites.Meeting`): List of mettings
+                meetings (:obj:`list` of :obj:`models.entities.Meeting`): List of meetings
         """
     __doc__ += BaseResponse.__doc__
 
@@ -495,6 +495,7 @@ class RoleResponse(BaseResponse):
     id = None
     name = None
     banned = None
+    fired = None
     member_ids = None
     avatar_id = None
     external_avatar_id = None
@@ -519,8 +520,8 @@ class RoleResponse(BaseResponse):
 
 class RolesResponse(BaseResponse):
     """
-        RoleResponse
-        
+        RolesResponse
+
         Attributes:
             roles (:obj:`list` of :obj:`models.entities.Role`): List of roles in user's organization
     """
@@ -558,6 +559,7 @@ class MemberResponse(BaseResponse):
     email = None
     status = None
     avatar_id = None
+    external_avatar_id = None
     type = None
     department_id = None
     department_name = None
