@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Task base API: added 'direction' property to Channel
 
 ## [2.48.1] - 2026-03-26
-### Added
+### Fixed
 - Any typos
 
 ## [2.48.0] - 2026-03-24
