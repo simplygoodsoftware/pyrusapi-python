@@ -6,8 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 ## [2.49.0] - 2026-05-27
-### Fixed
-- Knowledge base API: added 'direction' property to Channel
+### Added
+- Task base API: added 'direction' property to Channel
 
 ## [2.48.1] - 2026-03-26
 ### Added
