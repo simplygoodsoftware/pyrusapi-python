@@ -1381,6 +1381,7 @@ class Channel:
     """
 
     type = None
+    direction = None
     to = None
     sender = None
     phone = None
@@ -1388,6 +1389,8 @@ class Channel:
     def __init__(self, **kwargs):
         if 'type' in kwargs:
             self.type = kwargs['type']
+        if 'direction' in kwargs:
+            self.direction = kwargs['direction']
         if 'to' in kwargs:
             self.to = kwargs['to']
         if 'from' in kwargs:
