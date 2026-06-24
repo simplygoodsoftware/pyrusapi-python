@@ -149,7 +149,7 @@ class FormRegisterRequest:
         if sort:
             if not isinstance(sort, entities.FormRegisterSort):
                 raise TypeError("sort must be entities.FormRegisterSort")
-            if sort.type != 'tsk':
+            if sort.type != 'id':
                 raise TypeError('only sorting by task id is supported')
             setattr(self, 'sort', sort.type)
 
