@@ -529,6 +529,7 @@ class TaskComment:
             due_date (:obj:`datetime`): Task due date
             due (:obj:`datetime`): Task due date with time
             duration (:obj:`int`): Task duration in minutes
+            meeting_action (:obj:`models.entities.MeetingAction`): Meeting action description attached to the comment
         Attributes(Simple Task comment):
             reassign_to (:obj:`models.entities.Person`): Person to whom the task was reassigned
             participants_added (:obj:`list` of :obj:`models.entities.Person`): List of participants added to the task
@@ -582,6 +583,7 @@ class TaskComment:
     reply_note_id = None
     skip_notification = None
     skip_auto_reopen = None
+    meeting_action = None
 
     @property
     def flat_field_updates(self):
@@ -675,6 +677,8 @@ class TaskComment:
             self.skip_notification = kwargs['skip_notification']
         if 'skip_auto_reopen' in kwargs:
             self.skip_auto_reopen = kwargs['skip_auto_reopen']
+        if 'meeting_action' in kwargs and kwargs['meeting_action'] is not None:
+            self.meeting_action = MeetingAction(**kwargs['meeting_action'])
 
 class TaskStep:
     """
@@ -1509,6 +1513,114 @@ class Meeting:
             self.shared_to_email = kwargs['shared_to_email']
         if 'deleted' in kwargs:
             self.deleted = kwargs['deleted']
+
+
+class MeetingPersonInfo:
+    """
+        Meeting person info
+
+        Attributes:
+            id (:obj:`int`): Person id
+            first_name (:obj:`str`): Person first name
+            last_name (:obj:`str`): Person last name
+            email (:obj:`str`): Person email (null for cross-organization users and roles)
+    """
+
+    id = None
+    first_name = None
+    last_name = None
+    email = None
+
+    def __init__(self, **kwargs):
+        if 'id' in kwargs:
+            self.id = kwargs['id']
+        if 'first_name' in kwargs:
+            self.first_name = kwargs['first_name']
+        if 'last_name' in kwargs:
+            self.last_name = kwargs['last_name']
+        if 'email' in kwargs:
+            self.email = kwargs['email']
+
+
+class MeetingMember:
+    """
+        Meeting member
+
+        Attributes:
+            person (:obj:`models.entities.MeetingPersonInfo`): Member person info
+            status (:obj:`str`): Member status. One of 'undefined', 'going', 'maybe', 'not_going', 'going_virtually', 'going_to_meeting_room'
+    """
+
+    person = None
+    status = None
+
+    def __init__(self, **kwargs):
+        if 'person' in kwargs:
+            self.person = MeetingPersonInfo(**kwargs['person'])
+        if 'status' in kwargs:
+            self.status = kwargs['status']
+
+
+class MeetingRoom:
+    """
+        Meeting room
+
+        Attributes:
+            id (:obj:`int`): Meeting room id
+            name (:obj:`str`): Meeting room name
+    """
+
+    id = None
+    name = None
+
+    def __init__(self, **kwargs):
+        if 'id' in kwargs:
+            self.id = kwargs['id']
+        if 'name' in kwargs:
+            self.name = kwargs['name']
+
+
+class MeetingAction:
+    """
+        Meeting action description attached to task comments
+
+        Attributes:
+            action_type (:obj:`str`): One of 'added', 'updated', 'deleted'
+            meeting_id (:obj:`int`): Meeting id
+            type (:obj:`str`): Meeting type ('offline', 'zoom', 'google_meet', 'yandex_telemost')
+            start_time (:obj:`datetime`): Meeting start time
+            duration_minutes (:obj:`int`): Meeting duration in minutes
+            title (:obj:`str`): Meeting title
+            note (:obj:`str`): Meeting note
+            join_parameters (:obj:`models.entities.MeetingJoinParameters`): Meeting join parameters (null for offline)
+    """
+
+    action_type = None
+    meeting_id = None
+    type = None
+    start_time = None
+    duration_minutes = None
+    title = None
+    note = None
+    join_parameters = None
+
+    def __init__(self, **kwargs):
+        if 'action_type' in kwargs:
+            self.action_type = kwargs['action_type']
+        if 'meeting_id' in kwargs:
+            self.meeting_id = kwargs['meeting_id']
+        if 'type' in kwargs:
+            self.type = kwargs['type']
+        if 'start_time' in kwargs and kwargs['start_time'] is not None:
+            self.start_time = _set_utc_timezone(datetime.strptime(kwargs['start_time'], constants.DATE_TIME_FORMAT))
+        if 'duration_minutes' in kwargs:
+            self.duration_minutes = kwargs['duration_minutes']
+        if 'title' in kwargs:
+            self.title = kwargs['title']
+        if 'note' in kwargs:
+            self.note = kwargs['note']
+        if 'join_parameters' in kwargs and kwargs['join_parameters'] is not None:
+            self.join_parameters = MeetingJoinParameters(**kwargs['join_parameters'])
 
 
 class TaskGroup:

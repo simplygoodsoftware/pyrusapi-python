@@ -2,7 +2,9 @@
 # pylint: disable=R0903
 # pylint: disable=too-many-instance-attributes
 
+from datetime import datetime
 from . import entities
+from . import constants
 
 
 class BaseResponse:
@@ -743,3 +745,103 @@ class KnowledgeBasePermissionsResponse(BaseResponse):
         if 'editors' in kwargs:
             self.editors = [entities.KnowledgeBasePersonInfo(**e) for e in kwargs['editors']]
         super(KnowledgeBasePermissionsResponse, self).__init__(**kwargs)
+
+
+class MeetingResponse(BaseResponse):
+    """
+        MeetingResponse
+
+        Attributes:
+            id (:obj:`int`): Meeting id
+            type (:obj:`str`): Meeting type ('offline', 'zoom', 'google_meet', 'yandex_telemost')
+            start_time (:obj:`datetime`): Meeting start time
+            duration_minutes (:obj:`int`): Meeting duration in minutes
+            title (:obj:`str`): Meeting title
+            note (:obj:`str`): Meeting note
+            creator (:obj:`models.entities.MeetingPersonInfo`): Meeting creator
+            task_ids (:obj:`list` of :obj:`int`): Ids of tasks linked to the meeting
+            members (:obj:`list` of :obj:`models.entities.MeetingMember`): Meeting members
+            meeting_rooms (:obj:`list` of :obj:`models.entities.MeetingRoom`): Meeting rooms
+            join_parameters (:obj:`models.entities.MeetingJoinParameters`): Meeting join parameters (null for offline)
+            shared_calendar_event_id (:obj:`str`): Unique identifier for external users
+            should_be_shared_to_external_person (:obj:`bool`): Whether the meeting should be shared to external person by email
+    """
+    __doc__ += BaseResponse.__doc__
+
+    id = None
+    type = None
+    start_time = None
+    duration_minutes = None
+    title = None
+    note = None
+    creator = None
+    task_ids = None
+    members = None
+    meeting_rooms = None
+    join_parameters = None
+    shared_calendar_event_id = None
+    should_be_shared_to_external_person = None
+
+    def __init__(self, **kwargs):
+        if 'id' in kwargs:
+            self.id = kwargs['id']
+        if 'type' in kwargs:
+            self.type = kwargs['type']
+        if 'start_time' in kwargs and kwargs['start_time'] is not None:
+            self.start_time = entities._set_utc_timezone(
+                datetime.strptime(kwargs['start_time'], constants.DATE_TIME_FORMAT))
+        if 'duration_minutes' in kwargs:
+            self.duration_minutes = kwargs['duration_minutes']
+        if 'title' in kwargs:
+            self.title = kwargs['title']
+        if 'note' in kwargs:
+            self.note = kwargs['note']
+        if 'creator' in kwargs and kwargs['creator'] is not None:
+            self.creator = entities.MeetingPersonInfo(**kwargs['creator'])
+        if 'task_ids' in kwargs:
+            self.task_ids = list(kwargs['task_ids']) if kwargs['task_ids'] is not None else None
+        if 'members' in kwargs and kwargs['members'] is not None:
+            self.members = [entities.MeetingMember(**m) for m in kwargs['members']]
+        if 'meeting_rooms' in kwargs and kwargs['meeting_rooms'] is not None:
+            self.meeting_rooms = [entities.MeetingRoom(**r) for r in kwargs['meeting_rooms']]
+        if 'join_parameters' in kwargs and kwargs['join_parameters'] is not None:
+            self.join_parameters = entities.MeetingJoinParameters(**kwargs['join_parameters'])
+        if 'shared_calendar_event_id' in kwargs:
+            self.shared_calendar_event_id = kwargs['shared_calendar_event_id']
+        if 'should_be_shared_to_external_person' in kwargs:
+            self.should_be_shared_to_external_person = kwargs['should_be_shared_to_external_person']
+        super(MeetingResponse, self).__init__(**kwargs)
+
+
+class MeetingRoomsResponse(BaseResponse):
+    """
+        MeetingRoomsResponse
+
+        Attributes:
+            meeting_rooms (:obj:`list` of :obj:`models.entities.MeetingRoom`): List of meeting rooms
+    """
+    __doc__ += BaseResponse.__doc__
+
+    meeting_rooms = None
+
+    def __init__(self, **kwargs):
+        if 'meeting_rooms' in kwargs and kwargs['meeting_rooms'] is not None:
+            self.meeting_rooms = [entities.MeetingRoom(**r) for r in kwargs['meeting_rooms']]
+        super(MeetingRoomsResponse, self).__init__(**kwargs)
+
+
+class DeleteMeetingResponse(BaseResponse):
+    """
+        DeleteMeetingResponse
+
+        Attributes:
+            deleted (:obj:`bool`): Whether the meeting was deleted
+    """
+    __doc__ += BaseResponse.__doc__
+
+    deleted = None
+
+    def __init__(self, **kwargs):
+        if 'deleted' in kwargs:
+            self.deleted = kwargs['deleted']
+        super(DeleteMeetingResponse, self).__init__(**kwargs)

@@ -971,3 +971,108 @@ class UpdateKnowledgeBasePermissionsRequest:
         self.inherit = inherit
         self.readers = readers
         self.editors = editors
+
+
+class CreateMeetingRequest:
+    """
+    CreateMeetingRequest
+
+    Args:
+        type (:obj:`str`): Meeting type ('offline', 'zoom', 'google_meet', 'yandex_telemost')
+        start_time (:obj:`datetime`): Meeting start time
+        duration_minutes (:obj:`int`): Meeting duration in minutes
+        title (:obj:`str`): Meeting title
+        note (:obj:`str`, optional): Meeting note
+        member_ids (:obj:`list` of :obj:`int`, optional): Meeting member ids
+        meeting_room_ids (:obj:`list` of :obj:`int`, optional): Meeting room ids
+        task_ids (:obj:`list` of :obj:`int`, optional): Ids of tasks to link the meeting to
+        should_be_shared_to_external_person (:obj:`bool`, optional): Whether the meeting should be shared to external person by email
+    """
+
+    def __init__(self, type, start_time, duration_minutes, title,
+                 note=None, member_ids=None, meeting_room_ids=None, task_ids=None,
+                 should_be_shared_to_external_person=None):
+        if not isinstance(type, str):
+            raise TypeError('type must be str')
+        if not isinstance(start_time, datetime):
+            raise TypeError('start_time must be datetime')
+        if not isinstance(duration_minutes, int):
+            raise TypeError('duration_minutes must be int')
+        if not isinstance(title, str):
+            raise TypeError('title must be str')
+
+        self.type = type
+        self.start_time = datetime.strftime(start_time, constants.DATE_TIME_FORMAT)
+        self.duration_minutes = duration_minutes
+        self.title = title
+        self.note = note
+        self.member_ids = member_ids
+        self.meeting_room_ids = meeting_room_ids
+        self.task_ids = task_ids
+        self.should_be_shared_to_external_person = should_be_shared_to_external_person
+
+
+class UpdateMeetingRequest:
+    """
+    UpdateMeetingRequest. Full-replace of meeting parameters and participants.
+    Task links and the personal status are managed by separate endpoints.
+
+    Args:
+        type (:obj:`str`): Meeting type ('offline', 'zoom', 'google_meet', 'yandex_telemost')
+        start_time (:obj:`datetime`): Meeting start time
+        duration_minutes (:obj:`int`): Meeting duration in minutes
+        title (:obj:`str`): Meeting title
+        note (:obj:`str`, optional): Meeting note
+        member_ids (:obj:`list` of :obj:`int`, optional): Meeting member ids
+        meeting_room_ids (:obj:`list` of :obj:`int`, optional): Meeting room ids
+        should_be_shared_to_external_person (:obj:`bool`, optional): Whether the meeting should be shared to external person by email
+    """
+
+    def __init__(self, type, start_time, duration_minutes, title,
+                 note=None, member_ids=None, meeting_room_ids=None,
+                 should_be_shared_to_external_person=None):
+        if not isinstance(type, str):
+            raise TypeError('type must be str')
+        if not isinstance(start_time, datetime):
+            raise TypeError('start_time must be datetime')
+        if not isinstance(duration_minutes, int):
+            raise TypeError('duration_minutes must be int')
+        if not isinstance(title, str):
+            raise TypeError('title must be str')
+
+        self.type = type
+        self.start_time = datetime.strftime(start_time, constants.DATE_TIME_FORMAT)
+        self.duration_minutes = duration_minutes
+        self.title = title
+        self.note = note
+        self.member_ids = member_ids
+        self.meeting_room_ids = meeting_room_ids
+        self.should_be_shared_to_external_person = should_be_shared_to_external_person
+
+
+class UpdateMeetingTasksRequest:
+    """
+    UpdateMeetingTasksRequest. Bulk add/remove of meeting task links.
+
+    Args:
+        add (:obj:`list` of :obj:`int`, optional): Task ids to link to the meeting
+        remove (:obj:`list` of :obj:`int`, optional): Task ids to unlink from the meeting
+    """
+
+    def __init__(self, add=None, remove=None):
+        self.add = add
+        self.remove = remove
+
+
+class UpdateMeetingMyStatusRequest:
+    """
+    UpdateMeetingMyStatusRequest. Change the current user's status in the meeting.
+
+    Args:
+        status (:obj:`str`): One of 'undefined', 'going', 'maybe', 'not_going', 'going_virtually', 'going_to_meeting_room'
+    """
+
+    def __init__(self, status):
+        if not isinstance(status, str):
+            raise TypeError('status must be str')
+        self.status = status
