@@ -718,6 +718,122 @@ class PyrusAPI:
         response = self._perform_put_request('/knowledgebase/{}/permissions'.format(entity_id), request)
         return resp.KnowledgeBasePermissionsResponse(**response)
 
+    def create_meeting(self, request):
+        """
+        Create a meeting. This method returns the created meeting.
+
+        Args:
+            request (:obj:`models.requests.CreateMeetingRequest`): Meeting data.
+
+        Returns:
+            class:`models.responses.MeetingResponse` object
+        """
+        if not isinstance(request, req.CreateMeetingRequest):
+            raise TypeError('request must be an instance of models.requests.CreateMeetingRequest')
+
+        response = self._perform_post_request('/meetings', request)
+        return resp.MeetingResponse(**response)
+
+    def get_meeting(self, meeting_id):
+        """
+        Get a meeting.
+
+        Args:
+            meeting_id (:obj:`int`): Meeting id
+
+        Returns:
+            class:`models.responses.MeetingResponse` object
+        """
+        if not isinstance(meeting_id, int):
+            raise TypeError('meeting_id must be an instance of int')
+
+        response = self._perform_get_request('/meetings/{}'.format(meeting_id))
+        return resp.MeetingResponse(**response)
+
+    def update_meeting(self, meeting_id, request):
+        """
+        Update a meeting (full-replace of parameters and participants).
+        Task links and the personal status are managed by separate methods.
+
+        Args:
+            meeting_id (:obj:`int`): Meeting id
+            request (:obj:`models.requests.UpdateMeetingRequest`): Meeting data.
+
+        Returns:
+            class:`models.responses.MeetingResponse` object
+        """
+        if not isinstance(meeting_id, int):
+            raise TypeError('meeting_id must be an instance of int')
+        if not isinstance(request, req.UpdateMeetingRequest):
+            raise TypeError('request must be an instance of models.requests.UpdateMeetingRequest')
+
+        response = self._perform_put_request('/meetings/{}'.format(meeting_id), request)
+        return resp.MeetingResponse(**response)
+
+    def update_meeting_tasks(self, meeting_id, request):
+        """
+        Bulk add/remove of meeting task links.
+
+        Args:
+            meeting_id (:obj:`int`): Meeting id
+            request (:obj:`models.requests.UpdateMeetingTasksRequest`): Task link changes.
+
+        Returns:
+            class:`models.responses.MeetingResponse` object
+        """
+        if not isinstance(meeting_id, int):
+            raise TypeError('meeting_id must be an instance of int')
+        if not isinstance(request, req.UpdateMeetingTasksRequest):
+            raise TypeError('request must be an instance of models.requests.UpdateMeetingTasksRequest')
+
+        response = self._perform_post_request('/meetings/{}/tasks'.format(meeting_id), request)
+        return resp.MeetingResponse(**response)
+
+    def update_meeting_my_status(self, meeting_id, request):
+        """
+        Change the current user's status in the meeting.
+
+        Args:
+            meeting_id (:obj:`int`): Meeting id
+            request (:obj:`models.requests.UpdateMeetingMyStatusRequest`): Status change.
+
+        Returns:
+            class:`models.responses.MeetingResponse` object
+        """
+        if not isinstance(meeting_id, int):
+            raise TypeError('meeting_id must be an instance of int')
+        if not isinstance(request, req.UpdateMeetingMyStatusRequest):
+            raise TypeError('request must be an instance of models.requests.UpdateMeetingMyStatusRequest')
+
+        response = self._perform_put_request('/meetings/{}/my-status'.format(meeting_id), request)
+        return resp.MeetingResponse(**response)
+
+    def delete_meeting(self, meeting_id):
+        """
+        Delete a meeting.
+
+        Args:
+            meeting_id (:obj:`int`): Meeting id
+
+        Returns:
+            class:`models.responses.DeleteMeetingResponse` object
+        """
+        if not isinstance(meeting_id, int):
+            raise TypeError('meeting_id must be an instance of int')
+
+        response = self._perform_delete_request('/meetings/{}'.format(meeting_id))
+        return resp.DeleteMeetingResponse(**response)
+
+    def get_meeting_rooms(self):
+        """
+        Get the list of meeting rooms in the user's organization.
+
+        Returns:
+            class:`models.responses.MeetingRoomsResponse` object
+        """
+        response = self._perform_get_request('/meetings/meeting-rooms')
+        return resp.MeetingRoomsResponse(**response)
+
     def _auth(self):
         url = self._create_auth_url('/auth')
         headers = {

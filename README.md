@@ -359,6 +359,71 @@ request = pyrus.models.requests.UpdateKnowledgeBasePermissionsRequest(
 response = pyrus_client.update_knowledge_base_permissions("KoSjtyL9EWm", request)
 ```
 
+## Meetings
+
+* Create a meeting linked to one or more tasks:
+
+```python
+request = pyrus.models.requests.CreateMeetingRequest(
+        type="zoom",
+        start_time=datetime.datetime(2026, 6, 25, 14, 0, 0),
+        duration_minutes=60,
+        title="Sync up",
+        note="Quarterly planning",
+        member_ids=[1733, 2434],
+        meeting_room_ids=[42],
+        task_ids=[10501])
+meeting = pyrus_client.create_meeting(request)
+```
+
+* Get a meeting:
+
+```python
+meeting = pyrus_client.get_meeting(7821)
+```
+
+* Update a meeting (full-replace of parameters and participants):
+
+```python
+request = pyrus.models.requests.UpdateMeetingRequest(
+        type="offline",
+        start_time=datetime.datetime(2026, 6, 25, 15, 0, 0),
+        duration_minutes=45,
+        title="Sync up (rescheduled)",
+        member_ids=[1733],
+        meeting_room_ids=[42])
+meeting = pyrus_client.update_meeting(7821, request)
+```
+
+* Bulk add/remove task links:
+
+```python
+request = pyrus.models.requests.UpdateMeetingTasksRequest(
+        add=[10502, 10503],
+        remove=[10501])
+meeting = pyrus_client.update_meeting_tasks(7821, request)
+```
+
+* Change the current user's status in the meeting:
+
+```python
+request = pyrus.models.requests.UpdateMeetingMyStatusRequest(status="going")
+meeting = pyrus_client.update_meeting_my_status(7821, request)
+```
+
+* Delete a meeting:
+
+```python
+response = pyrus_client.delete_meeting(7821)
+```
+
+* Get meeting rooms of the organization:
+
+```python
+response = pyrus_client.get_meeting_rooms()
+rooms = response.meeting_rooms
+```
+
 ## Support
 
 If you have any questions or comments please send an email to support@pyrus.com
