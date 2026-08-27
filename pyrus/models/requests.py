@@ -476,6 +476,8 @@ class TaskCommentRequest:
                 raise TypeError('integration_id must be an int')
             if not channel:
                 raise ValueError("integration_id can only be used with channel")
+            elif channel.type != None and channel.type != "custom":
+                raise ValueError("integration_id can only be used with channel type = 'custom'")
             self.integration_id = integration_id    
         if spent_minutes:
             if not isinstance(spent_minutes, int):
