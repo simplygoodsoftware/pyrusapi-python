@@ -476,7 +476,7 @@ class TaskCommentRequest:
                 raise TypeError('integration_id must be an int')
             if not channel:
                 raise ValueError("integration_id can only be used with due")
-            self.duration = duration    
+            self.integration_id = integration_id    
         if spent_minutes:
             if not isinstance(spent_minutes, int):
                 raise TypeError('spent_minutes must be an int')
