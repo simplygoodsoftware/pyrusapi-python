@@ -246,6 +246,7 @@ class TaskCommentRequest:
             approvals_removed (:obj:`list` of :obj:`list` of :obj:`models.entities.Person`, optional) List of approval steps to remove from the task
             approvals_rerequested (:obj:`list` of :obj:`list` of :obj:`models.entities.Person`, optional) List of approval steps to rerequest for the task
             channel (:obj:`str`) External channel to send notification (email, telegram, facebook, vk, viber, mobile_app, web_widget, instagram, private_channel, whats_app, sms, custom, max_messenger)
+            integration_id (:obj:`int`, optional): Id of the external integration to be used with channel type = "custom"
     """
 
     def __init__(self, text=None, approval_choice=None, approval_steps=None, action=None,
@@ -257,7 +258,7 @@ class TaskCommentRequest:
                  subscribers_rerequested=None, subject=None,
                  participants_removed=None, channel=None, spent_minutes=None,
                  skip_satisfaction = None, edit_comment_id = None, skip_notification = None,
-                 skip_auto_reopen = None):
+                 skip_auto_reopen = None, integration_id = None):
         if text:
             self.text = text
         if subject:
@@ -470,7 +471,12 @@ class TaskCommentRequest:
                 self.channel = channel
             else:
                 raise TypeError('channel must be str or Channel obj')
-            
+        if integration_id:
+            if not isinstance(integration_id, int):
+                raise TypeError('integration_id must be an int')
+            if not channel:
+                raise ValueError("integration_id can only be used with due")
+            self.duration = duration    
         if spent_minutes:
             if not isinstance(spent_minutes, int):
                 raise TypeError('spent_minutes must be an int')
