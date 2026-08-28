@@ -47,6 +47,8 @@ class ChannelHandler(jsonpickle.handlers.BaseHandler):
         p = jsonpickle.Pickler(unpicklable=False)
         if obj.type:
             data['type'] = obj.type
+        if obj.integration_id is not None:
+            data['integration_id'] = obj.integration_id
         if obj.phone:
             data['phone'] = obj.phone
         if obj.to:

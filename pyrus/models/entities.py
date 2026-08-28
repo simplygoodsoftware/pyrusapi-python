@@ -1375,12 +1375,14 @@ class Channel:
 
         Attributes:
             type (:obj:`str`): Channel type (email, telegram, web, facebook, vk, viber, mobile_app, web_widget, moy_sklad, zadarma, amo_crm, beeline, api_telephony, zoom, instagram, private_channel, web_form, whats_app, sms, custom)
+            integration_id (:obj:`int`): External integration id for a custom channel
             to (:obj:`models.entities.ChannelUser`): Notification recipient
             sender (:obj:`models.entities.ChannelUser`): Notification sender
             phone (:obj:`str`): Phone number for send sms
     """
 
     type = None
+    integration_id = None
     direction = None
     to = None
     sender = None
@@ -1389,6 +1391,8 @@ class Channel:
     def __init__(self, **kwargs):
         if 'type' in kwargs:
             self.type = kwargs['type']
+        if 'integration_id' in kwargs:
+            self.integration_id = kwargs['integration_id']
         if 'direction' in kwargs:
             self.direction = kwargs['direction']
         if 'to' in kwargs:
