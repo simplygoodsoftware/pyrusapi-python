@@ -79,6 +79,13 @@ request = pyrus.models.requests.TaskCommentRequest(text="hello", action="finishe
 task = pyrus_client.comment_task(tasks[0].id, request).task
 ```
 
+* Add task comment to the custom channel:
+
+```python
+request = pyrus.models.requests.TaskCommentRequest(text="hello", action="finished", channel="custom", integration_id=999999)
+task = pyrus_client.comment_task(tasks[0].id, request).task
+```
+
 * Create a task:
 
 ```python
