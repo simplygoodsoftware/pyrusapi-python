@@ -26,12 +26,13 @@ class FormRegisterRequest:
             item_count (:obj:`int`, optional): Max count of tasks (item_count > 0 & item_count <= 20000)
             due_filter (:obj:`str` or :obj:`list` of :obj:`int`, optional): Task due filter. (overdue/overdue_on_step/past_due/list of overdue_steps)
             sort (:obj:`models.entities.FormRegisterSort`, optional): Sort, currently only works by task Ids.
+            include_text (:obj:`str`, optional): Include only tasks containing the text (full-text search, up to 300 characters)
     """
 
     def __init__(self, steps=None, include_archived=None, filters=None, modified_before=None, modified_after=None,
                  field_ids=None, format=None, delimiter=None, simple_format=None, encoding=None,
                  closed_before=None, closed_after=None, created_before=None, created_after=None, task_ids = None, item_count = None, due_filter=None,
-                 sort=None):
+                 sort=None, include_text=None):
 
         if steps:
             if not isinstance(steps, list):
@@ -152,6 +153,11 @@ class FormRegisterRequest:
             if sort.type != 'id':
                 raise TypeError('only sorting by task id is supported')
             setattr(self, 'sort', sort.type)
+
+        if include_text:
+            if not isinstance(include_text, str):
+                raise TypeError('include_text must be a string')
+            self.include_text = include_text
 
 class TaskListRequest:
     """
