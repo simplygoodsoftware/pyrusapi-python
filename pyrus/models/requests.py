@@ -801,6 +801,43 @@ class CalendarRequest:
         self.filter_mask = filter_mask
         self.include_meetings = include_meetings
 
+class CreateBotRequest:
+    """Bot settings and optional administrator IDs for creation."""
+
+    def __init__(self, name, hook_url=None, external_id=None, add_supervisors=None):
+        self.name = name
+        if hook_url is not None:
+            self.hook_url = hook_url
+        if external_id is not None:
+            self.external_id = external_id
+        if add_supervisors is not None:
+            self.add_supervisors = add_supervisors
+
+
+class UpdateBotRequest:
+    """Bot settings and administrator IDs to add or remove."""
+
+    def __init__(self, name=None, hook_url=None, is_enabled=None, bot_settings=None,
+                 description=None, rights=None, send_only_last_comment=None, locale=None,
+                 time_zone_offset=None, add_supervisors=None, remove_supervisors=None):
+        fields = {
+            'name': name,
+            'hook_url': hook_url,
+            'is_enabled': is_enabled,
+            'bot_settings': bot_settings,
+            'description': description,
+            'rights': rights,
+            'send_only_last_comment': send_only_last_comment,
+            'locale': locale,
+            'time_zone_offset': time_zone_offset,
+            'add_supervisors': add_supervisors,
+            'remove_supervisors': remove_supervisors,
+        }
+        for field, value in fields.items():
+            if value is not None:
+                setattr(self, field, value)
+
+
 class CreateRoleRequest:
     """
         CreateRoleRequest

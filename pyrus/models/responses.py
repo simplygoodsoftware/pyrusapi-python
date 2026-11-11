@@ -477,6 +477,22 @@ class PermissionsResponse(BaseResponse):
                 self.permissions[int(key)] = kwargs['permissions'][key]
         super(PermissionsResponse, self).__init__(**kwargs)
 
+class BotResponse(BaseResponse, entities.Bot):
+    """Bot profile returned after creating or updating a bot."""
+
+    def __init__(self, **kwargs):
+        super(BotResponse, self).__init__(**kwargs)
+        entities.Bot.__init__(self, **kwargs)
+
+
+class BotsResponse(BaseResponse):
+    """Bots available to the caller."""
+
+    def __init__(self, **kwargs):
+        super(BotsResponse, self).__init__(**kwargs)
+        self.bots = [entities.Bot(**bot) for bot in kwargs.get('bots', [])]
+
+
 class RoleResponse(BaseResponse):
     """
         RoleResponse

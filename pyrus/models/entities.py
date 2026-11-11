@@ -759,6 +759,30 @@ class Organization:
             self.department_catalog_id = kwargs['department_catalog_id']
 
 
+class Bot:
+    """Bot profile. The API can omit supervisors when no administrators are set."""
+
+    def __init__(self, **kwargs):
+        self.id = kwargs.get('id')
+        self.code = kwargs.get('code')
+        self.name = kwargs.get('name')
+        self.external_id = kwargs.get('external_id')
+        self.is_enabled = kwargs.get('is_enabled')
+        self.fired = kwargs.get('fired')
+        self.hook_url = kwargs.get('hook_url')
+        self.description = kwargs.get('description')
+        self.bot_settings = kwargs.get('bot_settings')
+        self.version = kwargs.get('version')
+        self.login = kwargs.get('login')
+        self.rights = kwargs.get('rights')
+        self.send_only_last_comment = kwargs.get('send_only_last_comment')
+        self.time_zone_offset = kwargs.get('time_zone_offset')
+        self.locale = kwargs.get('locale')
+        self.avatar_id = kwargs.get('avatar_id')
+        self.external_avatar_id = kwargs.get('external_avatar_id')
+        self.supervisors = kwargs.get('supervisors')
+
+
 class Role:
     """
         Role

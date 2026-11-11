@@ -423,6 +423,30 @@ class PyrusAPI:
         response = self._perform_post_request('/catalogs/{}/diff'.format(catalog_id), update_catalog_items_request)
         return resp.SyncCatalogResponse(**response)
 
+    def get_bots(self, include_fired=False):
+        """Get bots and their administrators as a BotsResponse."""
+        path = '/bots?include_fired=true' if include_fired else '/bots'
+        response = self._perform_get_request(path)
+        return resp.BotsResponse(**response)
+
+    def create_bot(self, create_bot_request):
+        """Create a bot, optionally assigning administrators, and return a BotResponse."""
+        if not isinstance(create_bot_request, req.CreateBotRequest):
+            raise TypeError('create_bot_request must be an instance '
+                            'of models.requests.CreateBotRequest')
+
+        response = self._perform_post_request('/bots', create_bot_request)
+        return resp.BotResponse(**response)
+
+    def update_bot(self, bot_id, update_bot_request):
+        """Update a bot and its administrators and return a BotResponse."""
+        if not isinstance(update_bot_request, req.UpdateBotRequest):
+            raise TypeError('update_bot_request must be an instance '
+                            'of models.requests.UpdateBotRequest')
+
+        response = self._perform_put_request('/bots/{}'.format(bot_id), update_bot_request)
+        return resp.BotResponse(**response)
+
     def get_roles(self):
         """
         Get all roles from user's organization
