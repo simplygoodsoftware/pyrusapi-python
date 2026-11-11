@@ -478,7 +478,12 @@ class PermissionsResponse(BaseResponse):
         super(PermissionsResponse, self).__init__(**kwargs)
 
 class BotResponse(BaseResponse, entities.Bot):
-    """Bot profile returned after creating or updating a bot."""
+    """
+        BotResponse
+
+        Contains the attributes of :class:`models.entities.Bot`.
+    """
+    __doc__ += BaseResponse.__doc__
 
     def __init__(self, **kwargs):
         super(BotResponse, self).__init__(**kwargs)
@@ -486,7 +491,13 @@ class BotResponse(BaseResponse, entities.Bot):
 
 
 class BotsResponse(BaseResponse):
-    """Bots available to the caller."""
+    """
+        BotsResponse
+
+        Attributes:
+            bots (:obj:`list` of :obj:`models.entities.Bot`): Bots available to the caller
+    """
+    __doc__ += BaseResponse.__doc__
 
     def __init__(self, **kwargs):
         super(BotsResponse, self).__init__(**kwargs)

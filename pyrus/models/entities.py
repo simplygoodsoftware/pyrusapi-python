@@ -760,7 +760,29 @@ class Organization:
 
 
 class Bot:
-    """Bot profile. The API can omit supervisors when no administrators are set."""
+    """
+        Bot profile
+
+        Attributes:
+            id (:obj:`int`): Bot id
+            code (:obj:`str`): Bot code
+            name (:obj:`str`): Bot name
+            external_id (:obj:`str`): Bot identifier in an external system
+            is_enabled (:obj:`bool`): Whether the bot is enabled
+            fired (:obj:`bool`): Whether the bot is deactivated
+            hook_url (:obj:`str`): Bot webhook URL
+            description (:obj:`str`): Bot description
+            bot_settings (:obj:`str`): Bot settings
+            version (:obj:`str`): Bot version
+            login (:obj:`str`): Bot login
+            rights (:obj:`int`): Bot rights flags
+            send_only_last_comment (:obj:`bool`): Whether the webhook receives only the last comment
+            time_zone_offset (:obj:`int`): Bot time zone offset
+            locale (:obj:`str`): Bot locale
+            avatar_id (:obj:`int`): Bot avatar id
+            external_avatar_id (:obj:`int`): Bot external avatar id
+            supervisors (:obj:`list` of :obj:`int`, optional): Supervisor person ids. None if omitted by the API.
+    """
 
     def __init__(self, **kwargs):
         self.id = kwargs.get('id')

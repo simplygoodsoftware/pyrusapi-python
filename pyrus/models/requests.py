@@ -802,7 +802,15 @@ class CalendarRequest:
         self.include_meetings = include_meetings
 
 class CreateBotRequest:
-    """Bot settings and optional administrator IDs for creation."""
+    """
+        CreateBotRequest
+
+        Args:
+            name (:obj:`str`): Bot name
+            hook_url (:obj:`str`, optional): Bot webhook URL
+            external_id (:obj:`str`, optional): Bot identifier in an external system
+            add_supervisors (:obj:`list` of :obj:`int`, optional): Person ids to assign as initial supervisors
+    """
 
     def __init__(self, name, hook_url=None, external_id=None, add_supervisors=None):
         self.name = name
@@ -815,7 +823,22 @@ class CreateBotRequest:
 
 
 class UpdateBotRequest:
-    """Bot settings and administrator IDs to add or remove."""
+    """
+        UpdateBotRequest
+
+        Args:
+            name (:obj:`str`, optional): Bot name
+            hook_url (:obj:`str`, optional): Bot webhook URL
+            is_enabled (:obj:`bool`, optional): Whether the bot is enabled
+            bot_settings (:obj:`str`, optional): Bot settings
+            description (:obj:`str`, optional): Bot description
+            rights (:obj:`int`, optional): Bot rights flags
+            send_only_last_comment (:obj:`bool`, optional): Whether the webhook receives only the last comment
+            locale (:obj:`str`, optional): Bot locale
+            time_zone_offset (:obj:`int`, optional): Bot time zone offset
+            add_supervisors (:obj:`list` of :obj:`int`, optional): Person ids to add as supervisors
+            remove_supervisors (:obj:`list` of :obj:`int`, optional): Person ids to remove from the supervisors list
+    """
 
     def __init__(self, name=None, hook_url=None, is_enabled=None, bot_settings=None,
                  description=None, rights=None, send_only_last_comment=None, locale=None,
@@ -836,6 +859,18 @@ class UpdateBotRequest:
         for field, value in fields.items():
             if value is not None:
                 setattr(self, field, value)
+
+
+class DeleteBotRequest:
+    """
+        DeleteBotRequest
+
+        Args:
+            task_receiver_id (:obj:`int`): Id of the person to receive the bot's tasks
+    """
+
+    def __init__(self, task_receiver_id):
+        self.task_receiver_id = task_receiver_id
 
 
 class CreateRoleRequest:
