@@ -199,6 +199,47 @@ tasks = response.tasks
 profile_response = pyrus_client.get_profile()
 ```
 
+## Bots
+
+* Create a bot with a supervisor and change its supervisors:
+
+```python
+from pyrus.models.requests import CreateBotRequest, UpdateBotRequest
+
+initial_supervisor_id = 10196
+new_supervisor_id = 10242
+bot = pyrus_client.create_bot(
+    CreateBotRequest(name="Support bot", add_supervisors=[initial_supervisor_id])
+)
+
+if bot.error_code is None:
+    updated_bot = pyrus_client.update_bot(
+        bot.id,
+        UpdateBotRequest(
+            add_supervisors=[new_supervisor_id],
+            remove_supervisors=[initial_supervisor_id],
+        ),
+    )
+    print(updated_bot.supervisors)
+```
+
+* List bots and their supervisors:
+
+```python
+bots = pyrus_client.get_bots().bots
+for bot in bots:
+    print(bot.name, bot.supervisors or [])
+```
+
+* Delete a bot and transfer its tasks to another person:
+
+```python
+from pyrus.models.requests import DeleteBotRequest
+
+bot_id = 12345
+response = pyrus_client.delete_bot(bot_id, DeleteBotRequest(task_receiver_id=10196))
+```
+
 ## Roles
 
 * Get all organization roles:

@@ -801,6 +801,78 @@ class CalendarRequest:
         self.filter_mask = filter_mask
         self.include_meetings = include_meetings
 
+class CreateBotRequest:
+    """
+        CreateBotRequest
+
+        Args:
+            name (:obj:`str`): Bot name
+            hook_url (:obj:`str`, optional): Bot webhook URL
+            external_id (:obj:`str`, optional): Bot identifier in an external system
+            add_supervisors (:obj:`list` of :obj:`int`, optional): Person ids to assign as initial supervisors
+    """
+
+    def __init__(self, name, hook_url=None, external_id=None, add_supervisors=None):
+        self.name = name
+        if hook_url is not None:
+            self.hook_url = hook_url
+        if external_id is not None:
+            self.external_id = external_id
+        if add_supervisors is not None:
+            self.add_supervisors = add_supervisors
+
+
+class UpdateBotRequest:
+    """
+        UpdateBotRequest
+
+        Args:
+            name (:obj:`str`, optional): Bot name
+            hook_url (:obj:`str`, optional): Bot webhook URL
+            is_enabled (:obj:`bool`, optional): Whether the bot is enabled
+            bot_settings (:obj:`str`, optional): Bot settings
+            description (:obj:`str`, optional): Bot description
+            rights (:obj:`int`, optional): Bot rights flags
+            send_only_last_comment (:obj:`bool`, optional): Whether the webhook receives only the last comment
+            locale (:obj:`str`, optional): Bot locale
+            time_zone_offset (:obj:`int`, optional): Bot time zone offset
+            add_supervisors (:obj:`list` of :obj:`int`, optional): Person ids to add as supervisors
+            remove_supervisors (:obj:`list` of :obj:`int`, optional): Person ids to remove from the supervisors list
+    """
+
+    def __init__(self, name=None, hook_url=None, is_enabled=None, bot_settings=None,
+                 description=None, rights=None, send_only_last_comment=None, locale=None,
+                 time_zone_offset=None, add_supervisors=None, remove_supervisors=None):
+        fields = {
+            'name': name,
+            'hook_url': hook_url,
+            'is_enabled': is_enabled,
+            'bot_settings': bot_settings,
+            'description': description,
+            'rights': rights,
+            'send_only_last_comment': send_only_last_comment,
+            'locale': locale,
+            'time_zone_offset': time_zone_offset,
+            'add_supervisors': add_supervisors,
+            'remove_supervisors': remove_supervisors,
+        }
+        for field, value in fields.items():
+            if value is not None:
+                setattr(self, field, value)
+
+
+class DeleteBotRequest:
+    """
+        DeleteBotRequest
+
+        Args:
+            task_receiver_id (:obj:`int`): Id of the person to receive the bot's tasks
+    """
+
+    def __init__(self, task_receiver_id):
+        self.task_receiver_id = task_receiver_id
+
+
 class CreateRoleRequest:
     """
         CreateRoleRequest

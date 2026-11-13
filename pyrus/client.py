@@ -423,6 +423,73 @@ class PyrusAPI:
         response = self._perform_post_request('/catalogs/{}/diff'.format(catalog_id), update_catalog_items_request)
         return resp.SyncCatalogResponse(**response)
 
+    def get_bots(self, include_fired=False):
+        """
+        Get bots and their supervisors.
+
+        Args:
+            include_fired (:obj:`bool`, optional): Include deactivated bots. Defaults to False.
+
+        Returns:
+            class:`models.responses.BotsResponse` object
+        """
+        path = '/bots?include_fired=true' if include_fired else '/bots'
+        response = self._perform_get_request(path)
+        return resp.BotsResponse(**response)
+
+    def create_bot(self, create_bot_request):
+        """
+        Create a bot and optionally assign its initial supervisors.
+
+        Args:
+            create_bot_request (:obj:`models.requests.CreateBotRequest`): Bot settings and initial supervisors.
+
+        Returns:
+            class:`models.responses.BotResponse` object
+        """
+        if not isinstance(create_bot_request, req.CreateBotRequest):
+            raise TypeError('create_bot_request must be an instance '
+                            'of models.requests.CreateBotRequest')
+
+        response = self._perform_post_request('/bots', create_bot_request)
+        return resp.BotResponse(**response)
+
+    def update_bot(self, bot_id, update_bot_request):
+        """
+        Update a bot's settings and supervisors.
+
+        Args:
+            bot_id (:obj:`int`): Bot id
+            update_bot_request (:obj:`models.requests.UpdateBotRequest`): Bot settings and supervisor changes.
+
+        Returns:
+            class:`models.responses.BotResponse` object
+        """
+        if not isinstance(update_bot_request, req.UpdateBotRequest):
+            raise TypeError('update_bot_request must be an instance '
+                            'of models.requests.UpdateBotRequest')
+
+        response = self._perform_put_request('/bots/{}'.format(bot_id), update_bot_request)
+        return resp.BotResponse(**response)
+
+    def delete_bot(self, bot_id, delete_bot_request):
+        """
+        Delete a bot and transfer its tasks to the specified recipient.
+
+        Args:
+            bot_id (:obj:`int`): Bot id
+            delete_bot_request (:obj:`models.requests.DeleteBotRequest`): Task transfer settings.
+
+        Returns:
+            class:`models.responses.BotResponse` object
+        """
+        if not isinstance(delete_bot_request, req.DeleteBotRequest):
+            raise TypeError('delete_bot_request must be an instance '
+                            'of models.requests.DeleteBotRequest')
+
+        response = self._perform_delete_request('/bots/{}'.format(bot_id), delete_bot_request)
+        return resp.BotResponse(**response)
+
     def get_roles(self):
         """
         Get all roles from user's organization

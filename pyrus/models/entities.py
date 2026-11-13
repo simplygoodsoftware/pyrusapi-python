@@ -759,6 +759,52 @@ class Organization:
             self.department_catalog_id = kwargs['department_catalog_id']
 
 
+class Bot:
+    """
+        Bot profile
+
+        Attributes:
+            id (:obj:`int`): Bot id
+            code (:obj:`str`): Bot code
+            name (:obj:`str`): Bot name
+            external_id (:obj:`str`): Bot identifier in an external system
+            is_enabled (:obj:`bool`): Whether the bot is enabled
+            fired (:obj:`bool`): Whether the bot is deactivated
+            hook_url (:obj:`str`): Bot webhook URL
+            description (:obj:`str`): Bot description
+            bot_settings (:obj:`str`): Bot settings
+            version (:obj:`str`): Bot version
+            login (:obj:`str`): Bot login
+            rights (:obj:`int`): Bot rights flags
+            send_only_last_comment (:obj:`bool`): Whether the webhook receives only the last comment
+            time_zone_offset (:obj:`int`): Bot time zone offset
+            locale (:obj:`str`): Bot locale
+            avatar_id (:obj:`int`): Bot avatar id
+            external_avatar_id (:obj:`int`): Bot external avatar id
+            supervisors (:obj:`list` of :obj:`int`, optional): Supervisor person ids. None if omitted by the API.
+    """
+
+    def __init__(self, **kwargs):
+        self.id = kwargs.get('id')
+        self.code = kwargs.get('code')
+        self.name = kwargs.get('name')
+        self.external_id = kwargs.get('external_id')
+        self.is_enabled = kwargs.get('is_enabled')
+        self.fired = kwargs.get('fired')
+        self.hook_url = kwargs.get('hook_url')
+        self.description = kwargs.get('description')
+        self.bot_settings = kwargs.get('bot_settings')
+        self.version = kwargs.get('version')
+        self.login = kwargs.get('login')
+        self.rights = kwargs.get('rights')
+        self.send_only_last_comment = kwargs.get('send_only_last_comment')
+        self.time_zone_offset = kwargs.get('time_zone_offset')
+        self.locale = kwargs.get('locale')
+        self.avatar_id = kwargs.get('avatar_id')
+        self.external_avatar_id = kwargs.get('external_avatar_id')
+        self.supervisors = kwargs.get('supervisors')
+
+
 class Role:
     """
         Role
